@@ -32,33 +32,46 @@ def linear_model(df):
   # Usar validación cruzada para evaluar el modelo
   model = LinearRegression()
   scores = cross_val_score(model, X_train, y_train, cv=10)
-  print('Cross-Validation Scores: ', scores)
-  print('Mean Cross-Validation Score: ', np.mean(scores))
+
   # Entrena el modelo
   model.fit(X_train, y_train)
+
   # Evalúa el modelo
   y_pred = model.predict(X_test)
+
   # Calcula el error cuadrático medio
   mse = mean_squared_error(y_test, y_pred)
+
   # Calula la raíz del error cuadrático medio
   rmse = np.sqrt(mse)
+
   # Calcula el coeficiente de determinación de la predicción
   r2 = model.score(X_test, y_test)
-  # Imprime los resultados
-  print('Error cuadrático medio: ', mse)
-  print('Raíz del error cuadrático medio: ', rmse)
-  print('Coeficiente de determinación: ', r2)
+
+  # Guarda los resultados
+  results = pd.DataFrame({
+    'y_test': y_test,
+    'y_pred': y_pred,
+    'score': r2,
+    'mse': mse,
+    'rmse': rmse
+  })
+  results.to_excel('../out/linear_model.xlsx', index=False)
+
   # Muestra una gráfica de los resultados
   plt.scatter(y_test, y_pred)
+
   # Valores reales en color azul
-  plt.plot(y_test, y_test, color='blue')
+  plt.scatter(y_test, y_test, color='blue')
+
   # Valores predichos en color rojo
-  plt.plot(y_test, y_pred, color='red')
+  plt.scatter(y_test, y_pred, color='red')
+
   # Guarda la gráfica
   plt.savefig('../figures/linear_model.png')
-  plt.show()
+
   # Guarda el modelo
-  joblib.dump(model, '../save/linear_model.pkl')
+  joblib.dump(model, '../model/linear_model.pkl')
 
 if __name__ == '__main__':
   # Carga los datos
