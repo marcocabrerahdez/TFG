@@ -17,9 +17,8 @@ import matplotlib.pyplot as plt
 from utils import plot as utils_plot
 from utils import save as utils_save
 
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import cross_val_score
 from sklearn.metrics import mean_squared_error
 
 def linear_regression_model(df: pd.DataFrame) -> None:
@@ -27,7 +26,7 @@ def linear_regression_model(df: pd.DataFrame) -> None:
   Entrena un modelo de regresión lineal y guarda los resultados en un archivo xlsx.
 
   Parámetros:
-      df (str): DataFrame con los datos.
+      df (pd.DataFrame): DataFrame con los datos.
   '''
   # Selecciona las columnas a utilizar
   X = df[['HbA1c', 'InitAge', 'Duration']]
