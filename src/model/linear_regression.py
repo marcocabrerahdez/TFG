@@ -56,15 +56,17 @@ def linear_regression_model(df: pd.DataFrame) -> None:
   # Calcula el coeficiente de determinación de la predicción
   cd = model.score(X_test, y_test)
 
-  # Guarda los resultados
+  # Genenera un dataframe con los resultados
   results = pd.DataFrame({
-    'y_test': y_test,
-    'y_pred': y_pred,
-    'score': scores.std(),
-    'coeficiente de determinacion': cd,
-    'mse': mse,
-    'rmse': rmse
+    'Modelo': 'Regresión lineal',
+    'RMSE': rmse,
+    'Coeficiente de determinación': cd,
+    'Valores reales': y_test,
+    'Valores predichos': y_pred,
+    'Puntuaciones': scores.mean()
   })
+
+  # Guarda los resultados en un archivo xlsx
   utils_save.save_results(results, 'Regresión Lineal')
 
   # Guarda las gráficas

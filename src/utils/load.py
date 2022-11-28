@@ -1,7 +1,6 @@
 ''' Carga un dataset. '''
 
 import pandas as pd
-import settings as st
 
 def load_dataset(data) -> pd.DataFrame:
   '''

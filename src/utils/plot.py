@@ -9,8 +9,8 @@ def plot_linear_model(y_test, y_pred, filename) -> None:
   Guarda una gráfica con los resultados de la regresión lineal.
 
   Parámetros:
-      y_test (str): Valores reales.
-      y_pred (str): Valores predichos.
+      y_test (Array): Valores reales.
+      y_pred (Array): Valores predichos.
       filename (str): Nombre del archivo.
   '''
   # Muestra una gráfica de los resultados
@@ -34,8 +34,8 @@ def plot_randomForestRegressor_model(y_test, y_pred, filename) -> None:
   Guarda una gráfica con los resultados del modelo RandomForestRegressor.
 
   Parámetros:
-      y_test (str): Valores reales.
-      y_pred (str): Valores predichos.
+      y_test (Array): Valores reales.
+      y_pred (Array): Valores predichos.
       filename (str): Nombre del archivo.
   '''
   # Crear dos gráficas, una para L95CI y otra para U95CI

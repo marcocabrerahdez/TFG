@@ -10,7 +10,7 @@ def save_results(df: pd.DataFrame, path: str) -> None:
   Guarda los resultados en un archivo xlsx.
 
   Parámetros:
-      df (str): DataFrame con los resultados.
+      df (pd.DataFrame): DataFrame con los resultados.
       path (str): Ruta donde se guardará el archivo.
   '''
   result_location = os.path.join(st.DATA_PREDICTIONS, path) + '.xlsx'
@@ -24,7 +24,7 @@ def save_model(model, path) -> None:
   Guarda el modelo en un archivo pickle.
 
   Parámetros:
-      model (str): Modelo.
+      model (sklearn model): Modelo.
       path (str): Ruta donde se guardará el archivo.
   '''
   model_location = os.path.join(st.MODEL_DIR, path) + '.pkl'

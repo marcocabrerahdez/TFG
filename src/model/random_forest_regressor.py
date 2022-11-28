@@ -56,17 +56,21 @@ def random_forest_regressor_model(df: pd.DataFrame) -> None:
   rmse = np.sqrt(mse)
 
   # Calcula el coeficiente de determinación de la predicción
-  r2 = model.score(X_test, y_test)
+  cd = model.score(X_test, y_test)
 
-  # Guardar los resultados y los errores en una tabla
+  # Genenera un dataframe con los resultados
   results = pd.DataFrame({
-    'y_L95CI_test': y_test['L95CI_TIME_TO_PRET'],
-    'y_L95CI_pred': y_pred[:, 0],
-    'y_U95CI_test': y_test['U95CI_TIME_TO_PRET'],
-    'score': r2,
-    'mse': mse,
-    'rmse': rmse
+    'Modelo': 'Random Forest Regressor',
+    'Valores reales L95CI': y_test['L95CI_TIME_TO_PRET'],
+    'Valores predichos L95CI': y_pred[:, 0],
+    'Valores reales U95CI': y_test['U95CI_TIME_TO_PRET'],
+    'Valores predichos U95CI': y_pred[:, 1],
+    'MSE': mse,
+    'RMSE': rmse,
+    'Coeficiente de determinación': cd
   })
+
+  # Guarda los resultados
   utils_save.save_results(results, 'Bosque Aleatorio de Regresión')
 
   # Grafica los resultados
