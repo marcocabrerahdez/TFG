@@ -31,6 +31,7 @@ import argparse
 import settings as st
 
 from utils import load as utils_load
+from utils import plot as utils_plot
 
 from model import linear_regression as linear_regression_model
 from model import random_forest_regressor as random_forest_regressor_model
@@ -41,6 +42,9 @@ def main() -> None:
     '''
     # Carga los datos
     df = utils_load.load_dataset(os.path.join(st.DATA_DIR, st.DATA_NAME))
+
+    # Genera la gráfica de correlación entre las variables
+    utils_plot.plot_correlations(df, 'Correlation')
 
     # Modelo de regresión lineal
     linear_regression_model.linear_regression_model(df);
