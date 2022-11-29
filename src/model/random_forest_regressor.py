@@ -3,8 +3,8 @@
 
     Parámetros:
         HbA1c (float): Nivel de hemoglobina glicosilada.
-        InitAge (int): Edad al inicio del tratamiento.
-        Duration (int): Duración del tratamiento.
+        InitAge (int): Edad desde la cuál se detecto la diabetes.
+        Duration (int): Duración con diabetes.
 
     Retorna:
         L95CI_TIME_TO_PRET (float): Límite inferior del intervalo de confianza.
@@ -21,7 +21,7 @@ import pandas as pd
 from utils import plot as utils_plot
 from utils import save as utils_save
 
-from sklearn.model_selection import train_test_split, KFold, cross_val_score
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 

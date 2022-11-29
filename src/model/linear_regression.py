@@ -1,13 +1,13 @@
 ''' Modelo de regresión lineal.
-    Se utiliza para predecir el tiempo promedio de inicio de tratamiento de pacientes con diabetes tipo 1.
+    Se utiliza para predecir el tiempo promedio para retinopatía proliferativa de pacientes con diabetes tipo 1.
 
     Parámetros:
         HbA1c (float): Nivel de hemoglobina glicosilada.
-        InitAge (int): Edad al inicio del tratamiento.
-        Duration (int): Duración del tratamiento.
+        InitAge (int): Edad desde la cuál se detecto la diabetes.
+        Duration (int): Duración con diabetes.
 
     Retorna:
-        AVG_TIME_TO_PRET (float): Tiempo promedio de inicio de tratamiento.
+        AVG_TIME_TO_PRET (float): Tiempo promedio para retinopatía proliferativa.
 '''
 
 import numpy as np
