@@ -11,6 +11,7 @@ import settings as st
 from typing import List
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.pipeline import Pipeline
+from sklearn.model_selection import GridSearchCV
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.svm import SVR
@@ -68,15 +69,19 @@ class AutoML(object):
 
 
   def train(self) -> None:
-    ''' Entrena los modelos usando validación cruzada. '''
-    # Crea un pipeline con el modelo y los parámetros
-    pipeline = Pipeline([('model', self._model)])
-    pipeline.set_params(**self._params)
+    ''' Entrena el modelo '''
+    # Crea un pipeline con el modelo y los parámetros y GridSearchCV
+    pipe = Pipeline([('model', self._model)])
+    grid = GridSearchCV(pipe, self._params, cv=5, scoring=self._scoring, n_jobs=-1)
 
-    # Entrena el modelo usando validación cruzada
-    scores = cross_val_score(pipeline, self._X_train, self._y_train, cv=10, scoring=self._scoring)
-    pipeline.fit(self._X_train, self._y_train)
+    # Entrena el modelo
+    grid.fit(self._X_train, self._y_train)
 
+    # Asigna el mejor modelo
+    self._model = grid.best_estimator_
+
+    # Reentreña el modelo con los mejores parámetros
+    self._model.fit(self._X_train, self._y_train)
 
 
   def predict(self) -> None:
