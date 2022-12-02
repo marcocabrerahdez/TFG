@@ -5,10 +5,6 @@
     de pacientes con diabetes tipo 1 en Canarias. Y comparar los resultados de los modelos
     de simulación con los resultados de los modelos de predicción.
 
-    El programa genera los siguientes modelos de predicción:
-        - Modelo de regresión lineal
-        - Modelo de bosque aleatorio de regresión
-
     Los datos han sido previamente procesados y se encuentran en el directorio data.
     Se han generado gráficas con los resultados y se encuentran en el directorio figures. Además,
     se han generado los modelos y se encuentran en el directorio model. Y por último, se han generado
@@ -26,34 +22,28 @@
 '''
 
 import os
+import json
+import pandas as pd
 import argparse
+import joblib
 
 import settings as st
+from scripts import automl as ml
 
-from utils import load as utils_load
-from utils import plot as utils_plot
-
-from model import linear_regression as linear_regression_model
-from model import random_forest_regressor as random_forest_regressor_model
-
+# Main function
 def main() -> None:
-    '''
-        Carga los datos y genera los modelos.
-    '''
-    # Carga los datos
-    df = utils_load.load_dataset(os.path.join(st.DATA_DIR, st.DATA_NAME))
+  # Open param_models.json
+  with open(os.path.join(st.CONFIG_DIR, st.PARAM_MODELS), 'r') as f:
+    config_list = json.load(f)
+  # Read data
+  df = pd.read_excel(os.path.join(st.DATA_DIR, st.DATASET_NAME), 'Processed')
 
-    # Genera la gráfica de correlación entre las variables
-    utils_plot.plot_correlations(df, 'Correlation')
-
-    # Modelo de regresión lineal
-    linear_regression_model.linear_regression_model(df);
-
-    # Modelo de bosque aleatorio de regresión
-    random_forest_regressor_model.random_forest_regressor_model(df);
+  # Store data from param_models.json
+  for config in config_list['config_list']:
+    # Create AutoML object
+    automl = ml.AutoML(config['name'], df, config['model'], config['params'], config['columns_X'], config['columns_Y'])
+    # Run
+    automl.run()
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Ejecuta varios modelos de regresión sobre un dataset de diabetes tipo 1.')
-    args = parser.parse_args()
-
-    main()
+  main()

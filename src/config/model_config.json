@@ -1,0 +1,23 @@
+{
+  "config_list": [
+    {
+      "name":"Retionopatía Proliferativa",
+      "model":"RandomForestRegressor",
+      "params": {
+        "model__n_estimators": 100,
+        "model__max_depth": 5
+      },
+      "columns_X": [
+        "HbA1c",
+        "InitAge",
+        "Duration"
+      ],
+      "columns_Y": [
+        "AVG_TIME_TO_PRET",
+        "L95CI_TIME_TO_PRET",
+        "U95CI_TIME_TO_PRET"
+      ],
+      "scoring": "r2"
+    }
+  ]
+}
