@@ -72,7 +72,7 @@ class AutoML(object):
     ''' Entrena el modelo '''
     # Crea un pipeline con el modelo y los parámetros y GridSearchCV
     pipe = Pipeline([('model', self._model)])
-    grid = GridSearchCV(pipe, self._params, cv=5, scoring=self._scoring, n_jobs=-1)
+    grid = GridSearchCV(pipe, self._params, cv=5, scoring=self._scoring)
 
     # Entrena el modelo
     grid.fit(self._X_train, self._y_train)
@@ -80,8 +80,9 @@ class AutoML(object):
     # Asigna el mejor modelo
     self._model = grid.best_estimator_
 
-    # Reentreña el modelo con los mejores parámetros
-    self._model.fit(self._X_train, self._y_train)
+    # Reentreña el modelo con los mejores parámetros y validación cruzada
+    cross_val_score(self._model, self._X_train, self._y_train, cv=5, scoring=self._scoring)
+
 
 
   def predict(self) -> None:
