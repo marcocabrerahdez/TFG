@@ -19,6 +19,31 @@
         "AVG_INC_PRET"
       ],
       "scoring": "r2"
+    },
+    {
+      "name":"Incidencia",
+      "model":"RandomForestRegressor",
+      "params": {
+        "model__n_estimators": [50, 100, 150],
+        "model__max_depth": [3, 5, 7]
+      },
+      "columns_X": [
+        "HbA1c",
+        "InitAge",
+        "Duration"
+      ],
+      "columns_Y": [
+        "INC_STROKE",
+        "INC_MI",
+        "INC_HF",
+        "INC_NEU",
+        "INC_ALB1",
+        "INC_ALB2",
+        "INC_ESRD",
+        "INC_ANGINA",
+        "INC_LEA"
+      ],
+      "scoring": "r2"
     }
   ]
 }
