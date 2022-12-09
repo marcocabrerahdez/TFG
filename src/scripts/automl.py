@@ -97,13 +97,13 @@ class AutoML(object):
 
     # Crea un dataframe con los resultados
     df_results = pd.DataFrame({'MSE': [mse], 'R2': [r2]})
-    df_results.to_excel(os.path.join(st.PREDICTIONS_DIR, f'{self._name}_{self._model.__class__.__name__}.xlsx'), index=False)
+    df_results.to_excel(os.path.join(st.PREDICTIONS_DIR, f'{self._name}.xlsx'), index=False)
 
 
 
   def save(self) -> None:
     ''' Guarda los modelos. '''
-    model_path = os.path.join(st.MODEL_DIR, f'{self._name}_{self._model.__class__.__name__}.pkl')
+    model_path = os.path.join(st.MODEL_DIR, f'{self._name}.pkl')
     joblib.dump(self._model, model_path)
 
 
@@ -120,7 +120,26 @@ class AutoML(object):
     plt.ylabel('Predicted')
     plt.legend(loc='upper left')
     plt.plot([self._y_test.min(), self._y_test.max()], [self._y_test.min(), self._y_test.max()], 'k--', lw=4)
-    plt.savefig(os.path.join(st.PLOTS_DIR, f'{self._name}_{self._model.__class__.__name__}.png'))
+    plt.savefig(os.path.join(st.PLOTS_DIR, f'{self._name}.png'))
+
+
+
+  def compare(self, model_list_names, plot_name) -> None:
+    ''' Muestra una gráfica de comparación de modelos. '''
+    # Obtener el coeficiente de determinación de cada modelo del directorio de predicciones
+    df_results = pd.DataFrame()
+    for model_name in model_list_names:
+      df_results = df_results.append(pd.read_excel(os.path.join(st.PREDICTIONS_DIR, f'{model_name}.xlsx')))
+    df_results.index = model_list_names
+
+    # Grafica los resultados
+    plt.figure(figsize=(10, 10))
+    plt.plot(df_results['R2'], 'o-', label='R2')
+    plt.title('R2')
+    plt.xlabel('Model')
+    plt.ylabel('R2')
+    plt.legend(loc='upper left')
+    plt.savefig(os.path.join(st.PLOTS_DIR, f'{plot_name}.png'))
 
 
 

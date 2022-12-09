@@ -1,26 +1,6 @@
 {
   "config_list": [
     {
-      "name":"Retionopatía Proliferativa",
-      "model":"RandomForestRegressor",
-      "params": {
-        "model__n_estimators": [50, 100, 150],
-        "model__max_depth": [3, 5, 7]
-      },
-      "columns_X": [
-        "HbA1c",
-        "InitAge",
-        "Duration"
-      ],
-      "columns_Y": [
-        "AVG_TIME_TO_PRET",
-        "L95CI_TIME_TO_PRET",
-        "U95CI_TIME_TO_PRET",
-        "AVG_INC_PRET"
-      ],
-      "scoring": "r2"
-    },
-    {
       "name":"Incidencia",
       "model":"RandomForestRegressor",
       "params": {
@@ -42,6 +22,341 @@
         "INC_ESRD",
         "INC_ANGINA",
         "INC_LEA"
+      ],
+      "scoring": "r2"
+    },
+    {
+      "name":"Fallo Cardiaco",
+      "model":"RandomForestRegressor",
+      "params": {
+        "model__n_estimators": [50, 100, 150],
+        "model__max_depth": [3, 5, 7]
+      },
+      "columns_X": [
+        "HbA1c",
+        "InitAge",
+        "Duration"
+      ],
+      "columns_Y": [
+        "AVG_TIME_TO_HF"
+      ],
+      "scoring": "r2"
+    },
+    {
+      "name":"Infarto de miocardio",
+      "model":"RandomForestRegressor",
+      "params": {
+        "model__n_estimators": [50, 100, 150],
+        "model__max_depth": [3, 5, 7]
+      },
+      "columns_X": [
+        "HbA1c",
+        "InitAge",
+        "Duration"
+      ],
+      "columns_Y": [
+        "AVG_TIME_TO_MI"
+      ],
+      "scoring": "r2"
+    },
+    {
+      "name":"Angina",
+      "model":"RandomForestRegressor",
+      "params": {
+        "model__n_estimators": [50, 100, 150],
+        "model__max_depth": [3, 5, 7]
+      },
+      "columns_X": [
+        "HbA1c",
+        "InitAge",
+        "Duration"
+      ],
+      "columns_Y": [
+        "AVG_TIME_TO_ANGINA"
+      ],
+      "scoring": "r2"
+    },
+    {
+      "name":"Ictus",
+      "model":"RandomForestRegressor",
+      "params": {
+        "model__n_estimators": [50, 100, 150],
+        "model__max_depth": [3, 5, 7]
+      },
+      "columns_X": [
+        "HbA1c",
+        "InitAge",
+        "Duration"
+      ],
+      "columns_Y": [
+        "AVG_TIME_TO_STROKE"
+      ],
+      "scoring": "r2"
+    },
+    {
+      "name":"Ceguera",
+      "model":"RandomForestRegressor",
+      "params": {
+        "model__n_estimators": [50, 100, 150],
+        "model__max_depth": [3, 5, 7]
+      },
+      "columns_X": [
+        "HbA1c",
+        "InitAge",
+        "Duration"
+      ],
+      "columns_Y": [
+        "AVG_TIME_TO_BLI",
+        "L95CI_TIME_TO_BLI",
+        "U95CI_TIME_TO_BLI"
+      ],
+      "scoring": "r2"
+    },
+    {
+      "name":"Edema macular diabético",
+      "model":"RandomForestRegressor",
+      "params": {
+        "model__n_estimators": [50, 100, 150],
+        "model__max_depth": [3, 5, 7]
+      },
+      "columns_X": [
+        "HbA1c",
+        "InitAge",
+        "Duration"
+      ],
+      "columns_Y": [
+        "AVG_TIME_TO_ME",
+        "L95CI_TIME_TO_ME",
+        "U95CI_TIME_TO_ME"
+      ],
+      "scoring": "r2"
+    },
+    {
+      "name":"Retinopatía de fondo",
+      "model":"RandomForestRegressor",
+      "params": {
+        "model__n_estimators": [50, 100, 150],
+        "model__max_depth": [3, 5, 7]
+      },
+      "columns_X": [
+        "HbA1c",
+        "InitAge",
+        "Duration"
+      ],
+      "columns_Y": [
+        "AVG_TIME_TO_BGRET",
+        "L95CI_TIME_TO_BGRET",
+        "U95CI_TIME_TO_BGRET"
+      ],
+      "scoring": "r2"
+    },
+    {
+      "name":"Retinopatía proliferativa",
+      "model":"RandomForestRegressor",
+      "params": {
+        "model__n_estimators": [50, 100, 150],
+        "model__max_depth": [3, 5, 7]
+      },
+      "columns_X": [
+        "HbA1c",
+        "InitAge",
+        "Duration"
+      ],
+      "columns_Y": [
+        "AVG_TIME_TO_PRET",
+        "L95CI_TIME_TO_PRET",
+        "U95CI_TIME_TO_PRET"
+      ],
+      "scoring": "r2"
+    },
+    {
+      "name":"Neuropatía",
+      "model":"RandomForestRegressor",
+      "params": {
+        "model__n_estimators": [50, 100, 150],
+        "model__max_depth": [3, 5, 7]
+      },
+      "columns_X": [
+        "HbA1c",
+        "InitAge",
+        "Duration"
+      ],
+      "columns_Y": [
+        "AVG_TIME_TO_NEU"
+      ],
+      "scoring": "r2"
+    },
+    {
+      "name":"Amputación extremidades inferiores",
+      "model":"RandomForestRegressor",
+      "params": {
+        "model__n_estimators": [50, 100, 150],
+        "model__max_depth": [3, 5, 7]
+      },
+      "columns_X": [
+        "HbA1c",
+        "InitAge",
+        "Duration"
+      ],
+      "columns_Y": [
+        "AVG_TIME_TO_LEA"
+      ],
+      "scoring": "r2"
+    },
+    {
+      "name":"Microalbuminuria",
+      "model":"RandomForestRegressor",
+      "params": {
+        "model__n_estimators": [50, 100, 150],
+        "model__max_depth": [3, 5, 7]
+      },
+      "columns_X": [
+        "HbA1c",
+        "InitAge",
+        "Duration"
+      ],
+      "columns_Y": [
+        "AVG_TIME_TO_ALB1"
+      ],
+      "scoring": "r2"
+    },
+    {
+      "name":"Macroalbuminuria",
+      "model":"RandomForestRegressor",
+      "params": {
+        "model__n_estimators": [50, 100, 150],
+        "model__max_depth": [3, 5, 7]
+      },
+      "columns_X": [
+        "HbA1c",
+        "InitAge",
+        "Duration"
+      ],
+      "columns_Y": [
+        "AVG_TIME_TO_ALB2"
+      ],
+      "scoring": "r2"
+    },
+    {
+      "name":"Enfermedad renal terminal",
+      "model":"RandomForestRegressor",
+      "params": {
+        "model__n_estimators": [50, 100, 150],
+        "model__max_depth": [3, 5, 7]
+      },
+      "columns_X": [
+        "HbA1c",
+        "InitAge",
+        "Duration"
+      ],
+      "columns_Y": [
+        "AVG_TIME_TO_ESRD"
+      ],
+      "scoring": "r2"
+    },
+    {
+      "name":"Enfermedades cardíacas",
+      "model":"RandomForestRegressor",
+      "params": {
+        "model__n_estimators": [50, 100, 150],
+        "model__max_depth": [3, 5, 7]
+      },
+      "columns_X": [
+        "HbA1c",
+        "InitAge",
+        "Duration"
+      ],
+      "columns_Y": [
+        "AVG_TIME_TO_HF",
+        "AVG_TIME_TO_MI",
+        "AVG_TIME_TO_ANGINA",
+        "AVG_TIME_TO_STROKE"
+      ],
+      "scoring": "r2"
+    },
+    {
+      "name":"Retinopatías",
+      "model":"RandomForestRegressor",
+      "params": {
+        "model__n_estimators": [50, 100, 150],
+        "model__max_depth": [3, 5, 7]
+      },
+      "columns_X": [
+        "HbA1c",
+        "InitAge",
+        "Duration"
+      ],
+      "columns_Y": [
+        "AVG_TIME_TO_BLI",
+        "AVG_TIME_TO_ME",
+        "AVG_TIME_TO_BGRET",
+        "AVG_TIME_TO_PRET"
+      ],
+      "scoring": "r2"
+    },
+    {
+      "name":"Neuropatías",
+      "model":"RandomForestRegressor",
+      "params": {
+        "model__n_estimators": [50, 100, 150],
+        "model__max_depth": [3, 5, 7]
+      },
+      "columns_X": [
+        "HbA1c",
+        "InitAge",
+        "Duration"
+      ],
+      "columns_Y": [
+        "AVG_TIME_TO_NEU",
+        "AVG_TIME_TO_LEA"
+      ],
+      "scoring": "r2"
+    },
+    {
+      "name":"Nefropatías",
+      "model":"RandomForestRegressor",
+      "params": {
+        "model__n_estimators": [50, 100, 150],
+        "model__max_depth": [3, 5, 7]
+      },
+      "columns_X": [
+        "HbA1c",
+        "InitAge",
+        "Duration"
+      ],
+      "columns_Y": [
+        "AVG_TIME_TO_ALB1",
+        "AVG_TIME_TO_ALB2",
+        "AVG_TIME_TO_ESRD"
+      ],
+      "scoring": "r2"
+    },
+    {
+      "name":"Comorbilidades",
+      "model":"RandomForestRegressor",
+      "params": {
+        "model__n_estimators": [50, 100, 150],
+        "model__max_depth": [3, 5, 7]
+      },
+      "columns_X": [
+        "HbA1c",
+        "InitAge",
+        "Duration"
+      ],
+      "columns_Y": [
+        "AVG_TIME_TO_HF",
+        "AVG_TIME_TO_MI",
+        "AVG_TIME_TO_ANGINA",
+        "AVG_TIME_TO_STROKE",
+        "AVG_TIME_TO_BLI",
+        "AVG_TIME_TO_ME",
+        "AVG_TIME_TO_BGRET",
+        "AVG_TIME_TO_PRET",
+        "AVG_TIME_TO_NEU",
+        "AVG_TIME_TO_LEA",
+        "AVG_TIME_TO_ALB1",
+        "AVG_TIME_TO_ALB2",
+        "AVG_TIME_TO_ESRD"
       ],
       "scoring": "r2"
     }

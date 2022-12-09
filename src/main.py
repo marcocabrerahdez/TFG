@@ -35,15 +35,22 @@ def main() -> None:
   # Open param_models.json
   with open(os.path.join(st.CONFIG_DIR, st.PARAM_MODELS), 'r') as f:
     config_list = json.load(f)
-  # Read data
+  # Leer los datos
   df = pd.read_excel(os.path.join(st.DATA_DIR, st.DATASET_NAME), 'Processed')
 
-  # Store data from param_models.json
+  # Para cada modelo en la lista de modelos
   for config in config_list['config_list']:
-    # Create AutoML object
+    # Crear el objeto AutoML
     automl = ml.AutoML(config['name'], df, config['model'], config['params'], config['columns_X'], config['columns_Y'])
-    # Run
+    # Entrenar el modelo
     automl.run()
+    # Si el modelo es el último de la lista, se comparan los resultados
+    if config == config_list['config_list'][-1]:
+      automl.compare(['Fallo Cardiaco', 'Infarto de miocardio', 'Angina', 'Ictus'], 'Comparación Enfermedades cardíacas')
+      automl.compare(['Ceguera', 'Edema macular diabético', 'Retinopatía de fondo', 'Retinopatía proliferativa'], 'Comparación Retinopatías')
+      automl.compare(['Neuropatía', 'Amputación extremidades inferiores'], 'Comparación Neuropatías')
+      automl.compare(['Microalbuminuria', 'Macroalbuminuria', 'Enfermedad renal terminal'], 'Comparación Nefropatías')
+      automl.compare(['Enfermedades cardíacas', 'Retinopatías', 'Neuropatías', 'Nefropatías'], 'Comparación Cormobilidades')
 
 if __name__ == '__main__':
   main()
