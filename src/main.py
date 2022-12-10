@@ -10,13 +10,6 @@
     se han generado los modelos y se encuentran en el directorio model. Y por último, se han generado
     los resultados de las predicciones y se encuentran en el directorio predictions.
 
-    Parámetros:
-        -h, --help: Muestra la ayuda del programa.
-        -v, --version: Muestra la versión del programa.
-
-    Ejemplo:
-        python3 main.py -v
-
     Autor:
         Marco Antonio Cabrera Hernández
 '''
@@ -30,11 +23,20 @@ import joblib
 import settings as st
 from scripts import automl as ml
 
-# Main function
 def main() -> None:
-  # Open param_models.json
+  ''' Función principal.
+
+      Parámetros:
+          -h, --help: Muestra la ayuda del programa.
+          -v, --version: Muestra la versión del programa.
+
+      Ejemplo:
+          python3 main.py -v
+  '''
+  # Abrir el archivo de configuración
   with open(os.path.join(st.CONFIG_DIR, st.PARAM_MODELS), 'r') as f:
     config_list = json.load(f)
+
   # Leer los datos
   df = pd.read_excel(os.path.join(st.DATA_DIR, st.DATASET_NAME), 'Processed')
 
@@ -42,15 +44,15 @@ def main() -> None:
   for config in config_list['config_list']:
     # Crear el objeto AutoML
     automl = ml.AutoML(config['name'], df, config['model'], config['params'], config['columns_X'], config['columns_Y'])
+
     # Entrenar el modelo
     automl.run()
-    # Si el modelo es el último de la lista, se comparan los resultados
+
+    # Comparar los modelos
     if config == config_list['config_list'][-1]:
-      automl.compare(['Fallo Cardiaco', 'Infarto de miocardio', 'Angina', 'Ictus'], 'Comparación Enfermedades cardíacas')
-      automl.compare(['Ceguera', 'Edema macular diabético', 'Retinopatía de fondo', 'Retinopatía proliferativa'], 'Comparación Retinopatías')
-      automl.compare(['Neuropatía', 'Amputación extremidades inferiores'], 'Comparación Neuropatías')
-      automl.compare(['Microalbuminuria', 'Macroalbuminuria', 'Enfermedad renal terminal'], 'Comparación Nefropatías')
-      automl.compare(['Enfermedades cardíacas', 'Retinopatías', 'Neuropatías', 'Nefropatías'], 'Comparación Cormobilidades')
+      for model in config_list['compare']:
+        automl.compare(model['model'], model['name'])
+
 
 if __name__ == '__main__':
   main()

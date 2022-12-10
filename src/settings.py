@@ -9,6 +9,7 @@ MODEL_DIR = os.path.join(ROOT_DIR, 'model')
 SRC_DIR = os.path.join(ROOT_DIR, 'src')
 PLOTS_DIR = os.path.join(ROOT_DIR, 'figures')
 PREDICTIONS_DIR = os.path.join(ROOT_DIR, 'predictions')
+COMPARISION_DIR = os.path.join(PLOTS_DIR, 'comparisions')
 CONFIG_DIR = os.path.join(SRC_DIR, 'config')
 
 # Archivos
