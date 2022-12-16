@@ -3,18 +3,18 @@
 
 import os
 import joblib
+import importlib
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import settings as st
 
 from typing import List
-from sklearn.model_selection import train_test_split
+
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV
-from sklearn.linear_model import LinearRegression
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.svm import SVR
+from sklearn.model_selection import train_test_split
+from sklearn.multioutput import MultiOutputRegressor
 from sklearn.metrics import mean_squared_error, r2_score
 
 class AutoML(object):
@@ -33,80 +33,103 @@ class AutoML(object):
         y_test (pd.DataFrame): Datos de salida de prueba.
         scoring (str): Métrica de evaluación.
   '''
-  __slots__ = ['_name', '_model', '_df', '_params', '_columns_X', '_columns_Y', '_X_train', '_X_test', '_y_train', '_y_test', '_scoring', '_y_pred']
+  __slots__ = ['_name', '_class_name', '_model', '_type', '_params', '_columns_X', '_columns_Y', '_X_train', '_X_test', '_y_train', '_y_test', '_y_pred']
 
-  def __init__(self, name: str, df: pd.DataFrame, model: str, params: hash, columns_X: List[str], columns_Y: List[str], scoring: str = 'neg_mean_squared_error') -> None:
+  def __init__(self, name: str, class_name: str, model: str, type: str, params: hash, columns_X: pd.DataFrame, _columns_Y: pd.DataFrame) -> None:
     ''' Constructor de la clase.
       Parámetros:
-          name (str): Nombre del modelo.
-          df (pd.DataFrame): Datos de entrada.
-          model (str): Modelo de Machine Learning.
-          params (hash): Parámetros del modelo.
-          columns_X (List[str]): Columnas de entrada.
-          columns_Y (List[str]): Columnas de salida.
-          scoring (str): Métrica de evaluación.
+        name (str): Nombre del modelo.
+        class_name (str): Nombre de la clase del modelo.
+        model (str): Modelo de Machine Learning.
+        params (hash): Parámetros del modelo.
+        columns_X (List[str]): Columnas de entrada.
+        columns_y (List[str]): Columnas de salida.
     '''
-    # Asigna los atributos
-    if isinstance(model, str):
-      if model == 'LinearRegression':
-        model = LinearRegression()
-      elif model == 'RandomForestRegressor':
-        model = RandomForestRegressor()
-      elif model == 'SVR':
-        model = SVR()
-      else:
-        raise Exception('Model not found')
-
-    self._model = model
     self._name = name
-    self._df = df
+    self._class_name = importlib.import_module(class_name)
+    self._model = getattr(self._class_name , model)()
+    self._type = type
     self._params = params
     self._columns_X = columns_X
-    self._columns_Y = columns_Y
-    self._X_train, self._X_test, self._y_train, self._y_test = train_test_split(self._df[self._columns_X], self._df[self._columns_Y], test_size=0.2, random_state=42)
-    self._scoring = scoring
+    self._columns_Y = _columns_Y
+    self._X_train, self._X_test, self._y_train, self._y_test = train_test_split(self._columns_X, self._columns_Y, test_size=st.TEST_SIZE, random_state=st.RANDOM_STATE)
     self._y_pred = None
 
-
-
   def train(self) -> None:
-    ''' Entrena el modelo '''
-    # Crea un pipeline con el modelo y los parámetros y GridSearchCV
+    if self._type == 'single':
+      self.train_single()
+    elif self._type == 'multiple':
+      self.train_multioutput()
+
+
+  def train_single(self) -> None:
+    ''' Entrena un conjunto de modelos '''
+    # Crea un pipeline con el modelo y los parámetros
     pipe = Pipeline([('model', self._model)])
-    grid = GridSearchCV(pipe, self._params, cv=5, scoring=self._scoring, refit=True)
+
+    # Crea un grid search con el pipeline y los parámetros
+    grid_search = GridSearchCV(pipe, self._params, cv=5, refit=True)
 
     # Entrena el modelo
-    grid.fit(self._X_train, self._y_train)
+    self._model = grid_search.fit(self._X_train, self._y_train)
 
-    # Asigna el modelo entrenado
-    self._model = grid.best_estimator_
 
+
+  def train_multioutput(self) -> None:
+    ''' Entrena un conjunto de modelos '''
+    # Crea un pipeline con el modelo y los parámetros
+    pipe = Pipeline([('model', self._model)])
+
+    # Crea un grid search con el pipeline y los parámetros
+    grid_search = GridSearchCV(pipe, self._params, cv=5, refit=True)
+
+    # Crea un Multioutput Regressor con el grid search
+    self._model = MultiOutputRegressor(grid_search)
+
+    # Entrena el modelo
+    self._model.fit(self._X_train, self._y_train)
 
 
   def predict(self) -> None:
     ''' Predice con los modelos. '''
     self._y_pred = self._model.predict(self._X_test)
 
-    # Calcula el error cuadrático medio
-    mse = mean_squared_error(self._y_test, self._y_pred)
+    # Calcula el error cuadrático medio de cada salida del modelo
+    if self._type == 'single':
+      mse = mean_squared_error(self._y_test, self._y_pred)
+    elif self._type == 'multiple':
+      mse = [mean_squared_error(self._y_test.iloc[:, i], self._y_pred[:, i]) for i in range(self._y_test.shape[1])]
 
-    # Calcula el coeficiente de determinación
-    r2 = r2_score(self._y_test, self._y_pred)
+    # Calcula el coeficiente de determinación de cada salida del modelo
+    if self._type == 'single':
+      r2 = r2_score(self._y_test, self._y_pred)
+    elif self._type == 'multiple':
+      r2 = [r2_score(self._y_test.iloc[:, i], self._y_pred[:, i]) for i in range(self._y_test.shape[1])]
 
     # Crea un dataframe con los resultados
-    df_results = pd.DataFrame({'MSE': [mse], 'R2': [r2], 'PARAMS': [self._model.get_params()]})
-    df_results.to_excel(os.path.join(st.PREDICTIONS_DIR, f'{self._name}.xlsx'), index=False)
+    df_results = pd.DataFrame({
+      'Enfermedad': self._y_test.columns,
+      'MSE': mse,
+      'R2': r2
+    })
+    if self._type == 'single':
+      df_results.to_excel(os.path.join(st.SINGLE_PREDICTIONS_DIR, f'{self._name}.xlsx'), index=False)
+    elif self._type == 'multiple':
+      df_results.to_excel(os.path.join(st.MULTIPLE_PREDICTIONS_DIR, f'{self._name}.xlsx'), index=False)
 
 
 
   def save(self) -> None:
     ''' Guarda los modelos. '''
-    model_path = os.path.join(st.MODEL_DIR, f'{self._name}.pkl')
+    if self._type == 'single':
+      model_path = os.path.join(st.SINGLE_MODEL_DIR, f'{self._name}.pkl')
+    elif self._type == 'multiple':
+      model_path = os.path.join(st.MULTIPLE_MODEL_DIR, f'{self._name}.pkl')
     joblib.dump(self._model, model_path)
 
 
 
-  def plot(self) -> None:
+  def plot_results(self) -> None:
     ''' Grafica los modelos.
       La gráfica representa los valores reales contra los valores predichos.
     '''
@@ -124,29 +147,48 @@ class AutoML(object):
 
 
 
-  def compare(self, model_list_names, plot_name) -> None:
-    ''' Muestra una gráfica de comparación de modelos. '''
+  def plot_metrics(self) -> None:
+    ''' Grafica las métricas de los modelos. '''
     # Obtener el coeficiente de determinación de cada modelo del directorio de predicciones
-    df_results = pd.DataFrame()
-    for model_name in model_list_names:
-      df_results = pd.concat([df_results, pd.read_excel(os.path.join(st.PREDICTIONS_DIR, f'{model_name}.xlsx'))])
-    df_results.index = model_list_names
+    if self._type == 'single':
+      df_results = pd.read_excel(os.path.join(st.SINGLE_PREDICTIONS_DIR, f'{self._name}.xlsx'))
+      # Quitar la columna de la enfermedad
+      model_names = df_results['Enfermedad']
+      df_results = df_results.drop(columns=['Enfermedad'])
+    elif self._type == 'multiple':
+      df_results = pd.read_excel(os.path.join(st.MULTIPLE_PREDICTIONS_DIR, f'{self._name}.xlsx'))
+      model_names = df_results['Enfermedad']
+      df_results = df_results.drop(columns=['Enfermedad'])
 
-    # Grafica los resultados
-    plt.figure(figsize=(10, 10))
-    plt.plot(df_results['R2'], 'o-', label='R2')
-    plt.title('R2')
-    plt.xlabel('Modelo')
-    plt.ylabel('R2')
-    plt.legend(loc='upper left')
-    plt.savefig(os.path.join(st.COMPARISION_DIR, f'{plot_name}.png'))
+    # Obtén los nombres de las columnas del dataframe
+    column_names = df_results.columns
+
+    # Crea una figura con dos subgráficos
+    fig, axs = plt.subplots(1, len(column_names), figsize=(10, 5))
+
+    # Crea un gráfico de barras horizontal para cada columna en cada subgráfico
+    for ax, column_name in zip(axs, column_names):
+      # Obtén los valores de la columna
+      values = df_results[column_name]
+
+      # Crea el gráfico de lineas horizontal
+      ax.barh(range(len(values)), values)
+
+      # Establece las etiquetas de las barras
+      ax.set_yticks(range(len(values)))
+      ax.set_yticklabels(model_names)
+
+      # Establece el título del gráfico
+      ax.set_title(column_name)
+
+    # Establece el título de la figura
+    fig.suptitle(f'{self._name}')
+
+    # Guarda el gráfico
+    if self._type == 'single':
+      plt.savefig(os.path.join(st.SINGLE_METRICS_DIR, f'{self._name}.png'))
+    elif self._type == 'multiple':
+      plt.savefig(os.path.join(st.MULTIPLE_METRICS_DIR, f'{self._name}.png'))
+
+    # Cierra el gráfico
     plt.close()
-
-
-
-  def run(self) -> None:
-    ''' Ejecuta el proceso de entrenamiento. '''
-    self.train()
-    self.predict()
-    self.save()
-    self.plot()

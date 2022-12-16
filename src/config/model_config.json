@@ -2,7 +2,9 @@
   "config_list": [
     {
       "name":"Incidencia",
+      "class_name": "sklearn.ensemble",
       "model":"RandomForestRegressor",
+      "type": "single",
       "params": {
         "model__n_estimators": [50, 100, 150],
         "model__max_depth": [3, 5, 7]
@@ -27,7 +29,9 @@
     },
     {
       "name":"Fallo Cardiaco",
+      "class_name": "sklearn.ensemble",
       "model":"RandomForestRegressor",
+      "type": "single",
       "params": {
         "model__n_estimators": [50, 100, 150],
         "model__max_depth": [3, 5, 7]
@@ -44,7 +48,9 @@
     },
     {
       "name":"Infarto de miocardio",
+      "class_name": "sklearn.ensemble",
       "model":"RandomForestRegressor",
+      "type": "single",
       "params": {
         "model__n_estimators": [50, 100, 150],
         "model__max_depth": [3, 5, 7]
@@ -61,7 +67,9 @@
     },
     {
       "name":"Angina",
+      "class_name": "sklearn.ensemble",
       "model":"RandomForestRegressor",
+      "type": "single",
       "params": {
         "model__n_estimators": [50, 100, 150],
         "model__max_depth": [3, 5, 7]
@@ -78,7 +86,9 @@
     },
     {
       "name":"Ictus",
+      "class_name": "sklearn.ensemble",
       "model":"RandomForestRegressor",
+      "type": "single",
       "params": {
         "model__n_estimators": [50, 100, 150],
         "model__max_depth": [3, 5, 7]
@@ -95,7 +105,9 @@
     },
     {
       "name":"Ceguera",
+      "class_name": "sklearn.ensemble",
       "model":"RandomForestRegressor",
+      "type": "single",
       "params": {
         "model__n_estimators": [50, 100, 150],
         "model__max_depth": [3, 5, 7]
@@ -114,7 +126,9 @@
     },
     {
       "name":"Edema macular diabético",
+      "class_name": "sklearn.ensemble",
       "model":"RandomForestRegressor",
+      "type": "single",
       "params": {
         "model__n_estimators": [50, 100, 150],
         "model__max_depth": [3, 5, 7]
@@ -133,7 +147,9 @@
     },
     {
       "name":"Retinopatía de fondo",
+      "class_name": "sklearn.ensemble",
       "model":"RandomForestRegressor",
+      "type": "single",
       "params": {
         "model__n_estimators": [50, 100, 150],
         "model__max_depth": [3, 5, 7]
@@ -152,7 +168,9 @@
     },
     {
       "name":"Retinopatía proliferativa",
+      "class_name": "sklearn.ensemble",
       "model":"RandomForestRegressor",
+      "type": "single",
       "params": {
         "model__n_estimators": [50, 100, 150],
         "model__max_depth": [3, 5, 7]
@@ -171,7 +189,9 @@
     },
     {
       "name":"Neuropatía",
+      "class_name": "sklearn.ensemble",
       "model":"RandomForestRegressor",
+      "type": "single",
       "params": {
         "model__n_estimators": [50, 100, 150],
         "model__max_depth": [3, 5, 7]
@@ -188,7 +208,9 @@
     },
     {
       "name":"Amputación extremidades inferiores",
+      "class_name": "sklearn.ensemble",
       "model":"RandomForestRegressor",
+      "type": "single",
       "params": {
         "model__n_estimators": [50, 100, 150],
         "model__max_depth": [3, 5, 7]
@@ -205,7 +227,9 @@
     },
     {
       "name":"Microalbuminuria",
+      "class_name": "sklearn.ensemble",
       "model":"RandomForestRegressor",
+      "type": "single",
       "params": {
         "model__n_estimators": [50, 100, 150],
         "model__max_depth": [3, 5, 7]
@@ -222,7 +246,9 @@
     },
     {
       "name":"Macroalbuminuria",
+      "class_name": "sklearn.ensemble",
       "model":"RandomForestRegressor",
+      "type": "single",
       "params": {
         "model__n_estimators": [50, 100, 150],
         "model__max_depth": [3, 5, 7]
@@ -239,7 +265,9 @@
     },
     {
       "name":"Enfermedad renal terminal",
+      "class_name": "sklearn.ensemble",
       "model":"RandomForestRegressor",
+      "type": "single",
       "params": {
         "model__n_estimators": [50, 100, 150],
         "model__max_depth": [3, 5, 7]
@@ -256,7 +284,9 @@
     },
     {
       "name":"Enfermedades cardíacas",
+      "class_name": "sklearn.ensemble",
       "model":"RandomForestRegressor",
+      "type": "multiple",
       "params": {
         "model__n_estimators": [50, 100, 150],
         "model__max_depth": [3, 5, 7]
@@ -276,7 +306,9 @@
     },
     {
       "name":"Retinopatías",
+      "class_name": "sklearn.ensemble",
       "model":"RandomForestRegressor",
+      "type": "multiple",
       "params": {
         "model__n_estimators": [50, 100, 150],
         "model__max_depth": [3, 5, 7]
@@ -296,7 +328,9 @@
     },
     {
       "name":"Neuropatías",
+      "class_name": "sklearn.ensemble",
       "model":"RandomForestRegressor",
+      "type": "multiple",
       "params": {
         "model__n_estimators": [50, 100, 150],
         "model__max_depth": [3, 5, 7]
@@ -314,7 +348,9 @@
     },
     {
       "name":"Nefropatías",
+      "class_name": "sklearn.ensemble",
       "model":"RandomForestRegressor",
+      "type": "multiple",
       "params": {
         "model__n_estimators": [50, 100, 150],
         "model__max_depth": [3, 5, 7]
@@ -333,7 +369,9 @@
     },
     {
       "name":"Comorbilidades",
+      "class_name": "sklearn.ensemble",
       "model":"RandomForestRegressor",
+      "type": "multiple",
       "params": {
         "model__n_estimators": [50, 100, 150],
         "model__max_depth": [3, 5, 7]
@@ -359,50 +397,6 @@
         "AVG_TIME_TO_ESRD"
       ],
       "scoring": "r2"
-    }
-  ],
-  "compare": [
-    {
-      "model": [
-        "Fallo Cardiaco",
-        "Infarto de miocardio",
-        "Angina",
-        "Ictus"
-      ],
-      "name": "Comparación Enfermedades cardíacas"
-    },
-    {
-      "model": [
-        "Ceguera",
-        "Edema macular diabético",
-        "Retinopatía de fondo",
-        "Retinopatía proliferativa"
-      ],
-      "name": "Comparación Retinopatías"
-    },
-    {
-      "model": [
-        "Neuropatía",
-        "Amputación extremidades inferiores"
-      ],
-      "name": "Comparación Neuropatías"
-    },
-    {
-      "model": [
-        "Microalbuminuria",
-        "Macroalbuminuria",
-        "Enfermedad renal terminal"
-      ],
-      "name": "Comparación Nefropatías"
-    },
-    {
-      "model": [
-        "Enfermedades cardíacas",
-        "Retinopatías",
-        "Neuropatías",
-        "Nefropatías"
-      ],
-      "name": "Comparación Cormobilidades"
     }
   ]
 }

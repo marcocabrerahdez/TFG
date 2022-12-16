@@ -43,15 +43,22 @@ def main() -> None:
   # Para cada modelo en la lista de modelos
   for config in config_list['config_list']:
     # Crear el objeto AutoML
-    automl = ml.AutoML(config['name'], df, config['model'], config['params'], config['columns_X'], config['columns_Y'])
+    automl = ml.AutoML(config['name'], config['class_name'], config['model'], config['type'], config['params'], df[config['columns_X']], df[config['columns_Y']])
 
     # Entrenar el modelo
-    automl.run()
+    automl.train()
 
-    # Comparar los modelos
-    if config == config_list['config_list'][-1]:
-      for model in config_list['compare']:
-        automl.compare(model['model'], model['name'])
+    # Predecir con el modelo
+    automl.predict()
+
+    # Guardar el modelo
+    automl.save()
+
+    # Graficar los resultados
+    automl.plot_results()
+
+    # Graficar las métricas
+    automl.plot_metrics()
 
 
 if __name__ == '__main__':
