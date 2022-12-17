@@ -44,7 +44,6 @@ def main() -> None:
 
   # Leer los datos
   df = pd.read_excel(os.path.join(st.DATA_DIR, st.DATASET_NAME), 'Processed')
-
   # Para cada modelo en la lista de modelos
   for config in config_list['config_list']:
     # Crear el objeto AutoML
@@ -60,7 +59,8 @@ def main() -> None:
     automl.save()
 
     # Graficar los resultados
-    automl.plot_results()
+    automl.plot_single_results()
+    automl.plot_multiple_results()
 
   # Comparar los modelos
   for model in compare_list['compare']:

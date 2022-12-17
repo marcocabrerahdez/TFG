@@ -188,7 +188,7 @@
       "scoring": "r2"
     },
     {
-      "name":"Neuropatía",
+      "name":"Neuropatía individual",
       "class_name": "sklearn.ensemble",
       "model":"RandomForestRegressor",
       "type": "single",
@@ -371,7 +371,7 @@
       "name":"Comorbilidades",
       "class_name": "sklearn.ensemble",
       "model":"RandomForestRegressor",
-      "type": "multiple",
+      "type": "global",
       "params": {
         "model__n_estimators": [50, 100, 150],
         "model__max_depth": [3, 5, 7]

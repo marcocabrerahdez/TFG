@@ -10,6 +10,7 @@ DATA_DIR = os.path.join(ROOT_DIR, 'data')
 MODEL_DIR = os.path.join(ROOT_DIR, 'model')
 SINGLE_MODEL_DIR = os.path.join(MODEL_DIR, 'single')
 MULTIPLE_MODEL_DIR = os.path.join(MODEL_DIR, 'multiple')
+GLOBAL_MODEL_DIR = os.path.join(MODEL_DIR, 'global')
 
 SRC_DIR = os.path.join(ROOT_DIR, 'src')
 
@@ -17,11 +18,13 @@ SRC_DIR = os.path.join(ROOT_DIR, 'src')
 PLOTS_DIR = os.path.join(ROOT_DIR, 'figures')
 SINGLE_PLOTS_DIR = os.path.join(PLOTS_DIR, 'single')
 MULTIPLE_PLOTS_DIR = os.path.join(PLOTS_DIR, 'multiple')
+GLOBAL_PLOTS_DIR = os.path.join(PLOTS_DIR, 'global')
 
 # PREDICCIONES
 PREDICTIONS_DIR = os.path.join(ROOT_DIR, 'predictions')
 SINGLE_PREDICTIONS_DIR = os.path.join(PREDICTIONS_DIR, 'single')
 MULTIPLE_PREDICTIONS_DIR = os.path.join(PREDICTIONS_DIR, 'multiple')
+GLOBAL_PREDICTIONS_DIR = os.path.join(PREDICTIONS_DIR, 'global')
 COMPARISION_DIR = os.path.join(PLOTS_DIR, 'comparisions')
 
 # CONFIGURACION

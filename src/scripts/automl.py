@@ -60,7 +60,7 @@ class AutoML(object):
   def train(self) -> None:
     if self._type == 'single':
       self.train_single()
-    elif self._type == 'multiple':
+    elif self._type == 'multiple' or self._type == 'global':
       self.train_multioutput()
 
 
@@ -101,25 +101,28 @@ class AutoML(object):
     # Calcula el error cuadrático medio de cada salida del modelo
     if self._type == 'single':
       mse = mean_squared_error(self._y_test, self._y_pred)
-    elif self._type == 'multiple':
+    elif self._type == 'multiple' or self._type == 'global':
       mse = [mean_squared_error(self._y_test.iloc[:, i], self._y_pred[:, i]) for i in range(self._y_test.shape[1])]
 
     # Calcula el coeficiente de determinación de cada salida del modelo
     if self._type == 'single':
       r2 = r2_score(self._y_test, self._y_pred)
-    elif self._type == 'multiple':
+    elif self._type == 'multiple' or self._type == 'global':
       r2 = [r2_score(self._y_test.iloc[:, i], self._y_pred[:, i]) for i in range(self._y_test.shape[1])]
 
     # Crea un dataframe con los resultados
     df_results = pd.DataFrame({
       'Enfermedad': self._y_test.columns,
       'MSE': mse,
-      'R2': r2
+      'R2': r2,
+      'Tipo': self._type
     })
     if self._type == 'single':
       df_results.to_excel(os.path.join(st.SINGLE_PREDICTIONS_DIR, f'{self._name}.xlsx'), index=False)
     elif self._type == 'multiple':
       df_results.to_excel(os.path.join(st.MULTIPLE_PREDICTIONS_DIR, f'{self._name}.xlsx'), index=False)
+    elif self._type == 'global':
+      df_results.to_excel(os.path.join(st.GLOBAL_PREDICTIONS_DIR, f'{self._name}.xlsx'), index=False)
 
 
 
@@ -129,11 +132,13 @@ class AutoML(object):
       model_path = os.path.join(st.SINGLE_MODEL_DIR, f'{self._name}.pkl')
     elif self._type == 'multiple':
       model_path = os.path.join(st.MULTIPLE_MODEL_DIR, f'{self._name}.pkl')
+    elif self._type == 'global':
+      model_path = os.path.join(st.GLOBAL_MODEL_DIR, f'{self._name}.pkl')
     joblib.dump(self._model, model_path)
 
 
 
-  def plot_results(self) -> None:
+  def plot_single_results(self) -> None:
     ''' Grafica los modelos.
       La gráfica representa los valores reales contra los valores predichos.
     '''
@@ -148,8 +153,52 @@ class AutoML(object):
     plt.ylabel('Predicho')
     if self._type == 'single':
       plt.savefig(os.path.join(st.SINGLE_PLOTS_DIR, f'{self._name}.png'))
-    elif self._type == 'multiple':
-      plt.savefig(os.path.join(st.MULTIPLE_PLOTS_DIR, f'{self._name}.png'))
 
     # Cierra la gráfica
     plt.close()
+
+  def plot_multiple_results(self) -> None:
+    ''' Grafica los modelos.
+      La gráfica representa los valores reales contra los valores predichos.
+    '''
+    if self._type == 'multiple' or self._type == 'global':
+      # Grafica los resultados
+      fig, ax = plt.subplots(figsize=(30, 30), nrows=self._y_test.shape[1], ncols=1)
+
+      # Crear una gráfico de barras para cada salida
+      if self._type == 'multiple' or self._type == 'global':
+        for i in range(self._y_test.shape[1]):
+          # Crear una gráfico de scatter para cada salida del modelo con colores azul y rojo
+          ax[i].plot(self._y_test.iloc[:, i], self._y_test.iloc[:, i], 'b-')
+          ax[i].plot(self._y_test.iloc[:, i], self._y_pred[:, i], 'ro')
+
+          # Agrega los títulos
+          ax[i].set_title(self._y_test.columns[i])
+
+          # Agrega las etiquetas
+          ax[i].set_xlabel('Real')
+          ax[i].set_ylabel('Predicho')
+
+          # Agrega la leyenda
+          ax[i].legend(['Real', 'Predicho'])
+
+      # Agrega los títulos a la gráfica
+      fig.suptitle(self._name)
+
+      # Ajustar el espacio entre subgráficas
+      fig.tight_layout()
+
+      # Ajustar el espacio entre subgráficas y el título
+      fig.subplots_adjust(top=0.95)
+
+      # Guarda la gráfica
+      if self._type == 'multiple':
+        plt.savefig(os.path.join(st.MULTIPLE_PLOTS_DIR, f'{self._name}.png'))
+      elif self._type == 'global':
+        plt.savefig(os.path.join(st.GLOBAL_PLOTS_DIR, f'{self._name}.png'))
+
+      # Cierra la gráfica
+      plt.close()
+
+    else:
+      pass

@@ -22,7 +22,7 @@
     },
     {
       "model": [
-        "Neuropatía",
+        "Neuropatía individual",
         "Amputación extremidades inferiores",
         "Neuropatías"
       ],
@@ -49,13 +49,13 @@
         "Retinopatía de fondo",
         "Retinopatía proliferativa",
         "Retinopatías",
-        "Neuropatía",
+        "Neuropatía individual",
         "Amputación extremidades inferiores",
         "Neuropatías",
-        "Nefropatías",
         "Microalbuminuria",
         "Macroalbuminuria",
         "Enfermedad renal terminal",
+        "Nefropatías",
         "Comorbilidades"
       ],
       "name": "Cormobilidades"
