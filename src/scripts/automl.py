@@ -55,11 +55,14 @@ class AutoML(object):
     self._X_train, self._X_test, self._y_train, self._y_test = train_test_split(self._columns_X, self._columns_Y, test_size=st.TEST_SIZE, random_state=st.RANDOM_STATE)
     self._y_pred = None
 
+
+
   def train(self) -> None:
     if self._type == 'single':
       self.train_single()
     elif self._type == 'multiple':
       self.train_multioutput()
+
 
 
   def train_single(self) -> None:
@@ -88,6 +91,7 @@ class AutoML(object):
 
     # Entrena el modelo
     self._model.fit(self._X_train, self._y_train)
+
 
 
   def predict(self) -> None:
@@ -142,53 +146,10 @@ class AutoML(object):
     plt.title('Real vs Predicho')
     plt.xlabel('Real')
     plt.ylabel('Predicho')
-    plt.savefig(os.path.join(st.PLOTS_DIR, f'{self._name}.png'))
-    plt.close()
-
-
-
-  def plot_metrics(self) -> None:
-    ''' Grafica las métricas de los modelos. '''
-    # Obtener el coeficiente de determinación de cada modelo del directorio de predicciones
     if self._type == 'single':
-      df_results = pd.read_excel(os.path.join(st.SINGLE_PREDICTIONS_DIR, f'{self._name}.xlsx'))
-      # Quitar la columna de la enfermedad
-      model_names = df_results['Enfermedad']
-      df_results = df_results.drop(columns=['Enfermedad'])
+      plt.savefig(os.path.join(st.SINGLE_PLOTS_DIR, f'{self._name}.png'))
     elif self._type == 'multiple':
-      df_results = pd.read_excel(os.path.join(st.MULTIPLE_PREDICTIONS_DIR, f'{self._name}.xlsx'))
-      model_names = df_results['Enfermedad']
-      df_results = df_results.drop(columns=['Enfermedad'])
+      plt.savefig(os.path.join(st.MULTIPLE_PLOTS_DIR, f'{self._name}.png'))
 
-    # Obtén los nombres de las columnas del dataframe
-    column_names = df_results.columns
-
-    # Crea una figura con dos subgráficos
-    fig, axs = plt.subplots(1, len(column_names), figsize=(10, 5))
-
-    # Crea un gráfico de barras horizontal para cada columna en cada subgráfico
-    for ax, column_name in zip(axs, column_names):
-      # Obtén los valores de la columna
-      values = df_results[column_name]
-
-      # Crea el gráfico de lineas horizontal
-      ax.barh(range(len(values)), values)
-
-      # Establece las etiquetas de las barras
-      ax.set_yticks(range(len(values)))
-      ax.set_yticklabels(model_names)
-
-      # Establece el título del gráfico
-      ax.set_title(column_name)
-
-    # Establece el título de la figura
-    fig.suptitle(f'{self._name}')
-
-    # Guarda el gráfico
-    if self._type == 'single':
-      plt.savefig(os.path.join(st.SINGLE_METRICS_DIR, f'{self._name}.png'))
-    elif self._type == 'multiple':
-      plt.savefig(os.path.join(st.MULTIPLE_METRICS_DIR, f'{self._name}.png'))
-
-    # Cierra el gráfico
+    # Cierra la gráfica
     plt.close()

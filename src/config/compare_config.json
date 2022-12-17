@@ -1,0 +1,64 @@
+{
+  "compare": [
+    {
+      "model": [
+        "Fallo Cardiaco",
+        "Infarto de miocardio",
+        "Angina",
+        "Ictus",
+        "Enfermedades cardíacas"
+      ],
+      "name": "Enfermedades cardíacas"
+    },
+    {
+      "model": [
+        "Ceguera",
+        "Edema macular diabético",
+        "Retinopatía de fondo",
+        "Retinopatía proliferativa",
+        "Retinopatías"
+      ],
+      "name": "Retinopatías"
+    },
+    {
+      "model": [
+        "Neuropatía",
+        "Amputación extremidades inferiores",
+        "Neuropatías"
+      ],
+      "name": "Neuropatías"
+    },
+    {
+      "model": [
+        "Microalbuminuria",
+        "Macroalbuminuria",
+        "Enfermedad renal terminal",
+        "Nefropatías"
+      ],
+      "name": "Nefropatías"
+    },
+    {
+      "model": [
+        "Fallo Cardiaco",
+        "Infarto de miocardio",
+        "Angina",
+        "Ictus",
+        "Enfermedades cardíacas",
+        "Ceguera",
+        "Edema macular diabético",
+        "Retinopatía de fondo",
+        "Retinopatía proliferativa",
+        "Retinopatías",
+        "Neuropatía",
+        "Amputación extremidades inferiores",
+        "Neuropatías",
+        "Nefropatías",
+        "Microalbuminuria",
+        "Macroalbuminuria",
+        "Enfermedad renal terminal",
+        "Comorbilidades"
+      ],
+      "name": "Cormobilidades"
+    }
+  ]
+}

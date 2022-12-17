@@ -22,6 +22,7 @@ import joblib
 
 import settings as st
 from scripts import automl as ml
+from scripts import compare as cp
 
 def main() -> None:
   ''' Función principal.
@@ -33,9 +34,13 @@ def main() -> None:
       Ejemplo:
           python3 main.py -v
   '''
-  # Abrir el archivo de configuración
+  # Abrir el archivo de configuración del modelo
   with open(os.path.join(st.CONFIG_DIR, st.PARAM_MODELS), 'r') as f:
     config_list = json.load(f)
+
+  # Abrir el archivo de configuración de la comparación
+  with open(os.path.join(st.CONFIG_DIR, st.COMPARE_MODELS), 'r') as f:
+    compare_list = json.load(f)
 
   # Leer los datos
   df = pd.read_excel(os.path.join(st.DATA_DIR, st.DATASET_NAME), 'Processed')
@@ -57,9 +62,9 @@ def main() -> None:
     # Graficar los resultados
     automl.plot_results()
 
-    # Graficar las métricas
-    automl.plot_metrics()
-
+  # Comparar los modelos
+  for model in compare_list['compare']:
+    cp.compare(model['model'], model['name'])
 
 if __name__ == '__main__':
   main()
