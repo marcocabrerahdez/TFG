@@ -42,10 +42,6 @@ def main() -> None:
   with open(os.path.join(st.CONFIG_DIR, st.COMPARE_MODELS), 'r') as f:
     compare_list = json.load(f)
 
-  # Comparar los modelos
-  for model in compare_list['compare']:
-    cp.compare(model['model'], model['directory'], model['name'])
-'''
   # Leer los datos
   df = pd.read_excel(os.path.join(st.DATA_DIR, st.DATASET_NAME), 'Processed')
   # Para cada modelo en la lista de modelos
@@ -64,6 +60,10 @@ def main() -> None:
 
     # Graficar los resultados
     automl.plot()
-'''
+
+  # Comparar los modelos
+  for model in compare_list['compare']:
+    cp.compare(model['model'], model['directory'], model['name'])
+
 if __name__ == '__main__':
   main()

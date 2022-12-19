@@ -73,7 +73,7 @@ class AutoML(object):
     pipe = [Pipeline([('model', self._model[i])]) for i in range(len(self._model))]
 
     # Crea un grid search con el pipeline y los parámetros
-    grid_search = [GridSearchCV(pipe[i], param_grid=self._params[i], cv=5, refit=True, scoring='r2') for i in range(len(pipe))]
+    grid_search = [GridSearchCV(pipe[i], param_grid=self._params[i], cv=5, refit=True, scoring='neg_mean_squared_error') for i in range(len(pipe))]
 
     # Entrena el modelo
     for i in range(len(grid_search)):
