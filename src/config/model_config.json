@@ -2,13 +2,36 @@
   "config_list": [
     {
       "name":"Incidencia",
-      "class_name": "sklearn.ensemble",
-      "model":"RandomForestRegressor",
-      "type": "single",
-      "params": {
-        "model__n_estimators": [50, 100, 150],
-        "model__max_depth": [3, 5, 7]
-      },
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
+      "type": "multiple",
       "columns_X": [
         "HbA1c",
         "InitAge",
@@ -29,13 +52,36 @@
     },
     {
       "name":"Fallo Cardiaco",
-      "class_name": "sklearn.ensemble",
-      "model":"RandomForestRegressor",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
       "type": "single",
-      "params": {
-        "model__n_estimators": [50, 100, 150],
-        "model__max_depth": [3, 5, 7]
-      },
       "columns_X": [
         "HbA1c",
         "InitAge",
@@ -48,13 +94,36 @@
     },
     {
       "name":"Infarto de miocardio",
-      "class_name": "sklearn.ensemble",
-      "model":"RandomForestRegressor",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
       "type": "single",
-      "params": {
-        "model__n_estimators": [50, 100, 150],
-        "model__max_depth": [3, 5, 7]
-      },
       "columns_X": [
         "HbA1c",
         "InitAge",
@@ -67,13 +136,36 @@
     },
     {
       "name":"Angina",
-      "class_name": "sklearn.ensemble",
-      "model":"RandomForestRegressor",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
       "type": "single",
-      "params": {
-        "model__n_estimators": [50, 100, 150],
-        "model__max_depth": [3, 5, 7]
-      },
       "columns_X": [
         "HbA1c",
         "InitAge",
@@ -86,13 +178,36 @@
     },
     {
       "name":"Ictus",
-      "class_name": "sklearn.ensemble",
-      "model":"RandomForestRegressor",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
       "type": "single",
-      "params": {
-        "model__n_estimators": [50, 100, 150],
-        "model__max_depth": [3, 5, 7]
-      },
       "columns_X": [
         "HbA1c",
         "InitAge",
@@ -105,97 +220,204 @@
     },
     {
       "name":"Ceguera",
-      "class_name": "sklearn.ensemble",
-      "model":"RandomForestRegressor",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
       "type": "single",
-      "params": {
-        "model__n_estimators": [50, 100, 150],
-        "model__max_depth": [3, 5, 7]
-      },
       "columns_X": [
         "HbA1c",
         "InitAge",
         "Duration"
       ],
       "columns_Y": [
-        "AVG_TIME_TO_BLI",
-        "L95CI_TIME_TO_BLI",
-        "U95CI_TIME_TO_BLI"
+        "AVG_TIME_TO_BLI"
       ],
       "scoring": "r2"
     },
     {
       "name":"Edema macular diabético",
-      "class_name": "sklearn.ensemble",
-      "model":"RandomForestRegressor",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
       "type": "single",
-      "params": {
-        "model__n_estimators": [50, 100, 150],
-        "model__max_depth": [3, 5, 7]
-      },
       "columns_X": [
         "HbA1c",
         "InitAge",
         "Duration"
       ],
       "columns_Y": [
-        "AVG_TIME_TO_ME",
-        "L95CI_TIME_TO_ME",
-        "U95CI_TIME_TO_ME"
+        "AVG_TIME_TO_ME"
       ],
       "scoring": "r2"
     },
     {
       "name":"Retinopatía de fondo",
-      "class_name": "sklearn.ensemble",
-      "model":"RandomForestRegressor",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
       "type": "single",
-      "params": {
-        "model__n_estimators": [50, 100, 150],
-        "model__max_depth": [3, 5, 7]
-      },
       "columns_X": [
         "HbA1c",
         "InitAge",
         "Duration"
       ],
       "columns_Y": [
-        "AVG_TIME_TO_BGRET",
-        "L95CI_TIME_TO_BGRET",
-        "U95CI_TIME_TO_BGRET"
+        "AVG_TIME_TO_BGRET"
       ],
       "scoring": "r2"
     },
     {
       "name":"Retinopatía proliferativa",
-      "class_name": "sklearn.ensemble",
-      "model":"RandomForestRegressor",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
       "type": "single",
-      "params": {
-        "model__n_estimators": [50, 100, 150],
-        "model__max_depth": [3, 5, 7]
-      },
       "columns_X": [
         "HbA1c",
         "InitAge",
         "Duration"
       ],
       "columns_Y": [
-        "AVG_TIME_TO_PRET",
-        "L95CI_TIME_TO_PRET",
-        "U95CI_TIME_TO_PRET"
+        "AVG_TIME_TO_PRET"
       ],
       "scoring": "r2"
     },
     {
       "name":"Neuropatía individual",
-      "class_name": "sklearn.ensemble",
-      "model":"RandomForestRegressor",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
       "type": "single",
-      "params": {
-        "model__n_estimators": [50, 100, 150],
-        "model__max_depth": [3, 5, 7]
-      },
       "columns_X": [
         "HbA1c",
         "InitAge",
@@ -208,13 +430,36 @@
     },
     {
       "name":"Amputación extremidades inferiores",
-      "class_name": "sklearn.ensemble",
-      "model":"RandomForestRegressor",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
       "type": "single",
-      "params": {
-        "model__n_estimators": [50, 100, 150],
-        "model__max_depth": [3, 5, 7]
-      },
       "columns_X": [
         "HbA1c",
         "InitAge",
@@ -227,13 +472,36 @@
     },
     {
       "name":"Microalbuminuria",
-      "class_name": "sklearn.ensemble",
-      "model":"RandomForestRegressor",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
       "type": "single",
-      "params": {
-        "model__n_estimators": [50, 100, 150],
-        "model__max_depth": [3, 5, 7]
-      },
       "columns_X": [
         "HbA1c",
         "InitAge",
@@ -246,13 +514,36 @@
     },
     {
       "name":"Macroalbuminuria",
-      "class_name": "sklearn.ensemble",
-      "model":"RandomForestRegressor",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
       "type": "single",
-      "params": {
-        "model__n_estimators": [50, 100, 150],
-        "model__max_depth": [3, 5, 7]
-      },
       "columns_X": [
         "HbA1c",
         "InitAge",
@@ -265,13 +556,36 @@
     },
     {
       "name":"Enfermedad renal terminal",
-      "class_name": "sklearn.ensemble",
-      "model":"RandomForestRegressor",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
       "type": "single",
-      "params": {
-        "model__n_estimators": [50, 100, 150],
-        "model__max_depth": [3, 5, 7]
-      },
       "columns_X": [
         "HbA1c",
         "InitAge",
@@ -284,13 +598,36 @@
     },
     {
       "name":"Enfermedades cardíacas",
-      "class_name": "sklearn.ensemble",
-      "model":"RandomForestRegressor",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
       "type": "multiple",
-      "params": {
-        "model__n_estimators": [50, 100, 150],
-        "model__max_depth": [3, 5, 7]
-      },
       "columns_X": [
         "HbA1c",
         "InitAge",
@@ -306,13 +643,36 @@
     },
     {
       "name":"Retinopatías",
-      "class_name": "sklearn.ensemble",
-      "model":"RandomForestRegressor",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
       "type": "multiple",
-      "params": {
-        "model__n_estimators": [50, 100, 150],
-        "model__max_depth": [3, 5, 7]
-      },
       "columns_X": [
         "HbA1c",
         "InitAge",
@@ -328,13 +688,36 @@
     },
     {
       "name":"Neuropatías",
-      "class_name": "sklearn.ensemble",
-      "model":"RandomForestRegressor",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
       "type": "multiple",
-      "params": {
-        "model__n_estimators": [50, 100, 150],
-        "model__max_depth": [3, 5, 7]
-      },
       "columns_X": [
         "HbA1c",
         "InitAge",
@@ -348,13 +731,36 @@
     },
     {
       "name":"Nefropatías",
-      "class_name": "sklearn.ensemble",
-      "model":"RandomForestRegressor",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
       "type": "multiple",
-      "params": {
-        "model__n_estimators": [50, 100, 150],
-        "model__max_depth": [3, 5, 7]
-      },
       "columns_X": [
         "HbA1c",
         "InitAge",
@@ -369,13 +775,36 @@
     },
     {
       "name":"Comorbilidades",
-      "class_name": "sklearn.ensemble",
-      "model":"RandomForestRegressor",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
       "type": "global",
-      "params": {
-        "model__n_estimators": [50, 100, 150],
-        "model__max_depth": [3, 5, 7]
-      },
       "columns_X": [
         "HbA1c",
         "InitAge",

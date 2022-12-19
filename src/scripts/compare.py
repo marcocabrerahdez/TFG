@@ -16,7 +16,7 @@ def search_model_file(model_name: str) -> str:
     model_file = glob.glob(os.path.join(root, model_name + "*"))
     # Si encontramos el archivo, lo devolvemos
     if model_file:
-      return model_file[0]
+      return model_file
 
 
 
@@ -57,10 +57,6 @@ def compare(models_list: List[str], plot_name: str) -> None:
   # Seleccionar las filas que coincidan en la columna 'Enfermedad'
   df_results.reset_index(inplace=True)
   df_results.drop('index', axis=1, inplace=True)
-
-  # Quitar las filas que coincidan en la columna 'Enfermedad' que empiecen por L95CI o U95CI
-  df_results = df_results[~df_results['Enfermedad'].str.contains('L95CI')]
-  df_results = df_results[~df_results['Enfermedad'].str.contains('U95CI')]
 
   # Agrupar los resultados por enfermedad
   df_results = df_results.groupby('Enfermedad')

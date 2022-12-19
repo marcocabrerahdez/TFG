@@ -59,12 +59,11 @@ def main() -> None:
     automl.save()
 
     # Graficar los resultados
-    automl.plot_single_results()
-    automl.plot_multiple_results()
-
+    automl.plot()
+'''
   # Comparar los modelos
   for model in compare_list['compare']:
     cp.compare(model['model'], model['name'])
-
+'''
 if __name__ == '__main__':
   main()
