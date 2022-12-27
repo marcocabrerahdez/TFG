@@ -90,5 +90,15 @@
       ],
       "name": "Cormobilidades"
     }
-  ]
+  ],
+  "compare_model": {
+    "list": "Comorbilidades",
+    "directory": [
+      "AdaBoostRegressor",
+      "GradientBoostingRegressor",
+      "LinearRegression",
+      "RandomForestRegressor"
+    ],
+    "name": "Comparación modelo de regresión"
+  }
 }

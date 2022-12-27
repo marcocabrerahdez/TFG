@@ -15,7 +15,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.multioutput import MultiOutputRegressor
-from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 
 class AutoML(object):
   ''' Clase que automatiza el proceso de entrenamiento de modelos de Machine Learning.
@@ -90,7 +90,7 @@ class AutoML(object):
     pipe = [Pipeline([('model', self._model[i])]) for i in range(len(self._model))]
 
     # Crea un grid search con el pipeline y los parámetros
-    grid_search = [GridSearchCV(pipe[i], param_grid=self._params[i], cv=5, refit=True, scoring='neg_mean_absolute_error') for i in range(len(pipe))]
+    grid_search = [GridSearchCV(pipe[i], param_grid=self._params[i], cv=5, refit=True, scoring='neg_mean_squared_error') for i in range(len(pipe))]
 
     # Crea un Multioutput Regressor con el grid search
     self._model = [MultiOutputRegressor(grid_search[i]) for i in range(len(grid_search))]
@@ -105,23 +105,22 @@ class AutoML(object):
     ''' Predice con los modelos. '''
     self._y_pred = [self._model[i].predict(self._X_test) for i in range(len(self._model))]
 
-    # Calcula el error cuadrático medio de cada salida del modelo
-    if self._type == 'single':
-      mse = [mean_squared_error(self._y_test, self._y_pred[i]) for i in range(len(self._model))]
-    elif self._type == 'multiple' or self._type == 'global':
-      mse = [[mean_squared_error(self._y_test.iloc[:, i], self._y_pred[j][:, i]) for i in range(self._y_test.shape[1])] for j in range(len(self._model))]
-
-    # Calcula el coeficiente de determinación de cada salida del modelo
+    # Calcula el R2 y el error cuadrático medio de cada salida del modelo
     if self._type == 'single':
       r2 = [r2_score(self._y_test, self._y_pred[i]) for i in range(len(self._model))]
+      mse = [mean_squared_error(self._y_test, self._y_pred[i]) for i in range(len(self._model))]
+      mae = [mean_absolute_error(self._y_test, self._y_pred[i]) for i in range(len(self._model))]
     elif self._type == 'multiple' or self._type == 'global':
       r2 = [[r2_score(self._y_test.iloc[:, i], self._y_pred[j][:, i]) for i in range(self._y_test.shape[1])] for j in range(len(self._model))]
+      mse = [[mean_squared_error(self._y_test.iloc[:, i], self._y_pred[j][:, i]) for i in range(self._y_test.shape[1])] for j in range(len(self._model))]
+      mae = [[mean_absolute_error(self._y_test.iloc[:, i], self._y_pred[j][:, i]) for i in range(self._y_test.shape[1])] for j in range(len(self._model))]
 
     # Crea un dataframe con los resultados
     df_results = [pd.DataFrame({
       'Enfermedad': self._y_test.columns,
       'MSE': mse[i],
       'R2': r2[i],
+      'MAE': mae[i],
       'Tipo': self._type,
     }) for i in range(len(self._model))]
     for i in range(len(self._model)):

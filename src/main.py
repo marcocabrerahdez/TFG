@@ -65,5 +65,7 @@ def main() -> None:
   for model in compare_list['compare']:
     cp.compare(model['model'], model['directory'], model['name'])
 
+  cp.compare_models(compare_list['compare_model']['list'], compare_list['compare_model']['directory'], compare_list['compare_model']['name'])
+
 if __name__ == '__main__':
   main()

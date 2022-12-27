@@ -74,7 +74,7 @@ def compare(models_list: List[str], directory_name: List[str], plot_name: str) -
 
     # Graficar los resultados en una misma figura
     for i, disease in enumerate(diseases):
-      df_results.get_group(disease).plot.bar(x='Tipo', y=['R2', 'MSE'], rot=0, legend=False, ax=ax[i], colormap='winter', xlabel=disease)
+      df_results.get_group(disease).plot.bar(x='Tipo', y=['R2', 'MSE', 'MAE'], rot=0, legend=False, ax=ax[i], colormap='winter', xlabel=disease)
 
       # Anotar los valores de R2 y MSE en cada barra y escribirlo encima de la barra centrado
       for p in ax[i].patches:
@@ -84,7 +84,7 @@ def compare(models_list: List[str], directory_name: List[str], plot_name: str) -
       ax[i].set_ylabel('Valor')
 
     # Añadir leyenda en un lateral
-    fig.legend(labels=['R2', 'MSE'], ncol=2, fontsize=20)
+    fig.legend(labels=['R2', 'MSE', 'MAE'], ncol=2, fontsize=20)
 
     # Añadir título
     fig.suptitle(plot_name, fontsize=30)
@@ -105,3 +105,53 @@ def compare(models_list: List[str], directory_name: List[str], plot_name: str) -
 
     # Limpiar el dataframe
     df_results = pd.DataFrame()
+
+
+
+def compare_models(model: str, directory_name: List[str], plot_name: str) -> None:
+  "Compara los resultados de los modelos según el modelo usado para entrenarlos."
+
+  # Creamos un diccionario para guardar cada dataframe
+  df_results = pd.DataFrame()
+
+  # Recorremos la lista de modelos
+  for directory in directory_name:
+    df_model_results = get_model_results(model, directory)
+
+    # Calcular la media de los resultados de cada modelo
+    df_mean_r2_results = df_model_results['R2'].mean()
+    df_mean_mse_results = df_model_results['MSE'].mean()
+    df_mean_mae_results = df_model_results['MAE'].mean()
+
+    # Añadir los resultados a un dataframe
+    df_results = pd.concat([df_results, pd.DataFrame({'Modelo': directory, 'R2': [df_mean_r2_results], 'MSE': [df_mean_mse_results], 'MAE': [df_mean_mae_results]})], axis=0)
+
+  # Graficar los resultados
+  fig, ax = plt.subplots(figsize=(10, 10))
+
+  # Graficar los resultados en una misma figura
+  df_results.plot.bar(x='Modelo', y=['R2', 'MSE', 'MAE'], rot=0, legend=False, ax=ax, colormap='winter', xlabel=model)
+
+  # Anotar los valores de R2 y MSE en cada barra y escribirlo encima de la barra centrado
+  for p in ax.patches:
+    ax.annotate(str(round(p.get_height(), 6)), (p.get_x() + p.get_width() / 2., p.get_height()), ha='center', va='center', xytext=(0, 10), textcoords='offset points')
+
+  # Añadir leyenda en un lateral
+  ax.set_ylabel('Valor')
+
+  # Añadir leyenda en un lateral
+  fig.legend(labels=['R2', 'MSE', 'MAE'], ncol=2, fontsize=10)
+
+  # Añadir título
+  fig.suptitle(plot_name, fontsize=20)
+
+  # Ajustar el espacio entre subgráficas
+  fig.tight_layout()
+
+  # Ajustar el espacio entre subgráficas y el título
+  fig.subplots_adjust(top=0.95)
+
+  # Guardar la gráfica en el directorio de comparaciones
+  if not os.path.exists(st.COMPARISION_DIR):
+    os.makedirs(st.COMPARISION_DIR)
+  plt.savefig(os.path.join(st.COMPARISION_DIR, plot_name + '.png'))
