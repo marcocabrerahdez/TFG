@@ -122,6 +122,7 @@ class AutoML(object):
       'R2': r2[i],
       'MAE': mae[i],
       'Tipo': self._type,
+      'Modelo': self._model[i]
     }) for i in range(len(self._model))]
     for i in range(len(self._model)):
       if self._type == 'single':
