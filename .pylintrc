@@ -1,0 +1,15 @@
+[MESSAGES CONTROL]
+disable=C0103,C0111,R0903,R0913,R0902,W0511,C0200
+
+[FORMAT]
+indent-string='  '
+max-line-length=80
+
+[SIMILARITIES]
+min-similarity-lines=2
+ignore-comments=yes
+ignore-docstrings=yes
+ignore-imports=yes
+
+[MISCELLANEOUS]
+notes=FIXME,XXX

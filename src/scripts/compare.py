@@ -1,18 +1,17 @@
 import os
 import glob
-import numpy as np
+from typing import List
 import pandas as pd
 import matplotlib.pyplot as plt
 import settings as st
-
-from typing import List
 
 def search_model_file(model_name: str, directory_name: str) -> str:
   ''' Busca el archivo de un modelo.
   '''
   # directory_name es el directori padre de model_name
   # Buscamos el archivo del modelo
-  model_file = glob.glob(os.path.join(st.PREDICTIONS_DIR, '**', directory_name, model_name + '*.xlsx'))
+  model_file = glob.glob(os.path.join(st.PREDICTIONS_DIR, '**',
+                          directory_name, model_name + '*.xlsx'))
 
   # Si no encontramos el archivo, devolvemos error
   if not model_file:
@@ -30,15 +29,18 @@ def get_model_results(model_name: str, directory_name: str) -> pd.DataFrame:
   model_file = search_model_file(model_name, directory_name)
   # Si no encontramos el archivo, devolvemos error
   if not model_file or not directory_name:
-    return print('No se encontró el archivo del modelo o directorio.', model_name, directory_name)
+    return print('No se encontró el archivo del modelo o directorio.',
+                  model_name, directory_name)
 
   # Leemos el archivo y lo devolvemos
   return pd.read_excel(model_file)
 
 
 
-def compare(models_list: List[str], directory_name: List[str], plot_name: str) -> None:
+def compare(models_list: List[str], directory_name: List[str],
+            plot_name: str) -> None:
   ''' Muestra una gráfica de comparación de modelos.
+
       Compara los resultados de los modelos entrenados individualmente
       con los resultados de un modelo entrenado con el conjunto.
   '''
@@ -50,10 +52,6 @@ def compare(models_list: List[str], directory_name: List[str], plot_name: str) -
     for model in models_list:
       # Obtenemos los resultados del modelo
       df_model_results = get_model_results(model, directory)
-
-      # Si no encontramos el archivo, devolvemos error
-      if type(df_model_results) == str:
-        return df_model_results
 
       # Concatenamos los resultados de cada dataframe
       df_results = pd.concat([df_results, df_model_results], axis=0)
@@ -74,17 +72,37 @@ def compare(models_list: List[str], directory_name: List[str], plot_name: str) -
 
     # Graficar los resultados en una misma figura
     for i, disease in enumerate(diseases):
-      df_results.get_group(disease).plot.bar(x='Tipo', y=['R2', 'MSE', 'MAE', 'Elapsed Time', 'CPU'], rot=0, legend=False, ax=ax[i], colormap='winter', xlabel=disease)
+      df_results.get_group(disease).plot.bar(
+        x='Tipo',
+        y=['R2', 'MSE', 'MAE', 'Elapsed Time', 'CPU'],
+        rot=0,
+        legend=False,
+        ax=ax[i],
+        colormap='winter',
+        xlabel=disease
+      )
 
-      # Anotar los valores de R2 y MSE en cada barra y escribirlo encima de la barra centrado
+      # Anotar los valores de R2 y MSE en cada barra
+      # y escribirlo encima de la barra centrado
       for p in ax[i].patches:
-        ax[i].annotate(str(round(p.get_height(), 6)), (p.get_x() + p.get_width() / 2., p.get_height()), ha='center', va='center', xytext=(0, 10), textcoords='offset points')
+        ax[i].annotate(
+          str(round(p.get_height(), 6)),
+          (p.get_x() + p.get_width() / 2., p.get_height()),
+          ha='center',
+          va='center',
+          xytext=(0, 10),
+          textcoords='offset points'
+        )
 
       # Añadir leyenda en un lateral
       ax[i].set_ylabel('Valor')
 
     # Añadir leyenda en un lateral
-    fig.legend(labels=['R2', 'MSE', 'MAE', 'Elapsed Time', 'CPU'], ncol=2, fontsize=20)
+    fig.legend(
+      labels=['R2', 'MSE', 'MAE', 'Elapsed Time', 'CPU'],
+      ncol=2,
+      fontsize=20
+    )
 
     # Añadir título
     fig.suptitle(plot_name, fontsize=30)
@@ -95,7 +113,8 @@ def compare(models_list: List[str], directory_name: List[str], plot_name: str) -
     # Ajustar el espacio entre subgráficas y el título
     fig.subplots_adjust(top=0.95)
 
-    # Guardar la gráfica en el directorio de comparaciones y en subdirectorio directorio
+    # Guardar la gráfica en el directorio de comparaciones
+    # y en subdirectorio directorio
     if not os.path.exists(os.path.join(st.COMPARISION_DIR, directory)):
       os.makedirs(os.path.join(st.COMPARISION_DIR, directory))
     plt.savefig(os.path.join(st.COMPARISION_DIR, directory, plot_name + '.png'))
@@ -108,8 +127,9 @@ def compare(models_list: List[str], directory_name: List[str], plot_name: str) -
 
 
 
-def compare_models(model: str, directory_name: List[str], plot_name: str) -> None:
-  "Compara los resultados de los modelos según el modelo usado para entrenarlos."
+def compare_models(model: str, directory_name: List[str],
+                  plot_name: str) -> None:
+  "Compara los resultados según el modelo usado para entrenarlos."
 
   # Creamos un diccionario para guardar cada dataframe
   df_results = pd.DataFrame()
@@ -126,30 +146,43 @@ def compare_models(model: str, directory_name: List[str], plot_name: str) -> Non
     df_mean_cpu_results = df_model_results['CPU'].mean()
 
     # Añadir los resultados a un dataframe
-    df_results = pd.concat([df_results, pd.DataFrame({
-                                          'Modelo': directory,
-                                          'R2': [df_mean_r2_results],
-                                          'MSE': [df_mean_mse_results],
-                                          'MAE': [df_mean_mae_results],
-                                          'Elapsed Time': [df_mean_elapsed_time_results],
-                                          'CPU': [df_mean_cpu_results]
-                                        })], axis=0)
+    df_results = pd.concat([
+      df_results,
+      pd.DataFrame(
+        {
+          'Modelo': directory,
+          'R2': [df_mean_r2_results],
+          'MSE': [df_mean_mse_results],
+          'MAE': [df_mean_mae_results],
+          'Elapsed Time': [df_mean_elapsed_time_results],
+          'CPU': [df_mean_cpu_results]
+        }
+      )
+    ], axis=0)
 
   # Graficar los resultados
   fig, ax = plt.subplots(figsize=(10, 10))
 
   # Graficar los resultados en una misma figura
-  df_results.plot.bar(x='Modelo', y=['R2', 'MSE', 'MAE', 'Elapsed Time', 'CPU'], rot=0, legend=False, ax=ax, colormap='winter', xlabel=model)
+  df_results.plot.bar(x='Modelo', y=['R2', 'MSE', 'MAE', 'Elapsed Time', 'CPU'],
+                      rot=0, legend=False, ax=ax,
+                      colormap='winter', xlabel=model)
 
-  # Anotar los valores de R2 y MSE en cada barra y escribirlo encima de la barra centrado
+  # Anotar los valores de R2 y MSE en cada barra
+  # y escribirlo encima de la barra centrado
   for p in ax.patches:
-    ax.annotate(str(round(p.get_height(), 6)), (p.get_x() + p.get_width() / 2., p.get_height()), ha='center', va='center', xytext=(0, 10), textcoords='offset points')
+    ax.annotate(
+      str(round(p.get_height(), 6)),
+      (p.get_x() + p.get_width() / 2., p.get_height()),
+      ha='center', va='center', xytext=(0, 10), textcoords='offset points'
+    )
 
   # Añadir leyenda en un lateral
   ax.set_ylabel('Valor')
 
   # Añadir leyenda en un lateral
-  fig.legend(labels=['R2', 'MSE', 'MAE', 'Elapsed Time', 'CPU'], ncol=2, fontsize=10)
+  fig.legend(labels=['R2', 'MSE', 'MAE', 'Elapsed Time', 'CPU'],
+              ncol=2, fontsize=10)
 
   # Añadir título
   fig.suptitle(plot_name, fontsize=20)

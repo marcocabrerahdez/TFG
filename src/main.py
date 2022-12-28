@@ -1,14 +1,20 @@
 ''' Programa principal.
-    Este programa es parte de un Trabajo de Fin de Grado de la Universidad de La Laguna.
+    Este programa es parte de un Trabajo de Fin de Grado
+    de la Universidad de La Laguna.
 
-    El objetivo de este programa es generar modelos de predicción para el tiempo de espera
-    de pacientes con diabetes tipo 1 en Canarias. Y comparar los resultados de los modelos
+    El objetivo de este programa es generar
+    modelos de predicción para el tiempo de espera
+    de pacientes con diabetes tipo 1 en Canarias.
+    Y comparar los resultados de los modelos
     de simulación con los resultados de los modelos de predicción.
 
-    Los datos han sido previamente procesados y se encuentran en el directorio data.
-    Se han generado gráficas con los resultados y se encuentran en el directorio figures. Además,
-    se han generado los modelos y se encuentran en el directorio model. Y por último, se han generado
-    los resultados de las predicciones y se encuentran en el directorio predictions.
+    Los datos han sido previamente procesados
+    y se encuentran en el directorio data.
+    Se han generado gráficas con los resultados
+    y se encuentran en el directorio figures.
+    Además, se han generado los modelos y se encuentran en el directorio model.
+    Y por último, se han generadolos resultados de las predicciones
+    y se encuentran en el directorio predictions.
 
     Autor:
         Marco Antonio Cabrera Hernández
@@ -17,12 +23,11 @@
 import os
 import json
 import pandas as pd
-import argparse
-import joblib
 
 import settings as st
 from scripts import automl as ml
 from scripts import compare as cp
+
 
 def main() -> None:
   ''' Función principal.
@@ -35,19 +40,25 @@ def main() -> None:
           python3 main.py -v
   '''
   # Abrir el archivo de configuración del modelo
-  with open(os.path.join(st.CONFIG_DIR, st.PARAM_MODELS), 'r') as f:
-    config_list = json.load(f)
+  with open(os.path.join(st.CONFIG_DIR, st.PARAM_MODELS), 'r',
+            encoding='utf8') as file_name:
+    config_list = json.load(file_name)
 
   # Abrir el archivo de configuración de la comparación
-  with open(os.path.join(st.CONFIG_DIR, st.COMPARE_MODELS), 'r') as f:
-    compare_list = json.load(f)
+  with open(os.path.join(st.CONFIG_DIR, st.COMPARE_MODELS), 'r',
+            encoding='utf8') as file_name:
+    compare_list = json.load(file_name)
 
   # Leer los datos
-  df = pd.read_excel(os.path.join(st.DATA_DIR, st.DATASET_NAME), 'Processed')
+  data_frame = pd.read_excel(os.path.join(st.DATA_DIR, st.DATASET_NAME),
+                              'Processed')
   # Para cada modelo en la lista de modelos
   for config in config_list['config_list']:
     # Crear el objeto AutoML
-    automl = ml.AutoML(config['name'], config['class_name'], config['model'], config['type'], config['params'], df[config['columns_X']], df[config['columns_Y']])
+    automl = ml.AutoML(config['name'], config['class_name'],
+                        config['model'], config['type'],
+                        config['params'], data_frame[config['columns_X']],
+                        data_frame[config['columns_Y']])
 
     # Entrenar el modelo
     automl.train()
@@ -65,7 +76,10 @@ def main() -> None:
   for model in compare_list['compare']:
     cp.compare(model['model'], model['directory'], model['name'])
 
-  cp.compare_models(compare_list['compare_model']['list'], compare_list['compare_model']['directory'], compare_list['compare_model']['name'])
+  cp.compare_models(compare_list['compare_model']['list'],
+                    compare_list['compare_model']['directory'],
+                    compare_list['compare_model']['name'])
+
 
 if __name__ == '__main__':
   main()
