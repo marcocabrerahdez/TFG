@@ -74,7 +74,7 @@ def compare(models_list: List[str], directory_name: List[str], plot_name: str) -
 
     # Graficar los resultados en una misma figura
     for i, disease in enumerate(diseases):
-      df_results.get_group(disease).plot.bar(x='Tipo', y=['R2', 'MSE', 'MAE'], rot=0, legend=False, ax=ax[i], colormap='winter', xlabel=disease)
+      df_results.get_group(disease).plot.bar(x='Tipo', y=['R2', 'MSE', 'MAE', 'Elapsed Time', 'CPU'], rot=0, legend=False, ax=ax[i], colormap='winter', xlabel=disease)
 
       # Anotar los valores de R2 y MSE en cada barra y escribirlo encima de la barra centrado
       for p in ax[i].patches:
@@ -84,7 +84,7 @@ def compare(models_list: List[str], directory_name: List[str], plot_name: str) -
       ax[i].set_ylabel('Valor')
 
     # Añadir leyenda en un lateral
-    fig.legend(labels=['R2', 'MSE', 'MAE'], ncol=2, fontsize=20)
+    fig.legend(labels=['R2', 'MSE', 'MAE', 'Elapsed Time', 'CPU'], ncol=2, fontsize=20)
 
     # Añadir título
     fig.suptitle(plot_name, fontsize=30)
@@ -122,15 +122,24 @@ def compare_models(model: str, directory_name: List[str], plot_name: str) -> Non
     df_mean_r2_results = df_model_results['R2'].mean()
     df_mean_mse_results = df_model_results['MSE'].mean()
     df_mean_mae_results = df_model_results['MAE'].mean()
+    df_mean_elapsed_time_results = df_model_results['Elapsed Time'].mean()
+    df_mean_cpu_results = df_model_results['CPU'].mean()
 
     # Añadir los resultados a un dataframe
-    df_results = pd.concat([df_results, pd.DataFrame({'Modelo': directory, 'R2': [df_mean_r2_results], 'MSE': [df_mean_mse_results], 'MAE': [df_mean_mae_results]})], axis=0)
+    df_results = pd.concat([df_results, pd.DataFrame({
+                                          'Modelo': directory,
+                                          'R2': [df_mean_r2_results],
+                                          'MSE': [df_mean_mse_results],
+                                          'MAE': [df_mean_mae_results],
+                                          'Elapsed Time': [df_mean_elapsed_time_results],
+                                          'CPU': [df_mean_cpu_results]
+                                        })], axis=0)
 
   # Graficar los resultados
   fig, ax = plt.subplots(figsize=(10, 10))
 
   # Graficar los resultados en una misma figura
-  df_results.plot.bar(x='Modelo', y=['R2', 'MSE', 'MAE'], rot=0, legend=False, ax=ax, colormap='winter', xlabel=model)
+  df_results.plot.bar(x='Modelo', y=['R2', 'MSE', 'MAE', 'Elapsed Time', 'CPU'], rot=0, legend=False, ax=ax, colormap='winter', xlabel=model)
 
   # Anotar los valores de R2 y MSE en cada barra y escribirlo encima de la barra centrado
   for p in ax.patches:
@@ -140,7 +149,7 @@ def compare_models(model: str, directory_name: List[str], plot_name: str) -> Non
   ax.set_ylabel('Valor')
 
   # Añadir leyenda en un lateral
-  fig.legend(labels=['R2', 'MSE', 'MAE'], ncol=2, fontsize=10)
+  fig.legend(labels=['R2', 'MSE', 'MAE', 'Elapsed Time', 'CPU'], ncol=2, fontsize=10)
 
   # Añadir título
   fig.suptitle(plot_name, fontsize=20)

@@ -4,6 +4,8 @@
 import os
 import joblib
 import importlib
+import time
+import psutil
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -34,9 +36,13 @@ class AutoML(object):
         y_pred (pd.DataFrame): Datos de salida predichos.
         model_list_names (List[str]): Lista de nombres de modelos.
   '''
-  __slots__ = ['_name', '_class_name', '_model', '_type', '_params', '_columns_X', '_columns_Y', '_X_train', '_X_test', '_y_train', '_y_test', '_y_pred', '_model_list_names']
+  __slots__ = ['_name','_class_name', '_model', '_type', '_params', '_columns_X',
+                '_columns_Y', '_X_train', '_X_test', '_y_train', '_y_test', '_y_pred',
+                '_model_list_names', 'time', 'cpu'
+              ]
 
-  def __init__(self, name: str, class_name, model, type: str, params, columns_X: pd.DataFrame, _columns_Y: pd.DataFrame) -> None:
+  def __init__(self, name: str, class_name, model, type: str, params,
+                columns_X: pd.DataFrame, _columns_Y: pd.DataFrame) -> None:
     ''' Constructor de la clase.
       Parámetros:
         name (str): Nombre del modelo.
@@ -56,14 +62,30 @@ class AutoML(object):
     self._columns_Y = _columns_Y
     self._X_train, self._X_test, self._y_train, self._y_test = train_test_split(self._columns_X, self._columns_Y, test_size=st.TEST_SIZE, random_state=st.RANDOM_STATE)
     self._y_pred = None
+    self.time = None
+    self.cpu = None
 
 
 
   def train(self) -> None:
+    # Medir el tiempo de ejecución y el uso de recursos antes de entrenar el modelo
+    start_time = time.perf_counter()
+    process = psutil.Process()
+    cpu_before = process.cpu_percent()
+
+    # Entrenar el modelo
     if self._type == 'single':
       self.train_single()
     elif self._type == 'multiple' or self._type == 'global':
       self.train_multioutput()
+
+    # Medir el tiempo de ejecución y el uso de recursos después de entrenar el modelo
+    elapsed_time = time.perf_counter() - start_time
+    cpu_after = process.cpu_percent()
+
+    # Calcular el tiempo de ejecución y el uso de recursos
+    self.time = elapsed_time / 60
+    self.cpu = (cpu_after - cpu_before) / 100
 
 
 
@@ -122,7 +144,9 @@ class AutoML(object):
       'R2': r2[i],
       'MAE': mae[i],
       'Tipo': self._type,
-      'Modelo': self._model[i]
+      'Modelo': self._model[i],
+      'Elapsed Time': self.time,
+      'CPU': self.cpu
     }) for i in range(len(self._model))]
     for i in range(len(self._model)):
       if self._type == 'single':
