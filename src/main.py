@@ -55,11 +55,16 @@ def main() -> None:
   # Para cada modelo en la lista de modelos
   for config in config_list['config_list']:
     # Crear el objeto AutoML
-    automl = ml.AutoML(config['name'], config['class_name'],
-                        config['model'], config['type'],
-                        config['params'], data_frame[config['columns_X']],
-                        data_frame[config['columns_Y']])
-
+    if config['type'] == 'single':
+      automl = ml.AutoML(config['name'], config['class_name'],
+                          config['model'], config['type'],
+                          config['params'],
+                          columns_X=data_frame[config['columns_X']],
+                          columns_Y=data_frame[config['columns_Y']])
+    else:
+      automl = ml.AutoML(config['name'], config['class_name'],
+                          config['model'], config['type'],
+                          config['params'], config['trained_data_names'])
     # Entrenar el modelo
     automl.train()
 
@@ -71,7 +76,7 @@ def main() -> None:
 
     # Graficar los resultados
     automl.plot()
-
+"""
   # Comparar los modelos
   for model in compare_list['compare']:
     cp.compare(model['model'], model['directory'], model['name'])
@@ -79,7 +84,6 @@ def main() -> None:
   cp.compare_models(compare_list['compare_model']['list'],
                     compare_list['compare_model']['directory'],
                     compare_list['compare_model']['name'])
-
-
+"""
 if __name__ == '__main__':
   main()

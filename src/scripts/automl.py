@@ -50,11 +50,12 @@ class AutoML:
     '_y_pred',
     '_model_list_names',
     'time',
-    'cpu'
+    'cpu',
+    '_trained_data_names'
   ]
 
   def __init__(self, name: str, class_name, model, type_model: str, params,
-                columns_X: pd.DataFrame, _columns_Y: pd.DataFrame) -> None:
+              trained_data_names = [], columns_X: pd.DataFrame = pd.DataFrame(), columns_Y: pd.DataFrame = pd.DataFrame()) -> None:
     ''' Constructor de la clase.
       Parámetros:
         name (str): Nombre del modelo.
@@ -72,62 +73,79 @@ class AutoML:
                     for i in range(len(model))]
     self._type = type_model
     self._params = params
-    self._columns_X = columns_X
-    self._columns_Y = _columns_Y
-    # pylint: disable=line-too-long
-    self._X_train, self._X_test, self._y_train, self._y_test = train_test_split(self._columns_X, self._columns_Y, test_size=st.TEST_SIZE, random_state=st.RANDOM_STATE)
+    if self._type == 'single':
+      self._columns_X = columns_X
+      self._columns_Y = columns_Y
+      # pylint: disable=line-too-long
+      self._X_train, self._X_test, self._y_train, self._y_test = train_test_split(self._columns_X, self._columns_Y, test_size=st.TEST_SIZE, random_state=st.RANDOM_STATE)
+    else:
+      self._columns_X = pd.DataFrame()
+      self._columns_Y = pd.DataFrame()
+      self._X_train = pd.DataFrame()
+      self._X_test = pd.DataFrame()
+      self._y_train = pd.DataFrame()
+      self._y_test = pd.DataFrame()
+      self._trained_data_names = trained_data_names
     self._y_pred = None
     self.time = None
     self.cpu = None
 
 
 
+  def save_trained_data(self) -> None:
+    # Concatenenar dataframes
+    df_X_train = pd.DataFrame(self._X_train, columns=self._columns_X.columns)
+    df_X_test = pd.DataFrame(self._X_test, columns=self._columns_X.columns)
+    df_y_train = pd.DataFrame(self._y_train, columns=self._columns_Y.columns)
+    df_y_test = pd.DataFrame(self._y_test, columns=self._columns_Y.columns)
+
+    if not os.path.exists(os.path.join(st.TRAINED_PREDICTED, self._name)):
+      os.mkdir(os.path.join(st.TRAINED_PREDICTED, self._name))
+    df_X_train.to_excel(os.path.join(st.TRAINED_PREDICTED, self._name, 'X_train.xlsx'), index=False)
+    df_X_test.to_excel(os.path.join(st.TRAINED_PREDICTED, self._name, 'X_test.xlsx'), index=False)
+    df_y_train.to_excel(os.path.join(st.TRAINED_PREDICTED, self._name, 'y_train.xlsx'), index=False)
+    df_y_test.to_excel(os.path.join(st.TRAINED_PREDICTED, self._name, 'y_test.xlsx'), index=False)
+
+
+
+  def get_trained_data(self) -> None:
+    for name in self._trained_data_names:
+      # Concatenar
+      self._X_train = pd.concat([self._X_train, pd.read_excel(os.path.join(st.TRAINED_PREDICTED, name, 'X_train.xlsx'))], axis=0)
+      self._X_test = pd.concat([self._X_test, pd.read_excel(os.path.join(st.TRAINED_PREDICTED, name, 'X_test.xlsx'))], axis=0)
+      self._y_train = pd.concat([self._y_train, pd.read_excel(os.path.join(st.TRAINED_PREDICTED, name, 'y_train.xlsx'))], axis=1)
+      self._y_test = pd.concat([self._y_test, pd.read_excel(os.path.join(st.TRAINED_PREDICTED, name, 'y_test.xlsx'))], axis=1)
+
+      # Eliminar duplicados
+      self._X_train.drop_duplicates(inplace=True)
+      self._X_test.drop_duplicates(inplace=True)
+      self._y_train.drop_duplicates(inplace=True)
+      self._y_test.drop_duplicates(inplace=True)
+
+      # Reiniciar los índices
+      self._X_train.reset_index(drop=True, inplace=True)
+      self._X_test.reset_index(drop=True, inplace=True)
+      self._y_train.reset_index(drop=True, inplace=True)
+      self._y_test.reset_index(drop=True, inplace=True)
+
+      self._columns_X = self._X_train.columns
+      self._columns_Y = self._y_train.columns
+
+
+
   def train(self) -> None:
+    ''' Entrena un conjunto de modelos '''
+    if self._type == 'single':
+      self.save_trained_data()
+    else:
+      self.get_trained_data()
+      print(self._X_train, self._y_train)
     # Medir el tiempo de ejecución
     # y el uso de recursos antes de entrenar el modelo
     start_time = time.perf_counter()
     process = psutil.Process()
     cpu_before = process.cpu_percent()
 
-    # Entrenar el modelo
-    if self._type == 'single':
-      self.train_single()
-    elif self._type in ('multiple', 'global'):
-      self.train_multioutput()
-
-    # Medir el tiempo de ejecución
-    # y el uso de recursos después de entrenar el modelo
-    elapsed_time = time.perf_counter() - start_time
-    cpu_after = process.cpu_percent()
-
-    # Calcular el tiempo de ejecución y el uso de recursos
-    self.time = elapsed_time / 60
-    self.cpu = (cpu_after - cpu_before) / 100
-
-
-
-  def train_single(self) -> None:
-    ''' Entrena un conjunto de modelos '''
-    # Crea un pipeline con el modelo y los parámetros del parametro grid
-    pipe = [Pipeline([('model', self._model[i])])
-            for i in range(len(self._model))]
-
-    # Crea un grid search con el pipeline y los parámetros
-    grid_search = [GridSearchCV(pipe[i],
-                    param_grid=self._params[i], cv=5,
-                    refit=True, scoring='r2') for i in range(len(pipe))]
-
-    # Entrena el modelo
-    for i in range(len(grid_search)):
-      grid_search[i].fit(self._X_train, self._y_train.values.ravel())
-
-    # Asigna el mejor modelo a la variable _model
-    self._model = [grid_search[i].best_estimator_
-                    for i in range(len(grid_search))]
-
-
-
-  def train_multioutput(self) -> None:
     ''' Entrena un conjunto de modelos '''
     # Crea un pipeline con el modelo y los parámetros del parametro grid
     pipe = [Pipeline([('model', self._model[i])])
@@ -144,6 +162,14 @@ class AutoML:
     # Entrena el modelo
     for i in range(len(self._model)):
       self._model[i].fit(self._X_train, self._y_train)
+    # Medir el tiempo de ejecución
+    # y el uso de recursos después de entrenar el modelo
+    elapsed_time = time.perf_counter() - start_time
+    cpu_after = process.cpu_percent()
+
+    # Calcular el tiempo de ejecución y el uso de recursos
+    self.time = elapsed_time / 60
+    self.cpu = (cpu_after - cpu_before) / 100
 
 
 
@@ -153,23 +179,15 @@ class AutoML:
                     for i in range(len(self._model))]
 
     # Calcula el R2 y el error cuadrático medio de cada salida del modelo
-    if self._type == 'single':
-      r2 = [r2_score(self._y_test, self._y_pred[i])
-            for i in range(len(self._model))]
-      mse = [mean_squared_error(self._y_test, self._y_pred[i])
-              for i in range(len(self._model))]
-      mae = [mean_absolute_error(self._y_test, self._y_pred[i])
-              for i in range(len(self._model))]
-    elif self._type in ('multiple', 'global'):
-      r2 = [[r2_score(self._y_test.iloc[:, i], self._y_pred[j][:, i])
-              for i in range(self._y_test.shape[1])]
-                for j in range(len(self._model))]
-      mse = [[mean_squared_error(self._y_test.iloc[:, i], self._y_pred[j][:, i])
-              for i in range(self._y_test.shape[1])]
-                for j in range(len(self._model))]
-      mae = [[mean_absolute_error(self._y_test.iloc[:, i],self._y_pred[j][:, i])
-              for i in range(self._y_test.shape[1])]
-                for j in range(len(self._model))]
+    r2 = [[r2_score(self._y_test.iloc[:, i], self._y_pred[j][:, i])
+            for i in range(self._y_test.shape[1])]
+              for j in range(len(self._model))]
+    mse = [[mean_squared_error(self._y_test.iloc[:, i], self._y_pred[j][:, i])
+            for i in range(self._y_test.shape[1])]
+              for j in range(len(self._model))]
+    mae = [[mean_absolute_error(self._y_test.iloc[:, i],self._y_pred[j][:, i])
+            for i in range(self._y_test.shape[1])]
+              for j in range(len(self._model))]
 
     # Crea un dataframe con los resultados
     df_results = [pd.DataFrame({
@@ -242,45 +260,6 @@ class AutoML:
 
   def plot(self) -> None:
     ''' Grafica los modelos.
-    '''
-    if self._type == 'single':
-      self.plot_single_results()
-    elif self._type in ('multiple', 'global'):
-      self.plot_multiple_results()
-
-
-
-  def plot_single_results(self) -> None:
-    ''' Grafica los modelos.
-      La gráfica representa los valores reales contra los valores predichos.
-    '''
-    for j in range(len(self._model_list_names)):
-      # Grafica los resultados
-      plt.figure(figsize=(10, 10))
-
-      # Valores reales en color azul y valores predichos en color rojo
-      plt.plot(self._y_test, self._y_test, 'b-')
-      plt.plot(self._y_test, self._y_pred[j], 'ro')
-
-      # Título y etiquetas
-      plt.title(f'{self._name} - {self._model_list_names[j]}')
-      plt.xlabel('Real')
-      plt.ylabel('Predicho')
-      if self._type == 'single':
-        if not os.path.exists(os.path.join(st.SINGLE_PLOTS_DIR,
-                              self._model_list_names[j])):
-          os.makedirs(os.path.join(st.SINGLE_PLOTS_DIR,
-                      self._model_list_names[j]))
-        plt.savefig(os.path.join(st.SINGLE_PLOTS_DIR,
-                    self._model_list_names[j], f'{self._name}.png'))
-
-      # Cierra la gráfica
-      plt.close()
-
-
-
-  def plot_multiple_results(self) -> None:
-    ''' Grafica los modelos.
       La gráfica representa los valores reales contra los valores predichos.
     '''
     for j in range(len(self._model_list_names)):
@@ -288,23 +267,22 @@ class AutoML:
       fig, ax = plt.subplots(figsize=(30, 30),
                               nrows=self._y_test.shape[1], ncols=1)
 
-      # Crear una gráfico de barras para cada salida
-      if self._type in ('multiple', 'global'):
-        for i in range(self._y_test.shape[1]):
-          # Crear una gráfico de scatter
-          # para cada salida del modelo con colores azul y rojo
-          ax[i].plot(self._y_test.iloc[:, i], self._y_test.iloc[:, i], 'b-')
-          ax[i].plot(self._y_test.iloc[:, i], self._y_pred[j][:, i], 'ro')
+      # Crear una gráfico para cada salida
+      for i in range(self._y_test.shape[1]):
+        # Crear una gráfico de scatter
+        # para cada salida del modelo con colores azul y rojo
+        ax[i].plot(self._y_test.iloc[:, i], self._y_test.iloc[:, i], 'b-')
+        ax[i].plot(self._y_test.iloc[:, i], self._y_pred[j][:, i], 'ro')
 
-          # Agrega los títulos
-          ax[i].set_title(self._y_test.columns[i])
+        # Agrega los títulos
+        ax[i].set_title(self._y_test.columns[i])
 
-          # Agrega las etiquetas
-          ax[i].set_xlabel('Real')
-          ax[i].set_ylabel('Predicho')
+        # Agrega las etiquetas
+        ax[i].set_xlabel('Real')
+        ax[i].set_ylabel('Predicho')
 
-          # Agrega la leyenda
-          ax[i].legend(['Real', 'Predicho'])
+        # Agrega la leyenda
+        ax[i].legend(['Real', 'Predicho'])
 
       # Agrega los títulos a la gráfica
       fig.suptitle(self._name + ' - ' + self._model_list_names[j])
@@ -316,7 +294,14 @@ class AutoML:
       fig.subplots_adjust(top=0.95)
 
       # Guarda la gráfica
-      if self._type == 'multiple':
+      if self._type == 'single':
+        if not os.path.exists(os.path.join(st.SINGLE_PLOTS_DIR,
+                              self._model_list_names[j])):
+          os.makedirs(os.path.join(st.SINGLE_PLOTS_DIR,
+                      self._model_list_names[j]))
+        plt.savefig(os.path.join(st.SINGLE_PLOTS_DIR,
+                    self._model_list_names[j], f'{self._name}.png'))
+      elif self._type == 'multiple':
         if not os.path.exists(os.path.join(st.MULTIPLE_PLOTS_DIR,
                               self._model_list_names[j])):
           os.makedirs(os.path.join(st.MULTIPLE_PLOTS_DIR,
