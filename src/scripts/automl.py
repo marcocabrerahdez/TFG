@@ -16,6 +16,7 @@ from sklearn.multioutput import MultiOutputRegressor
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 
 import settings as st
+import utils as ut
 
 class AutoML:
   ''' Clase que automatiza el proceso de entrenamiento
@@ -51,7 +52,8 @@ class AutoML:
     '_model_list_names',
     'time',
     'cpu',
-    '_trained_data_names'
+    '_trained_data_names',
+    '_metrics_results'
   ]
 
   def __init__(self, name: str, class_name, model, type_model: str, params,
@@ -73,73 +75,29 @@ class AutoML:
                     for i in range(len(model))]
     self._type = type_model
     self._params = params
+    self._trained_data_names = trained_data_names
     if self._type == 'single':
       self._columns_X = columns_X
       self._columns_Y = columns_Y
       # pylint: disable=line-too-long
       self._X_train, self._X_test, self._y_train, self._y_test = train_test_split(self._columns_X, self._columns_Y, test_size=st.TEST_SIZE, random_state=st.RANDOM_STATE)
+    elif self._type == 'multiple' or self._type == 'global':
+      self._X_train, self._X_test, self._y_train, self._y_test, self._columns_X, self._columns_Y = ut.get_splited_data(self._trained_data_names, self._type)
     else:
-      self._columns_X = pd.DataFrame()
-      self._columns_Y = pd.DataFrame()
-      self._X_train = pd.DataFrame()
-      self._X_test = pd.DataFrame()
-      self._y_train = pd.DataFrame()
-      self._y_test = pd.DataFrame()
-      self._trained_data_names = trained_data_names
+      raise Exception('El tipo de modelo no es válido.')
+
+    # Guardar los datos de entrenamiento y prueba
+    ut.save_splitted_data(self._X_train, self._X_test, self._y_train, self._y_test, self._columns_X, self._columns_Y, self._name, self._type)
+
     self._y_pred = None
     self.time = None
     self.cpu = None
-
-
-
-  def save_trained_data(self) -> None:
-    # Concatenenar dataframes
-    df_X_train = pd.DataFrame(self._X_train, columns=self._columns_X.columns)
-    df_X_test = pd.DataFrame(self._X_test, columns=self._columns_X.columns)
-    df_y_train = pd.DataFrame(self._y_train, columns=self._columns_Y.columns)
-    df_y_test = pd.DataFrame(self._y_test, columns=self._columns_Y.columns)
-
-    if not os.path.exists(os.path.join(st.TRAINED_PREDICTED, self._name)):
-      os.mkdir(os.path.join(st.TRAINED_PREDICTED, self._name))
-    df_X_train.to_excel(os.path.join(st.TRAINED_PREDICTED, self._name, 'X_train.xlsx'), index=False)
-    df_X_test.to_excel(os.path.join(st.TRAINED_PREDICTED, self._name, 'X_test.xlsx'), index=False)
-    df_y_train.to_excel(os.path.join(st.TRAINED_PREDICTED, self._name, 'y_train.xlsx'), index=False)
-    df_y_test.to_excel(os.path.join(st.TRAINED_PREDICTED, self._name, 'y_test.xlsx'), index=False)
-
-
-
-  def get_trained_data(self) -> None:
-    for name in self._trained_data_names:
-      # Concatenar
-      self._X_train = pd.concat([self._X_train, pd.read_excel(os.path.join(st.TRAINED_PREDICTED, name, 'X_train.xlsx'))], axis=0)
-      self._X_test = pd.concat([self._X_test, pd.read_excel(os.path.join(st.TRAINED_PREDICTED, name, 'X_test.xlsx'))], axis=0)
-      self._y_train = pd.concat([self._y_train, pd.read_excel(os.path.join(st.TRAINED_PREDICTED, name, 'y_train.xlsx'))], axis=1)
-      self._y_test = pd.concat([self._y_test, pd.read_excel(os.path.join(st.TRAINED_PREDICTED, name, 'y_test.xlsx'))], axis=1)
-
-      # Eliminar duplicados
-      self._X_train.drop_duplicates(inplace=True)
-      self._X_test.drop_duplicates(inplace=True)
-      self._y_train.drop_duplicates(inplace=True)
-      self._y_test.drop_duplicates(inplace=True)
-
-      # Reiniciar los índices
-      self._X_train.reset_index(drop=True, inplace=True)
-      self._X_test.reset_index(drop=True, inplace=True)
-      self._y_train.reset_index(drop=True, inplace=True)
-      self._y_test.reset_index(drop=True, inplace=True)
-
-      self._columns_X = self._X_train.columns
-      self._columns_Y = self._y_train.columns
+    self._metrics_results = []
 
 
 
   def train(self) -> None:
     ''' Entrena un conjunto de modelos '''
-    if self._type == 'single':
-      self.save_trained_data()
-    else:
-      self.get_trained_data()
-      print(self._X_train, self._y_train)
     # Medir el tiempo de ejecución
     # y el uso de recursos antes de entrenar el modelo
     start_time = time.perf_counter()
@@ -178,6 +136,9 @@ class AutoML:
     self._y_pred = [self._model[i].predict(self._X_test)
                     for i in range(len(self._model))]
 
+
+
+  def metrics(self) -> None:
     # Calcula el R2 y el error cuadrático medio de cada salida del modelo
     r2 = [[r2_score(self._y_test.iloc[:, i], self._y_pred[j][:, i])
             for i in range(self._y_test.shape[1])]
@@ -189,8 +150,8 @@ class AutoML:
             for i in range(self._y_test.shape[1])]
               for j in range(len(self._model))]
 
-    # Crea un dataframe con los resultados
-    df_results = [pd.DataFrame({
+    # Crea un dataframe con los resultados de cada modelo
+    self._metrics_results = [pd.DataFrame({
       'Enfermedad': self._y_test.columns,
       'MSE': mse[i],
       'R2': r2[i],
@@ -200,61 +161,80 @@ class AutoML:
       'Elapsed Time': self.time,
       'CPU': self.cpu
     }) for i in range(len(self._model))]
+
+
+
+
+  def _save_predictions_results(self) -> None:
+    # Guarda las predicciones en un archivo excel
     for i in range(len(self._model)):
       if self._type == 'single':
-        if not os.path.exists(os.path.join(st.SINGLE_PREDICTIONS_DIR,
-                              self._model_list_names[i])):
-          os.makedirs(os.path.join(st.SINGLE_PREDICTIONS_DIR,
-                      self._model_list_names[i]))
-        df_results[i].to_excel(os.path.join(st.SINGLE_PREDICTIONS_DIR,
-                                self._model_list_names[i],
-                                f'{self._name}.xlsx'), index=False)
+        if not os.path.exists(os.path.join(st.SINGLE_PREDICTIONS_DIR, self._model_list_names[i])):
+          os.makedirs(os.path.join(st.SINGLE_PREDICTIONS_DIR, self._model_list_names[i]))
+        pd.DataFrame(self._y_pred[i]).to_excel(os.path.join(st.SINGLE_PREDICTIONS_DIR, self._model_list_names[i], f'{self._name}.xlsx'), index=False)
+
       elif self._type == 'multiple':
-        if not os.path.exists(os.path.join(st.MULTIPLE_PREDICTIONS_DIR,
-                              self._model_list_names[i])):
-          os.makedirs(os.path.join(st.MULTIPLE_PREDICTIONS_DIR,
-                      self._model_list_names[i]))
-        df_results[i].to_excel(os.path.join(st.MULTIPLE_PREDICTIONS_DIR,
-                              self._model_list_names[i], f'{self._name}.xlsx'),
-                              index=False)
+        if not os.path.exists(os.path.join(st.MULTIPLE_PREDICTIONS_DIR, self._model_list_names[i])):
+          os.makedirs(os.path.join(st.MULTIPLE_PREDICTIONS_DIR, self._model_list_names[i]))
+        pd.DataFrame(self._y_pred[i]).to_excel(os.path.join(st.MULTIPLE_PREDICTIONS_DIR, self._model_list_names[i], f'{self._name}.xlsx'), index=False)
+
       elif self._type == 'global':
-        if not os.path.exists(os.path.join(st.GLOBAL_PREDICTIONS_DIR,
-                              self._model_list_names[i])):
-          os.makedirs(os.path.join(st.GLOBAL_PREDICTIONS_DIR,
-                      self._model_list_names[i]))
-        df_results[i].to_excel(os.path.join(st.GLOBAL_PREDICTIONS_DIR,
-                              self._model_list_names[i], f'{self._name}.xlsx'),
-                              index=False)
+        if not os.path.exists(os.path.join(st.GLOBAL_PREDICTIONS_DIR, self._model_list_names[i])):
+          os.makedirs(os.path.join(st.GLOBAL_PREDICTIONS_DIR, self._model_list_names[i]))
+        pd.DataFrame(self._y_pred[i]).to_excel(os.path.join(st.GLOBAL_PREDICTIONS_DIR, self._model_list_names[i], f'{self._name}.xlsx'), index=False)
+
+      else:
+        raise Exception('El tipo de modelo no es válido.')
 
 
 
-  def save(self) -> None:
+  def _save_metrics_results(self) -> None:
+    print("Length of metrics results: ", len(self._metrics_results))
+    # Guarda los resultados en un archivo excel
+    for i in range(len(self._model)):
+      print(i)
+      if self._type == 'single':
+        if not os.path.exists(os.path.join(st.SINGLE_METRICS_DIR, self._model_list_names[i])):
+          os.makedirs(os.path.join(st.SINGLE_METRICS_DIR, self._model_list_names[i]))
+        self._metrics_results[i].to_excel(os.path.join(st.SINGLE_METRICS_DIR, self._model_list_names[i], f'{self._name}.xlsx'), index=False)
+
+      elif self._type == 'multiple':
+        if not os.path.exists(os.path.join(st.MULTIPLE_METRICS_DIR, self._model_list_names[i])):
+          os.makedirs(os.path.join(st.MULTIPLE_METRICS_DIR, self._model_list_names[i]))
+        self._metrics_results[i].to_excel(os.path.join(st.MULTIPLE_METRICS_DIR, self._model_list_names[i], f'{self._name}.xlsx'), index=False)
+      elif self._type == 'global':
+        if not os.path.exists(os.path.join(st.GLOBAL_METRICS_DIR, self._model_list_names[i])):
+          os.makedirs(os.path.join(st.GLOBAL_METRICS_DIR, self._model_list_names[i]))
+        self._metrics_results[i].to_excel(os.path.join(st.GLOBAL_METRICS_DIR, self._model_list_names[i], f'{self._name}.xlsx'), index=False)
+
+
+
+  def _save_model(self) -> None:
     ''' Guarda los modelos. '''
     model_path = []
     for i in range((len(self._model))):
       if self._type == 'single':
-        if not os.path.exists(os.path.join(st.SINGLE_MODEL_DIR,
-                              self._model_list_names[i])):
-          os.makedirs(os.path.join(st.SINGLE_MODEL_DIR,
-                      self._model_list_names[i]))
-        model_path.append(os.path.join(st.SINGLE_MODEL_DIR,
-                          self._model_list_names[i], f'{self._name}.pkl'))
+        if not os.path.exists(os.path.join(st.SINGLE_MODEL_DIR,  self._model_list_names[i])):
+          os.makedirs(os.path.join(st.SINGLE_MODEL_DIR, self._model_list_names[i]))
+        model_path.append(os.path.join(st.SINGLE_MODEL_DIR, self._model_list_names[i], f'{self._name}.pkl'))
       elif self._type == 'multiple':
-        if not os.path.exists(os.path.join(st.MULTIPLE_MODEL_DIR,
-                              self._model_list_names[i])):
-          os.makedirs(os.path.join(st.MULTIPLE_MODEL_DIR,
-                      self._model_list_names[i]))
-        model_path.append(os.path.join(st.MULTIPLE_MODEL_DIR,
-                          self._model_list_names[i], f'{self._name}.pkl'))
+        if not os.path.exists(os.path.join(st.MULTIPLE_MODEL_DIR, self._model_list_names[i])):
+          os.makedirs(os.path.join(st.MULTIPLE_MODEL_DIR, self._model_list_names[i]))
+        model_path.append(os.path.join(st.MULTIPLE_MODEL_DIR, self._model_list_names[i], f'{self._name}.pkl'))
       elif self._type == 'global':
-        if not os.path.exists(os.path.join(st.GLOBAL_MODEL_DIR,
-                              self._model_list_names[i])):
-          os.makedirs(os.path.join(st.GLOBAL_MODEL_DIR,
-                      self._model_list_names[i]))
-        model_path.append(os.path.join(st.GLOBAL_MODEL_DIR,
-                          self._model_list_names[i], f'{self._name}.pkl'))
+        if not os.path.exists(os.path.join(st.GLOBAL_MODEL_DIR, self._model_list_names[i])):
+          os.makedirs(os.path.join(st.GLOBAL_MODEL_DIR, self._model_list_names[i]))
+        model_path.append(os.path.join(st.GLOBAL_MODEL_DIR, self._model_list_names[i], f'{self._name}.pkl'))
 
       joblib.dump(self._model[i], model_path[i])
+
+
+
+  def save(self) -> None:
+    """ Guarda """
+    self._save_model()
+    self._save_metrics_results()
+    self._save_predictions_results()
 
 
 

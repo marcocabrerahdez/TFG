@@ -57,8 +57,7 @@ def main() -> None:
     # Crear el objeto AutoML
     if config['type'] == 'single':
       automl = ml.AutoML(config['name'], config['class_name'],
-                          config['model'], config['type'],
-                          config['params'],
+                          config['model'], config['type'], config['params'],
                           columns_X=data_frame[config['columns_X']],
                           columns_Y=data_frame[config['columns_Y']])
     else:
@@ -71,19 +70,23 @@ def main() -> None:
     # Predecir con el modelo
     automl.predict()
 
-    # Guardar el modelo
+      # Calcular las métricas
+    automl.metrics()
+
+    # Guardar el modelo, las predicciones y las metricas
     automl.save()
 
     # Graficar los resultados
     automl.plot()
-"""
-  # Comparar los modelos
-  for model in compare_list['compare']:
-    cp.compare(model['model'], model['directory'], model['name'])
 
+  # Comparar las métricas de los resultados de los modelos
+  for model in compare_list['compare']:
+    cp.compare_metrics(model['model'], model['directory'], model['name'])
+
+  # Comparar los modelos
   cp.compare_models(compare_list['compare_model']['list'],
                     compare_list['compare_model']['directory'],
                     compare_list['compare_model']['name'])
-"""
+
 if __name__ == '__main__':
   main()

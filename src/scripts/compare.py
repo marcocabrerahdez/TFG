@@ -3,41 +3,12 @@ import glob
 from typing import List
 import pandas as pd
 import matplotlib.pyplot as plt
+
 import settings as st
-
-def search_model_file(model_name: str, directory_name: str) -> str:
-  ''' Busca el archivo de un modelo.
-  '''
-  # directory_name es el directori padre de model_name
-  # Buscamos el archivo del modelo
-  model_file = glob.glob(os.path.join(st.PREDICTIONS_DIR, '**',
-                          directory_name, model_name + '*.xlsx'))
-
-  # Si no encontramos el archivo, devolvemos error
-  if not model_file:
-    return print('No se encontró el archivo del modelo.', model_name)
-
-  # Devolvemos el archivo
-  return model_file[0]
+import utils as ut
 
 
-
-def get_model_results(model_name: str, directory_name: str) -> pd.DataFrame:
-  ''' Obtiene los resultados de un modelo.
-  '''
-  # Buscamos el archivo del modelo
-  model_file = search_model_file(model_name, directory_name)
-  # Si no encontramos el archivo, devolvemos error
-  if not model_file or not directory_name:
-    return print('No se encontró el archivo del modelo o directorio.',
-                  model_name, directory_name)
-
-  # Leemos el archivo y lo devolvemos
-  return pd.read_excel(model_file)
-
-
-
-def compare(models_list: List[str], directory_name: List[str],
+def compare_metrics(models_list: List[str], directory_name: List[str],
             plot_name: str) -> None:
   ''' Muestra una gráfica de comparación de modelos.
 
@@ -51,7 +22,7 @@ def compare(models_list: List[str], directory_name: List[str],
   for directory in directory_name:
     for model in models_list:
       # Obtenemos los resultados del modelo
-      df_model_results = get_model_results(model, directory)
+      df_model_results = ut.get_model_results(model, directory)
 
       # Concatenamos los resultados de cada dataframe
       df_results = pd.concat([df_results, df_model_results], axis=0)
@@ -136,7 +107,7 @@ def compare_models(model: str, directory_name: List[str],
 
   # Recorremos la lista de modelos
   for directory in directory_name:
-    df_model_results = get_model_results(model, directory)
+    df_model_results = ut.get_model_results(model, directory)
 
     # Calcular la media de los resultados de cada modelo
     df_mean_r2_results = df_model_results['R2'].mean()
