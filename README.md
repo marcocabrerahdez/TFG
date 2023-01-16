@@ -1,4 +1,4 @@
-# TFG
+# Trabajo de Fin de Grado
 
 [![PythonVersion](https://img.shields.io/pypi/pyversions/gino_admin)](https://img.shields.io/pypi/pyversions/gino_admin)
 
@@ -12,7 +12,7 @@ El objetivo principal de este proyecto es adaptar el modelo de simulación exist
 
 Para llevar a cabo esta tarea, se seleccionarán y entrenarán distintos modelos de aprendizaje automático utilizando técnicas y algoritmos adecuados (modelos subrogados) para el problema en cuestión. Una vez entrenados, se compararán los resultados obtenidos por los modelos de aprendizaje automático con los del modelo de simulación en términos de precisión y tiempo de cómputo.
 
-## Resultdos
+## Resultados
 
 `SHORT SUMMARY AND LINK TO REPORT`
 
@@ -36,7 +36,7 @@ Una vez que tenga las bibliotecas necesarias instaladas, puede utilizar los sigu
 
 También puede considerar utilizar sklearn.model_selection.GridSearchCV para automatizar el proceso de entrenamiento y evaluación de cada modelo con diferentes combinaciones de hiperparámetros. Esto puede ayudarle a encontrar el mejor conjunto de hiperparámetros para cada modelo y mejorar su rendimiento.
 
-## Configuration
+## Configuración
 
 > desarrollador principal `Marco Antonio Cabrera Hernández`
 >
