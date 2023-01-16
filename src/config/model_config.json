@@ -1,7 +1,7 @@
 {
   "config_list": [
     {
-      "name":"Ceguera",
+      "name":"Retinopatías",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -31,145 +31,12 @@
           "model__learning_rate": [0.1, 0.5, 1.0]
         }
       ],
-      "type": "single",
-      "columns_X": [
-        "HbA1c",
-        "InitAge",
-        "Duration"
-      ],
-      "columns_Y": [
-        "AVG_TIME_TO_BLI",
-        "L95CI_TIME_TO_BLI",
-        "U95CI_TIME_TO_BLI"
-      ]
-    },
-    {
-      "name":"Edema macular diabético",
-      "class_name": [
-        "sklearn.linear_model",
-        "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
-      ],
-      "model": [
-        "LinearRegression",
-        "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
-      ],
-      "params": [
-        {
-          "model__fit_intercept": [true, false]
-        },
-        {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
-        },
-        {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
-        },
-        {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
-        }
-      ],
-      "type": "single",
-      "columns_X": [
-        "HbA1c",
-        "InitAge",
-        "Duration"
-      ],
-      "columns_Y": [
-        "AVG_TIME_TO_ME",
-        "L95CI_TIME_TO_ME",
-        "U95CI_TIME_TO_ME"
-      ]
-    },
-    {
-      "name":"Retinopatía de fondo",
-      "class_name": [
-        "sklearn.linear_model",
-        "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
-      ],
-      "model": [
-        "LinearRegression",
-        "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
-      ],
-      "params": [
-        {
-          "model__fit_intercept": [true, false]
-        },
-        {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
-        },
-        {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
-        },
-        {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
-        }
-      ],
-      "type": "single",
-      "columns_X": [
-        "HbA1c",
-        "InitAge",
-        "Duration"
-      ],
-      "columns_Y": [
-        "AVG_TIME_TO_BGRET",
-        "L95CI_TIME_TO_BGRET",
-        "U95CI_TIME_TO_BGRET"
-      ]
-    },
-    {
-      "name":"Retinopatía proliferativa",
-      "class_name": [
-        "sklearn.linear_model",
-        "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
-      ],
-      "model": [
-        "LinearRegression",
-        "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
-      ],
-      "params": [
-        {
-          "model__fit_intercept": [true, false]
-        },
-        {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
-        },
-        {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
-        },
-        {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
-        }
-      ],
-      "type": "single",
-      "columns_X": [
-        "HbA1c",
-        "InitAge",
-        "Duration"
-      ],
-      "columns_Y": [
-        "AVG_TIME_TO_PRET",
-        "L95CI_TIME_TO_PRET",
-        "U95CI_TIME_TO_PRET"
+      "type": "multiple",
+      "trained_data_names": [
+        "Ceguera",
+        "Edema macular diabético",
+        "Retinopatía de fondo",
+        "Retinopatía proliferativa"
       ]
     }
   ]
