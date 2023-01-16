@@ -6,7 +6,7 @@
 
 > realizado en `Universidad de la Laguna`
 
-## Objectivo
+## Objetivo
 
 El objetivo principal de este proyecto es adaptar el modelo de simulación existente para la predicción del curso de la diabetes tipo 1 a modelos de aprendizaje automático (Machine Learning). La idea es comparar los resultados obtenidos por el modelo de simulación con los obtenidos por los modelos de aprendizaje automático y evaluar si estos últimos son capaces de realizar predicciones de forma más rápida y precisa.
 
