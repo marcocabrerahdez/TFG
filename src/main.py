@@ -21,6 +21,7 @@
 '''
 
 import os
+import sys
 import json
 import pandas as pd
 
@@ -35,27 +36,51 @@ def main() -> None:
       Parámetros:
           -h, --help: Muestra la ayuda del programa.
           -v, --version: Muestra la versión del programa.
+          -f, --file: Archivo de datos. Debe ser un archivo de Excel.
+            Además, se debe especificar:
+              - La hoja del archivo de datos.
+              - El archivo de configuración de modelos.
+              - El archivo de configuración de comparación de modelos.
 
       Ejemplo:
           python3 main.py -v
   '''
-  # Abrir el archivo de configuración del modelo
-  with open(os.path.join(st.CONFIG_DIR, st.PARAM_MODELS), 'r',
-            encoding='utf8') as file_name:
-    config_list = json.load(file_name)
+  if len(sys.argv) > 1:
+    # Ayuda del programa
+    if sys.argv[1] == '-h' or sys.argv[1] == '--help':
+      print(main.__doc__)
+      sys.exit()
+    # Versión del programa
+    elif sys.argv[1] == '-v' or sys.argv[1] == '--version':
+      print(st.VERSION)
+      sys.exit()
 
-  # Abrir el archivo de configuración de la comparación
-  with open(os.path.join(st.CONFIG_DIR, st.COMPARE_MODELS), 'r',
-            encoding='utf8') as file_name:
-    compare_list = json.load(file_name)
+    # Archivos de datos
+    elif sys.argv[1] == '-f' or sys.argv[1] == '--file':
+      data_file_path = os.path.join(st.ROOT_DIR, sys.argv[2])
+      data_file_sheet = sys.argv[3]
+      if os.path.isfile(data_file_path):
+         data_frame = pd.read_excel(data_file_path, data_file_sheet)
 
-  # Leer los datos
-  data_frame = pd.read_excel(os.path.join(st.DATA_DIR, st.DATASET_NAME), 'Datos')
+      # Abrir el archivo de configuración de datos
+      configuration_model_file_path = os.path.join(st.ROOT_DIR, sys.argv[4])
+      if os.path.isfile(configuration_model_file_path):
+        with open(configuration_model_file_path, 'r', encoding='utf8') as file_name:
+          config_list = json.load(file_name)
+
+      # Abrir el archivo de configuración de la comparación
+      compare_file_path = os.path.join(st.ROOT_DIR, sys.argv[5])
+      if os.path.isfile(compare_file_path):
+        with open(compare_file_path, 'r', encoding='utf8') as file_name:
+          compare_list = json.load(file_name)
+    else:
+      print('Argumento no válido.')
+      sys.exit()
 
   # Preprocesar los datos
   df_cols = data_frame.columns[data_frame.columns.str.contains('UPTO')]
   data_frame[df_cols] = data_frame[df_cols].div(500) * 100
-  """
+
   # Para cada modelo en la lista de modelos
   for config in config_list['config_list']:
     # Crear el objeto AutoML
@@ -82,15 +107,15 @@ def main() -> None:
 
     # Graficar los resultados
     automl.plot()
-  """
+
   # Comparar las métricas de los resultados de los modelos
   for model in compare_list['compare']:
     cp.compare_metrics(model['model'], model['directory'], model['name'])
-  """
+
   # Comparar los modelos
   cp.compare_models(compare_list['compare_model']['list'],
                     compare_list['compare_model']['directory'],
                     compare_list['compare_model']['name'])
-  """
+
 if __name__ == '__main__':
   main()
