@@ -39,7 +39,7 @@ def compare_metrics(models_list: List[str], directory_name: List[str],
     diseases_count = len(diseases)
 
     # Graficar los resultados
-    fig, ax = plt.subplots(figsize=(30, 40), nrows=diseases_count, ncols=1)
+    fig, ax = plt.subplots(figsize=(25, 40), dpi=300, nrows=diseases_count, ncols=1)
 
     # Graficar los resultados en una misma figura
     for i, disease in enumerate(diseases):
@@ -71,18 +71,15 @@ def compare_metrics(models_list: List[str], directory_name: List[str],
     # Añadir leyenda en un lateral
     fig.legend(
       labels=['R2', 'MSE', 'MAE', 'Elapsed Time', 'CPU'],
-      ncol=2,
-      fontsize=20
+      ncol=5,
+      fontsize=15
     )
 
     # Añadir título
-    fig.suptitle(plot_name, fontsize=30)
+    fig.suptitle(plot_name, fontsize=30, fontweight='bold')
 
-    # Ajustar el espacio entre subgráficas
-    fig.tight_layout()
-
-    # Ajustar el espacio entre subgráficas y el título
-    fig.subplots_adjust(top=0.95, hspace=0.5)
+    # Ajustar el espacio entre subgráficas para que ocupen todo el espacio posible de la figura y el titulo no se solape
+    fig.set_layout_engine('compressed')
 
     # Guardar la gráfica en el directorio de comparaciones
     # y en subdirectorio directorio
