@@ -171,17 +171,20 @@ class AutoML:
       if self._type == 'single':
         if not os.path.exists(os.path.join(st.SINGLE_PREDICTIONS_DIR, self._model_list_names[i])):
           os.makedirs(os.path.join(st.SINGLE_PREDICTIONS_DIR, self._model_list_names[i]))
-        pd.DataFrame(self._y_pred[i]).to_excel(os.path.join(st.SINGLE_PREDICTIONS_DIR, self._model_list_names[i], f'{self._name}.xlsx'), index=False)
+        # Guardar las predicciones con sus datos de entrada
+        pd.concat([self._X_test, pd.DataFrame(self._y_pred[i])], axis=1).to_excel(os.path.join(st.SINGLE_PREDICTIONS_DIR, self._model_list_names[i], f'{self._name}.xlsx'), index=False)
 
       elif self._type == 'multiple':
         if not os.path.exists(os.path.join(st.MULTIPLE_PREDICTIONS_DIR, self._model_list_names[i])):
           os.makedirs(os.path.join(st.MULTIPLE_PREDICTIONS_DIR, self._model_list_names[i]))
-        pd.DataFrame(self._y_pred[i]).to_excel(os.path.join(st.MULTIPLE_PREDICTIONS_DIR, self._model_list_names[i], f'{self._name}.xlsx'), index=False)
+        # Guardar las predicciones con sus datos de entrada
+        pd.concat([self._X_test, pd.DataFrame(self._y_pred[i])], axis=1).to_excel(os.path.join(st.MULTIPLE_PREDICTIONS_DIR, self._model_list_names[i], f'{self._name}.xlsx'), index=False)
 
       elif self._type == 'global':
         if not os.path.exists(os.path.join(st.GLOBAL_PREDICTIONS_DIR, self._model_list_names[i])):
           os.makedirs(os.path.join(st.GLOBAL_PREDICTIONS_DIR, self._model_list_names[i]))
-        pd.DataFrame(self._y_pred[i]).to_excel(os.path.join(st.GLOBAL_PREDICTIONS_DIR, self._model_list_names[i], f'{self._name}.xlsx'), index=False)
+         # Guardar las predicciones con sus datos de entrada
+        pd.concat([self._X_test, pd.DataFrame(self._y_pred[i])], axis=1).to_excel(os.path.join(st.GLOBAL_PREDICTIONS_DIR, self._model_list_names[i], f'{self._name}.xlsx'), index=False)
 
       else:
         raise Exception('El tipo de modelo no es válido.')
@@ -189,10 +192,8 @@ class AutoML:
 
 
   def _save_metrics_results(self) -> None:
-    print("Length of metrics results: ", len(self._metrics_results))
     # Guarda los resultados en un archivo excel
     for i in range(len(self._model)):
-      print(i)
       if self._type == 'single':
         if not os.path.exists(os.path.join(st.SINGLE_METRICS_DIR, self._model_list_names[i])):
           os.makedirs(os.path.join(st.SINGLE_METRICS_DIR, self._model_list_names[i]))

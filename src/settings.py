@@ -40,7 +40,7 @@ MULTIPLE_METRICS_DIR = os.path.join(METRICS_DIR, 'multiple')
 GLOBAL_METRICS_DIR = os.path.join(METRICS_DIR, 'global')
 
 # ARCHIVOS DE CONFIGURACIÓN
-DATASET_NAME = "2021-07-22 datos_clusterizados_ML.xlsx"
+DATASET_NAME = "2023-01-11 datos_clusterizados_ML.xlsx"
 PARAM_MODELS = 'model_config.json'
 COMPARE_MODELS = 'compare_config.json'
 

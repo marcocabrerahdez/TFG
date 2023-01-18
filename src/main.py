@@ -50,8 +50,12 @@ def main() -> None:
     compare_list = json.load(file_name)
 
   # Leer los datos
-  data_frame = pd.read_excel(os.path.join(st.DATA_DIR, st.DATASET_NAME),
-                              'Processed')
+  data_frame = pd.read_excel(os.path.join(st.DATA_DIR, st.DATASET_NAME), 'Datos')
+
+  # Preprocesar los datos
+  df_cols = data_frame.columns[data_frame.columns.str.contains('UPTO')]
+  data_frame[df_cols] = data_frame[df_cols].div(500) * 100
+  """
   # Para cada modelo en la lista de modelos
   for config in config_list['config_list']:
     # Crear el objeto AutoML
@@ -78,15 +82,15 @@ def main() -> None:
 
     # Graficar los resultados
     automl.plot()
-
+  """
   # Comparar las métricas de los resultados de los modelos
   for model in compare_list['compare']:
     cp.compare_metrics(model['model'], model['directory'], model['name'])
-
+  """
   # Comparar los modelos
   cp.compare_models(compare_list['compare_model']['list'],
                     compare_list['compare_model']['directory'],
                     compare_list['compare_model']['name'])
-
+  """
 if __name__ == '__main__':
   main()

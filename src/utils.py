@@ -36,12 +36,20 @@ def get_model_results(model_name: str, directory_name: str) -> pd.DataFrame:
   # Leemos el archivo y lo devolvemos
   return pd.read_excel(model_file)
 
+
+
 def save_splitted_data(_X_train, _X_test, _y_train, _y_test, _columns_X, _columns_Y, _name, _type) -> None:
   # Concatenenar dataframes
-  df_X_train = pd.DataFrame(_X_train, columns=_columns_X)
-  df_X_test = pd.DataFrame(_X_test, columns=_columns_X)
-  df_y_train = pd.DataFrame(_y_train, columns=_columns_Y)
-  df_y_test = pd.DataFrame(_y_test, columns=_columns_Y)
+  if _type == 'single':
+    df_X_train = pd.DataFrame(_X_train, columns=_columns_X.columns)
+    df_X_test = pd.DataFrame(_X_test, columns=_columns_X.columns)
+    df_y_train = pd.DataFrame(_y_train, columns=_columns_Y.columns)
+    df_y_test = pd.DataFrame(_y_test, columns=_columns_Y.columns)
+  else:
+    df_X_train = pd.DataFrame(_X_train, columns=_columns_X)
+    df_X_test = pd.DataFrame(_X_test, columns=_columns_X)
+    df_y_train = pd.DataFrame(_y_train, columns=_columns_Y)
+    df_y_test = pd.DataFrame(_y_test, columns=_columns_Y)
 
   if _type == 'single':
     if not os.path.exists(os.path.join(st.SPLITED_DATA_SINGLE, _name)):

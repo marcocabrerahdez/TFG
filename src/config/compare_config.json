@@ -2,10 +2,27 @@
   "compare": [
     {
       "model": [
+        "Fallo Cardiaco",
+        "Infarto de Miocardio",
+        "Angina",
+        "Ictus",
+        "Enfermedades cardíacas"
+      ],
+      "directory": [
+        "AdaBoostRegressor",
+        "GradientBoostingRegressor",
+        "LinearRegression",
+        "RandomForestRegressor"
+      ],
+      "name": "Enfermedades cardíacas"
+    },
+    {
+      "model": [
         "Ceguera",
         "Edema macular diabético",
         "Retinopatía de fondo",
-        "Retinopatía proliferativa"
+        "Retinopatía proliferativa",
+        "Retinopatías"
       ],
       "directory": [
         "AdaBoostRegressor",
@@ -14,10 +31,68 @@
         "RandomForestRegressor"
       ],
       "name": "Retinopatías"
+    },
+    {
+      "model": [
+        "Neuropatía individual",
+        "Amputación extremidades inferiores",
+        "Neuropatías"
+      ],
+      "directory": [
+        "AdaBoostRegressor",
+        "GradientBoostingRegressor",
+        "LinearRegression",
+        "RandomForestRegressor"
+      ],
+      "name": "Neuropatías"
+    },
+    {
+      "model": [
+        "Microalbuminuria",
+        "Macroalbuminuria",
+        "Enfermedad renal terminal",
+        "Nefropatías"
+      ],
+      "directory": [
+        "AdaBoostRegressor",
+        "GradientBoostingRegressor",
+        "LinearRegression",
+        "RandomForestRegressor"
+      ],
+      "name": "Nefropatías"
+    },
+    {
+      "model": [
+        "Fallo Cardiaco",
+        "Infarto de Miocardio",
+        "Angina",
+        "Ictus",
+        "Enfermedades cardíacas",
+        "Ceguera",
+        "Edema macular diabético",
+        "Retinopatía de fondo",
+        "Retinopatía proliferativa",
+        "Retinopatías",
+        "Neuropatía individual",
+        "Amputación extremidades inferiores",
+        "Neuropatías",
+        "Microalbuminuria",
+        "Macroalbuminuria",
+        "Enfermedad renal terminal",
+        "Nefropatías",
+        "Comorbilidades"
+      ],
+      "directory": [
+        "AdaBoostRegressor",
+        "GradientBoostingRegressor",
+        "LinearRegression",
+        "RandomForestRegressor"
+      ],
+      "name": "Comorbilidades"
     }
   ],
   "compare_model": {
-    "list": "Retinopatías",
+    "list": "Comorbilidades",
     "directory": [
       "AdaBoostRegressor",
       "GradientBoostingRegressor",

@@ -39,7 +39,7 @@ def compare_metrics(models_list: List[str], directory_name: List[str],
     diseases_count = len(diseases)
 
     # Graficar los resultados
-    fig, ax = plt.subplots(figsize=(25, 25), nrows=diseases_count, ncols=1)
+    fig, ax = plt.subplots(figsize=(30, 40), nrows=diseases_count, ncols=1)
 
     # Graficar los resultados en una misma figura
     for i, disease in enumerate(diseases):
@@ -82,7 +82,7 @@ def compare_metrics(models_list: List[str], directory_name: List[str],
     fig.tight_layout()
 
     # Ajustar el espacio entre subgráficas y el título
-    fig.subplots_adjust(top=0.95)
+    fig.subplots_adjust(top=0.95, hspace=0.5)
 
     # Guardar la gráfica en el directorio de comparaciones
     # y en subdirectorio directorio
