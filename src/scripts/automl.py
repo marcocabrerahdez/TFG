@@ -7,6 +7,7 @@ import importlib
 import time
 import joblib
 import psutil
+import math
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.pipeline import Pipeline
@@ -239,7 +240,7 @@ class AutoML:
 
 
 
-  def plot(self) -> None:
+  def plot_avg_time(self) -> None:
     ''' Grafica los modelos.
       La gráfica representa los valores reales contra los valores predichos.
     '''
@@ -269,10 +270,7 @@ class AutoML:
       fig.suptitle(self._name + ' - ' + self._model_list_names[j])
 
       # Ajustar el espacio entre subgráficas
-      fig.tight_layout()
-
-      # Ajustar el espacio entre subgráficas y el título
-      fig.subplots_adjust(top=0.95)
+      fig.set_layout_engine('compressed')
 
       # Guarda la gráfica
       if self._type == 'single':
@@ -299,3 +297,176 @@ class AutoML:
 
       # Cierra la gráfica
       plt.close()
+
+
+
+  def plot_upto_time(self) -> None:
+    '''
+      Gráfica los modelos de la supervivenia hasta cierta edad.
+    '''
+    # Para cada modelo
+    for j in range(len(self._model_list_names)):
+      # Convertir los valores predichos  a un dataframe
+      y_pred_df = pd.DataFrame(self._y_pred[j], columns=self._y_test.columns)
+
+      # Filtra las columnas que empiezan por AVG y las asigna a un dataframe
+      y_pred_df_avg = y_pred_df.filter(regex='^AVG')
+      y_test_df_avg = self._y_test.filter(regex='^AVG')
+
+      # Filtra las columnas que empiezan por L95CI y las asigna a un dataframe
+      y_pred_df_l95ci = y_pred_df.filter(regex='^L95CI')
+      y_test_df_l95ci = self._y_test.filter(regex='^L95CI')
+
+      # Filtra las columnas que empiezan por U95CI y las asigna a un dataframe
+      y_pred_df_u95ci = y_pred_df.filter(regex='^U95CI')
+      y_test_df_u95ci = self._y_test.filter(regex='^U95CI')
+
+      if self._type == 'single':
+        # Graficar los resultados
+        fig, ax = plt.subplots(figsize=(10, 6))
+
+        ax.plot(y_test_df_avg.columns, y_test_df_avg.cumsum(axis=1).iloc[0], 'o-b', label='Real')
+        ax.plot(y_pred_df_avg.columns, y_pred_df_avg.cumsum(axis=1).iloc[0], 'o-r', label='Predicción')
+
+        # Grafica los intervalos de confianza
+        ax.fill_between(y_pred_df_avg.columns,
+                            y_pred_df_l95ci.cumsum(axis=1).values[0],
+                            y_pred_df_u95ci.cumsum(axis=1).values[0],
+                            alpha=0.2, color='r')
+
+        ax.fill_between(y_test_df_avg.columns,
+                            y_test_df_l95ci.cumsum(axis=1).values[0],
+                            y_test_df_u95ci.cumsum(axis=1).values[0],
+                            alpha=0.2, color='b')
+
+        # Agregar xticks
+        ax.set_xticks(y_test_df_avg.columns)
+        ax.set_xticklabels([i[i.find("UPTO"):] for i in y_test_df_avg.columns])
+
+        # Agrega los ejes
+        ax.set_xlabel('Edad')
+        ax.set_ylabel('Porcentaje de personas afectadas')
+
+      elif self._type == 'multiple' or self._type == 'global':
+        # Dividir el dataframe en grupos
+        y_pred_df_avg = [y_pred_df_avg[y_pred_df_avg.columns[i:i+9]] for i in range(0, len(y_pred_df_avg.columns), 9)]
+        y_test_df_avg = [y_test_df_avg[y_test_df_avg.columns[i:i+9]] for i in range(0, len(y_test_df_avg.columns), 9)]
+
+        y_pred_df_l95ci = [y_pred_df_l95ci[y_pred_df_l95ci.columns[i:i+9]] for i in range(0, len(y_pred_df_l95ci.columns), 9)]
+        y_test_df_l95ci = [y_test_df_l95ci[y_test_df_l95ci.columns[i:i+9]] for i in range(0, len(y_test_df_l95ci.columns), 9)]
+
+        y_pred_df_u95ci = [y_pred_df_u95ci[y_pred_df_u95ci.columns[i:i+9]] for i in range(0, len(y_pred_df_u95ci.columns), 9)]
+        y_test_df_u95ci = [y_test_df_u95ci[y_test_df_u95ci.columns[i:i+9]] for i in range(0, len(y_test_df_u95ci.columns), 9)]
+
+        # Grafica los resultados
+        fig, ax = plt.subplots(figsize=(25, 25) if self._type == 'global' else (15, 15),
+                                nrows=(math.ceil(len(y_test_df_avg) / 2)) if (math.ceil(len(y_test_df_avg) / 2)) >= 2  else len(y_test_df_avg),
+                                ncols=2 if (math.ceil(len(y_test_df_avg) / 2)) >= 2 else 1)
+
+        # Aplanar el arreglo
+        ax = ax.ravel()
+
+        # Para cada grupo
+        for i in range(len(y_test_df_avg)):
+          # Si el valor del indice es mayor a la cantidad de grupos, termina el ciclo
+          if i >= len(ax):
+            fig.delaxes(ax[i])
+            break
+          # Grafica los datos de suma acumulada
+          ax[i].plot(y_test_df_avg[i].columns, y_test_df_avg[i].cumsum(axis=1).iloc[0], 'o-b', label='Real')
+          ax[i].plot(y_pred_df_avg[i].columns, y_pred_df_avg[i].cumsum(axis=1).iloc[0], 'o-r', label='Predicción')
+
+          # Grafica los intervalos de confianza
+          ax[i].fill_between(y_pred_df_avg[i].columns,
+                              y_pred_df_l95ci[i].cumsum(axis=1).values[0],
+                              y_pred_df_u95ci[i].cumsum(axis=1).values[0],
+                              alpha=0.2, color='r')
+
+          ax[i].fill_between(y_test_df_avg[i].columns,
+                              y_test_df_l95ci[i].cumsum(axis=1).values[0],
+                              y_test_df_u95ci[i].cumsum(axis=1).values[0],
+                              alpha=0.2, color='b')
+
+          # Agregar xticks
+          ax[i].set_xticks(y_test_df_avg[i].columns)
+          ax[i].set_xticklabels([k[k.find("UPTO"):] for k in y_test_df_avg[i].columns])
+
+          # Agrega los ejes
+          ax[i].set_xlabel('Edad')
+          ax[i].set_ylabel('Porcentaje de personas afectadas')
+
+          # Agrega los títulos
+          if self._type == 'global':
+            # Si encuentra HF en el nombre de la columna, lo agrega al título
+            if 'HF' in y_test_df_avg[i].columns[0]:
+              ax[i].set_title('Fallo Cardiaco (UPTO)')
+
+            elif 'MI' in y_test_df_avg[i].columns[0]:
+               ax[i].set_title('Infarto de Miocardio (UPTO)')
+
+            elif 'ANGINA' in y_test_df_avg[i].columns[0]:
+              ax[i].set_title('Angina (UPTO)')
+
+            elif 'STROKE' in y_test_df_avg[i].columns[0]:
+              ax[i].set_title('Ictus (UPTO)')
+
+            elif 'BLI' in y_test_df_avg[i].columns[0]:
+              ax[i].set_title('Ceguera (UPTO)')
+
+            elif 'ME' in y_test_df_avg[i].columns[0]:
+              ax[i].set_title('Edema macular diabético (UPTO)')
+
+            elif 'BGRET' in y_test_df_avg[i].columns[0]:
+              ax[i].set_title('Retinopatía de fondo (UPTO)')
+
+            elif 'PRET' in y_test_df_avg[i].columns[0]:
+              ax[i].set_title('Retinopatía proliferativa (UPTO)')
+
+            elif 'NEU' in y_test_df_avg[i].columns[0]:
+              ax[i].set_title('Neuropatía individual (UPTO)')
+
+            elif 'LEA' in y_test_df_avg[i].columns[0]:
+              ax[i].set_title('Amputación extremidades inferiores (UPTO)')
+
+            elif 'ALB1' in y_test_df_avg[i].columns[0]:
+              ax[i].set_title('Microalbuminuria (UPTO)')
+
+            elif 'ALB2' in y_test_df_avg[i].columns[0]:
+              ax[i].set_title('Macroalbuminuria (UPTO)')
+
+            elif 'ESRD' in y_test_df_avg[i].columns[0]:
+              ax[i].set_title('Enfermedad renal terminal (UPTO)')
+          else:
+            ax[i].set_title(f'{self._trained_data_names[i]}')
+
+      # Agrega la leyenda
+      fig.legend(['Real', 'Predicción'])
+
+      # Agrega el título general
+      fig.suptitle(f'{self._name}', fontsize=30 if self._type == 'multiple' or self._type == 'global'  else 20)
+
+      # Configura el layout
+      fig.set_layout_engine('compressed')
+
+      # Guarda la gráfica
+      if self._type == 'single':
+        if not os.path.exists(os.path.join(st.SINGLE_PLOTS_DIR,
+                              self._model_list_names[j])):
+          os.makedirs(os.path.join(st.SINGLE_PLOTS_DIR,
+                      self._model_list_names[j]))
+        plt.savefig(os.path.join(st.SINGLE_PLOTS_DIR,
+                    self._model_list_names[j], f'{self._name}.png'))
+      elif self._type == 'multiple':
+        if not os.path.exists(os.path.join(st.MULTIPLE_PLOTS_DIR,
+                              self._model_list_names[j])):
+          os.makedirs(os.path.join(st.MULTIPLE_PLOTS_DIR,
+                      self._model_list_names[j]))
+        plt.savefig(os.path.join(st.MULTIPLE_PLOTS_DIR,
+                    self._model_list_names[j], f'{self._name}.png'))
+      elif self._type == 'global':
+        if not os.path.exists(os.path.join(st.GLOBAL_PLOTS_DIR,
+                              self._model_list_names[j])):
+          os.makedirs(os.path.join(st.GLOBAL_PLOTS_DIR,
+                      self._model_list_names[j]))
+        plt.savefig(os.path.join(st.GLOBAL_PLOTS_DIR,
+                    self._model_list_names[j], f'{self._name}.png'))

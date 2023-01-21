@@ -76,6 +76,7 @@ def save_splitted_data(_X_train, _X_test, _y_train, _y_test, _columns_X, _column
     raise ValueError('El tipo de modelo no es válido')
 
 
+
 def get_splited_data(_trained_data_names, _type):
   """ Obtiene los datos de entrenamiento y testeo de los modelos entrenados """
   _X_train = pd.DataFrame()
