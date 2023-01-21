@@ -108,7 +108,7 @@ def main() -> None:
     # Graficar los resultados
     automl.plot_upto_time()
     # automl.plot_avg_time()
-  """
+
   # Comparar las métricas de los resultados de los modelos
   for model in compare_list['compare']:
     cp.compare_metrics(model['model'], model['directory'], model['name'])
@@ -116,6 +116,6 @@ def main() -> None:
   cp.compare_models(compare_list['compare_model']['list'],
                     compare_list['compare_model']['directory'],
                     compare_list['compare_model']['name'])
-  """
+
 if __name__ == '__main__':
   main()

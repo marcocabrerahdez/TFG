@@ -135,3 +135,4 @@ dmypy.json
 metrics
 predictions
 data/splited data
+model
