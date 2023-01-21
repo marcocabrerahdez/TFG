@@ -1,0 +1,79 @@
+{
+  "compare": [
+    {
+      "model": [
+        "Fallo Cardiaco (UPTO)",
+        "Infarto de Miocardio (UPTO)",
+        "Angina (UPTO)",
+        "Ictus (UPTO)",
+        "Enfermedades cardíacas (UPTO)"
+      ],
+      "directory": [
+        "GradientBoostingRegressor"
+      ],
+      "name": "Enfermedades cardíacas (UPTO)"
+    },
+    {
+      "model": [
+        "Ceguera (UPTO)",
+        "Edema macular diabético (UPTO)",
+        "Retinopatía de fondo (UPTO)",
+        "Retinopatía proliferativa (UPTO)",
+        "Retinopatías (UPTO)"
+      ],
+      "directory": [
+        "GradientBoostingRegressor"
+      ],
+      "name": "Retinopatías"
+    },
+    {
+      "model": [
+        "Neuropatía individual (UPTO)",
+        "Amputación extremidades inferiores (UPTO)",
+        "Neuropatías (UPTO)"
+      ],
+      "directory": [
+        "GradientBoostingRegressor"
+      ],
+      "name": "Neuropatías (UPTO)"
+    },
+    {
+      "model": [
+        "Microalbuminuria (UPTO)",
+        "Macroalbuminuria (UPTO)",
+        "Enfermedad renal terminal (UPTO)",
+        "Nefropatías (UPTO)"
+      ],
+      "directory": [
+        "GradientBoostingRegressor"
+      ],
+      "name": "Nefropatías (UPTO)"
+    },
+    {
+      "model": [
+        "Fallo Cardiaco (UPTO)",
+        "Infarto de Miocardio (UPTO)",
+        "Angina (UPTO)",
+        "Ictus (UPTO)",
+        "Enfermedades cardíacas (UPTO)",
+        "Ceguera (UPTO)",
+        "Edema macular diabético (UPTO)",
+        "Retinopatía de fondo (UPTO)",
+        "Retinopatía proliferativa (UPTO)",
+        "Retinopatías (UPTO)",
+        "Neuropatía individual (UPTO)",
+        "Amputación extremidades inferiores (UPTO)",
+        "Neuropatías (UPTO)",
+        "Microalbuminuria (UPTO)",
+        "Macroalbuminuria (UPTO)",
+        "Enfermedad renal terminal (UPTO)",
+        "Nefropatías (UPTO)",
+        "Comorbilidades (UPTO)"
+      ],
+      "directory": [
+        "GradientBoostingRegressor"
+      ],
+      "name": "Comorbilidades"
+    }
+  ]
+}
