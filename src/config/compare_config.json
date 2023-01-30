@@ -92,13 +92,13 @@
     }
   ],
   "compare_model": {
-    "list": "Comorbilidades",
+    "list": "Enfermedad renal terminal",
     "directory": [
       "AdaBoostRegressor",
       "GradientBoostingRegressor",
       "LinearRegression",
       "RandomForestRegressor"
     ],
-    "name": "Comparación modelo de regresión"
+    "name": "Comparación modelo de regresión (Enfermedad renal terminal)"
   }
 }
