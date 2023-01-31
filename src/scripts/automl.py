@@ -244,33 +244,105 @@ class AutoML:
     ''' Grafica los modelos.
       La gráfica representa los valores reales contra los valores predichos.
     '''
+    # Para cada modelo
     for j in range(len(self._model_list_names)):
-      # Grafica los resultados
-      fig, ax = plt.subplots(figsize=(30, 30),
-                              nrows=self._y_test.shape[1], ncols=1)
+      # Convertir los valores predichos  a un dataframe
+      y_pred_df = pd.DataFrame(self._y_pred[j], columns=self._y_test.columns)
+      y_pred_df.reset_index(drop=True, inplace=True)
 
-      # Crear una gráfico para cada salida
-      for i in range(self._y_test.shape[1]):
-        # Crear una gráfico de scatter
-        # para cada salida del modelo con colores azul y rojo
-        ax[i].plot(self._y_test.iloc[:, i], self._y_test.iloc[:, i], 'b-')
-        ax[i].plot(self._y_test.iloc[:, i], self._y_pred[j][:, i], 'ro')
+      # Unir X_test con y_test
+      Xy_test_df = pd.concat([self._X_test, self._y_test], axis=1)
+      Xy_test_df.reset_index(drop=True, inplace=True)
+      Xy_test_df = pd.concat([Xy_test_df, y_pred_df], axis=1)
+      Xy_test_df.reset_index(drop=True, inplace=True)
 
-        # Agrega los títulos
-        ax[i].set_title(self._y_test.columns[i])
+      # Filtra las columnas que empiezan por AVG y las asigna a un dataframe
+      Xy_test_l95ci_df = Xy_test_df.filter(regex='^(?!(AVG|U95CI)).*')
+      Xy_test_u95ci_df = Xy_test_df.filter(regex='^(?!(AVG|L95CI)).*')
+      Xy_test_df = Xy_test_df.filter(regex='^(?!(L95CI|U95CI)).*')
 
-        # Agrega las etiquetas
-        ax[i].set_xlabel('Real')
-        ax[i].set_ylabel('Predicho')
+      if self._type == 'single':
+        # Graficar los resultados
+        fig, ax = plt.subplots(figsize=(10, 6))
+
+        # Grafica los valores reales vs predichos como puntos
+        ax.plot(Xy_test_df.iloc[:, 3], Xy_test_df.iloc[:, 3], color=(0.3, 0.8, 0.5), label='Valor ideal')
+        ax.scatter(Xy_test_df.iloc[:, 3], Xy_test_df.iloc[:, 4], color=(0.8, 0.7, 0.2), label='Valor predicho')
+
+        # Grafica los intervalos de confianza reales y predichos como líneas
+        ax.plot(Xy_test_df.iloc[:, 3], Xy_test_l95ci_df.iloc[:, 3], color=(0.2, 0.5, 0.5), linestyle='dashed', label='Intervalo de confianza ideal')
+        ax.plot(Xy_test_df.iloc[:, 3], Xy_test_u95ci_df.iloc[:, 3], color=(0.2, 0.5, 0.5), linestyle='dashed')
+        ax.scatter(Xy_test_df.iloc[:, 3], Xy_test_u95ci_df.iloc[:, 4], color=(0.7, 0.8, 0.2), label='Intervalo de confianza predicho')
+        ax.scatter(Xy_test_df.iloc[:, 3], Xy_test_l95ci_df.iloc[:, 4], color=(0.7, 0.8, 0.2))
+
+        # Agrega los ejes
+        ax.set_xlabel('Valor ideal de tiempo promedio hasta aparición', fontsize=10, fontweight='bold')
+        ax.set_ylabel('Valor predicho de tiempo promedio hasta aparición', fontsize=10, fontweight='bold')
 
         # Agrega la leyenda
-        ax[i].legend(['Real', 'Predicho'])
+        ax.legend()
 
-      # Agrega los títulos a la gráfica
-      fig.suptitle(self._name + ' - ' + self._model_list_names[j])
+        # Agrega el título
+        ax.set_title(f'Gráfica de tiempo promedio hasta aparición para {self._name}', fontweight='bold', fontsize=12)
 
-      # Ajustar el espacio entre subgráficas
-      fig.set_layout_engine('compressed')
+        # Configura el layout
+        fig.set_layout_engine('compressed')
+
+      elif self._type == 'multiple' or self._type == 'global':
+        # Quitar las 3 primeras columnas
+        Xy_test_df = Xy_test_df.drop(Xy_test_df.columns[:3], axis=1)
+        Xy_test_l95ci_df = Xy_test_l95ci_df.drop(Xy_test_l95ci_df.columns[:3], axis=1)
+        Xy_test_u95ci_df = Xy_test_u95ci_df.drop(Xy_test_u95ci_df.columns[:3], axis=1)
+
+        # Dividir el dataframe en 2 dataframes
+        y_test_df = Xy_test_df.iloc[:, :int(Xy_test_df.shape[1] / 2)]
+        y_pred_df = Xy_test_df.iloc[:, int(Xy_test_df.shape[1] / 2):]
+        y_test_l95ci_df = Xy_test_l95ci_df.iloc[:, :int(Xy_test_l95ci_df.shape[1] / 2)]
+        y_test_u95ci_df = Xy_test_u95ci_df.iloc[:, :int(Xy_test_u95ci_df.shape[1] / 2)]
+        y_pred_l95ci_df = Xy_test_l95ci_df.iloc[:, int(Xy_test_l95ci_df.shape[1] / 2):]
+        y_pred_u95ci_df = Xy_test_u95ci_df.iloc[:, int(Xy_test_u95ci_df.shape[1] / 2):]
+
+        # Crear un subplot para cada columna
+        fig, ax = plt.subplots(figsize=(20, 20) if self._type == 'global' else (10, 10),
+                                nrows=(math.ceil(y_test_df.shape[1] / 2)) if (math.ceil(y_test_df.shape[1] / 2)) >= 2  else y_test_df.shape[1],
+                                ncols=2 if (math.ceil(y_test_df.shape[1] / 2)) >= 2 else 1)
+
+        # Aplanar el arreglo
+        ax = ax.ravel()
+
+        # Graficar cada columna
+        for i in range(y_test_df.shape[1]):
+          # Grafica los valores reales vs predichos como puntos
+          ax[i].plot(y_test_df.iloc[:, i], y_test_df.iloc[:, i], color=(0.3, 0.8, 0.5), label='Valor ideal')
+          ax[i].scatter(y_test_df.iloc[:, i], y_pred_df.iloc[:, i], color=(0.8, 0.7, 0.2), label='Valor predicho')
+
+          # Grafica los valores reales vs predichos como líneas
+          ax[i].plot(y_test_df.iloc[:, i], y_test_l95ci_df.iloc[:, i], color=(0.2, 0.5, 0.5), linestyle='dashed', label='Intervalo de confianza ideal')
+          ax[i].scatter(y_test_df.iloc[:, i], y_pred_l95ci_df.iloc[:, i], color=(0.7, 0.8, 0.2), label='Intervalo de confianza predicho')
+          ax[i].plot(y_test_df.iloc[:, i], y_test_u95ci_df.iloc[:, i], color=(0.2, 0.5, 0.5), linestyle='dashed')
+          ax[i].scatter(y_test_df.iloc[:, i], y_pred_u95ci_df.iloc[:, i], color=(0.7, 0.8, 0.2))
+
+          # Agrega los ejes
+          ax[i].set_xlabel('Valor ideal', fontsize=10, fontweight='bold')
+          ax[i].set_ylabel('Valor predicho', fontsize=10, fontweight='bold')
+
+          # añadir titulo al subplot
+          ax[i].set_title(f'{y_test_df.columns[i]}', fontweight='bold', fontsize=10)
+
+        # Agrega la leyenda
+        fig.legend(['Valor ideal', 'Valor predicho', 'Intervalo de confianza ideal', 'Intervalo de confianza predicho'], fontsize=10)
+
+        # Agrega el título
+        fig.suptitle(f'Gráfica de tiempo promedio hasta aparición para {self._name}', fontweight='bold', fontsize=15)
+
+        # Configura el layout
+        fig.set_layout_engine('compressed')
+
+      # Limpiar la memoria
+      Xy_test_df = pd.DataFrame()
+      Xy_test_l95ci_df = pd.DataFrame()
+      Xy_test_u95ci_df = pd.DataFrame()
+      y_pred_df = pd.DataFrame()
 
       # Guarda la gráfica
       if self._type == 'single':
@@ -297,7 +369,6 @@ class AutoML:
 
       # Cierra la gráfica
       plt.close()
-
 
 
   def plot_upto_time(self) -> None:
