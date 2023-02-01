@@ -9,7 +9,9 @@ import joblib
 import psutil
 import math
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
@@ -263,7 +265,7 @@ class AutoML:
 
       if self._type == 'single':
         # Graficar los resultados
-        fig, ax = plt.subplots(figsize=(10, 6))
+        fig, ax = plt.subplots(figsize=(10, 10))
 
         # Grafica los valores reales vs predichos como puntos
         ax.plot(Xy_test_df.iloc[:, 3], Xy_test_df.iloc[:, 3], color=(0.3, 0.8, 0.5), label='Valor ideal')
@@ -392,33 +394,63 @@ class AutoML:
       y_pred_df_u95ci = y_pred_df.filter(regex='^U95CI')
       y_test_df_u95ci = self._y_test.filter(regex='^U95CI')
 
+      # Unir en un dataframe X_test con y_test
+      Xy_test_df = pd.concat([self._X_test, y_test_df_avg], axis=1)
+
+      # Resetea los indices
+      y_pred_df_avg.reset_index(drop=True, inplace=True)
+      y_test_df_avg.reset_index(drop=True, inplace=True)
+      y_pred_df_l95ci.reset_index(drop=True, inplace=True)
+      y_test_df_l95ci.reset_index(drop=True, inplace=True)
+      y_pred_df_u95ci.reset_index(drop=True, inplace=True)
+      y_test_df_u95ci.reset_index(drop=True, inplace=True)
+
       if self._type == 'single':
         # Graficar los resultados
-        fig, ax = plt.subplots(figsize=(10, 6))
+        fig, ax = plt.subplots(nrows=1, ncols=3, figsize=(18, 6), subplot_kw={'projection': '3d'})
 
-        ax.plot(y_test_df_avg.columns, y_test_df_avg.cumsum(axis=1).iloc[0], 'o-b', label='Real')
-        ax.plot(y_pred_df_avg.columns, y_pred_df_avg.cumsum(axis=1).iloc[0], 'o-r', label='Predicción')
+        # Renombrar las columnas
+        cols = y_test_df_avg.columns
+        new_cols = [int(col.split("_UPTO_")[1]) for col in cols] # Extrae el número de la columna
+        y_test_df_avg.columns = new_cols
+        y_pred_df_avg.columns = new_cols
+        y_test_df_l95ci.columns = new_cols
+        y_pred_df_l95ci.columns = new_cols
+        y_test_df_u95ci.columns = new_cols
+        y_pred_df_u95ci.columns = new_cols
 
-        # Grafica los intervalos de confianza
-        ax.fill_between(y_pred_df_avg.columns,
-                            y_pred_df_l95ci.cumsum(axis=1).values[0],
-                            y_pred_df_u95ci.cumsum(axis=1).values[0],
-                            alpha=0.2, color='r')
+        # Caluclar numero de columnas
+        for col in y_test_df_avg.columns:
+          # Graficar los valores
+          ax[0].scatter(Xy_test_df['HBA1C'], y_test_df_avg[col], y_test_df_l95ci[col].values, color=(0.3, 0.8, 0.5))
+          ax[0].scatter(Xy_test_df['HBA1C'], y_test_df_avg[col], y_pred_df_l95ci[col].values, color=(0.8, 0.7, 0.2))
 
-        ax.fill_between(y_test_df_avg.columns,
-                            y_test_df_l95ci.cumsum(axis=1).values[0],
-                            y_test_df_u95ci.cumsum(axis=1).values[0],
-                            alpha=0.2, color='b')
+        for col in y_test_df_avg.columns:
+          # Graficar los valores
+          ax[1].scatter(Xy_test_df['HBA1C'], y_test_df_avg[col], y_test_df_avg[col].values, color=(0.3, 0.8, 0.5), label='Valor generado (modelo simulación)')
+          ax[1].scatter(Xy_test_df['HBA1C'], y_test_df_avg[col], y_pred_df_avg[col].values, color=(0.8, 0.7, 0.2), label='Valor predicho (modelo subrogado)')
 
-        # Agregar xticks
-        ax.set_xticks(y_test_df_avg.columns)
-        ax.set_xticklabels([i[i.find("UPTO"):] for i in y_test_df_avg.columns])
+        for col in y_test_df_avg.columns:
+          # Graficar los valores
+          ax[2].scatter(Xy_test_df['HBA1C'], y_test_df_avg[col], y_test_df_u95ci[col].values, color=(0.3, 0.8, 0.5))
+          ax[2].scatter(Xy_test_df['HBA1C'], y_test_df_avg[col], y_pred_df_u95ci[col].values, color=(0.8, 0.7, 0.2))
 
-        # Agrega los ejes
-        ax.set_xlabel('Edad')
-        ax.set_ylabel('Porcentaje de personas afectadas')
+        # Set yticks to the columns of the dataframe
+        for i in range(3):
+          ax[i].set_yticks(y_test_df_avg.columns)
 
-      elif self._type == 'multiple' or self._type == 'global':
+          # Configurar la gráfica
+          ax[i].set_xlabel('Nivel de HBA1C', fontsize=8, fontweight='bold')
+          ax[i].set_ylabel('Edad (hasta)', fontsize=8, fontweight='bold')
+          ax[i].set_zlabel('Porcentaje de personas afectadas', fontsize=8, fontweight='bold')
+
+        # Añadir titulo a cada gráfica
+        ax[0].set_title('Intervalo de confianza inferior', fontweight='bold', fontsize=10)
+        ax[1].set_title('Valor medio', fontweight='bold', fontsize=10)
+        ax[2].set_title('Intervalo de confianza superior', fontweight='bold', fontsize=10)
+
+
+      else:
         # Dividir el dataframe en grupos
         y_pred_df_avg = [y_pred_df_avg[y_pred_df_avg.columns[i:i+9]] for i in range(0, len(y_pred_df_avg.columns), 9)]
         y_test_df_avg = [y_test_df_avg[y_test_df_avg.columns[i:i+9]] for i in range(0, len(y_test_df_avg.columns), 9)]
@@ -429,95 +461,118 @@ class AutoML:
         y_pred_df_u95ci = [y_pred_df_u95ci[y_pred_df_u95ci.columns[i:i+9]] for i in range(0, len(y_pred_df_u95ci.columns), 9)]
         y_test_df_u95ci = [y_test_df_u95ci[y_test_df_u95ci.columns[i:i+9]] for i in range(0, len(y_test_df_u95ci.columns), 9)]
 
+        # Eliminar columnas duplicadas en los grupos
+        for i in range(len(y_pred_df_avg)):
+          y_pred_df_avg[i] = y_pred_df_avg[i].loc[:,~y_pred_df_avg[i].columns.duplicated()]
+          y_test_df_avg[i] = y_test_df_avg[i].loc[:,~y_test_df_avg[i].columns.duplicated()]
+
+          y_pred_df_l95ci[i] = y_pred_df_l95ci[i].loc[:,~y_pred_df_l95ci[i].columns.duplicated()]
+          y_test_df_l95ci[i] = y_test_df_l95ci[i].loc[:,~y_test_df_l95ci[i].columns.duplicated()]
+
+          y_pred_df_u95ci[i] = y_pred_df_u95ci[i].loc[:,~y_pred_df_u95ci[i].columns.duplicated()]
+          y_test_df_u95ci[i] = y_test_df_u95ci[i].loc[:,~y_test_df_u95ci[i].columns.duplicated()]
+
         # Grafica los resultados
-        fig, ax = plt.subplots(figsize=(25, 25) if self._type == 'global' else (15, 15),
-                                nrows=(math.ceil(len(y_test_df_avg) / 2)) if (math.ceil(len(y_test_df_avg) / 2)) >= 2  else len(y_test_df_avg),
-                                ncols=2 if (math.ceil(len(y_test_df_avg) / 2)) >= 2 else 1)
+        fig, ax = plt.subplots(figsize=(19, len(y_test_df_avg) * 6) if self._type == 'multiple' else (25, len(y_test_df_avg) * 6),
+                              subplot_kw={'projection': '3d'},
+                              nrows=len(y_test_df_avg),
+                              ncols=3
+                              )
+        # BUG: Recorrer las columnas de los grupos porque se cambiaron los nombres
+        for m in range(len(y_test_df_avg)):
+          # Renombrar las columnas que acaban en .1
+          y_test_df_avg[m].rename(columns=lambda x: x.split(".")[0], inplace=True)
+          y_pred_df_avg[m].rename(columns=lambda x: x.split(".")[0], inplace=True)
 
-        # Aplanar el arreglo
-        ax = ax.ravel()
+          y_test_df_l95ci[m].rename(columns=lambda x: x.split(".")[0], inplace=True)
+          y_pred_df_l95ci[m].rename(columns=lambda x: x.split(".")[0], inplace=True)
 
-        # Para cada grupo
+          y_test_df_u95ci[m].rename(columns=lambda x: x.split(".")[0], inplace=True)
+          y_pred_df_u95ci[m].rename(columns=lambda x: x.split(".")[0], inplace=True)
+
+        # Coger el primer nombre de columna de cada grupo
+        colum_names = [y_test_df_avg[i].columns[0] for i in range(len(y_test_df_avg))]
+
+        # Graficar los valores de cada grupo de columnas
         for i in range(len(y_test_df_avg)):
-          # Si el valor del indice es mayor a la cantidad de grupos, termina el ciclo
-          if i >= len(ax):
-            fig.delaxes(ax[i])
-            break
-          # Grafica los datos de suma acumulada
-          ax[i].plot(y_test_df_avg[i].columns, y_test_df_avg[i].cumsum(axis=1).iloc[0], 'o-b', label='Real')
-          ax[i].plot(y_pred_df_avg[i].columns, y_pred_df_avg[i].cumsum(axis=1).iloc[0], 'o-r', label='Predicción')
+          # Renombrar las columnas
+          cols = y_test_df_avg[i].columns
+          new_cols = [int(col.split("_UPTO_")[1]) for col in cols] # Extrae el número de la columna
+          y_test_df_avg[i].columns = new_cols
+          y_pred_df_avg[i].columns = new_cols
+          y_test_df_l95ci[i].columns = new_cols
+          y_pred_df_l95ci[i].columns = new_cols
+          y_test_df_u95ci[i].columns = new_cols
+          y_pred_df_u95ci[i].columns = new_cols
 
-          # Grafica los intervalos de confianza
-          ax[i].fill_between(y_pred_df_avg[i].columns,
-                              y_pred_df_l95ci[i].cumsum(axis=1).values[0],
-                              y_pred_df_u95ci[i].cumsum(axis=1).values[0],
-                              alpha=0.2, color='r')
+          for col in y_test_df_avg[i].columns:
+            # Graficar los valores
+            ax[i][0].scatter(Xy_test_df['HBA1C'], y_test_df_avg[i][col], y_test_df_l95ci[i][col].values, color=(0.3, 0.8, 0.5))
+            ax[i][0].scatter(Xy_test_df['HBA1C'], y_test_df_avg[i][col], y_pred_df_l95ci[i][col].values, color=(0.8, 0.7, 0.2))
 
-          ax[i].fill_between(y_test_df_avg[i].columns,
-                              y_test_df_l95ci[i].cumsum(axis=1).values[0],
-                              y_test_df_u95ci[i].cumsum(axis=1).values[0],
-                              alpha=0.2, color='b')
+            ax[i][1].scatter(Xy_test_df['HBA1C'], y_test_df_avg[i][col], y_test_df_avg[i][col].values, color=(0.3, 0.8, 0.5))
+            ax[i][1].scatter(Xy_test_df['HBA1C'], y_test_df_avg[i][col], y_pred_df_avg[i][col].values, color=(0.8, 0.7, 0.2))
 
-          # Agregar xticks
-          ax[i].set_xticks(y_test_df_avg[i].columns)
-          ax[i].set_xticklabels([k[k.find("UPTO"):] for k in y_test_df_avg[i].columns])
+            ax[i][2].scatter(Xy_test_df['HBA1C'], y_test_df_avg[i][col], y_test_df_u95ci[i][col].values, color=(0.3, 0.8, 0.5))
+            ax[i][2].scatter(Xy_test_df['HBA1C'], y_test_df_avg[i][col], y_pred_df_u95ci[i][col].values, color=(0.8, 0.7, 0.2))
 
-          # Agrega los ejes
-          ax[i].set_xlabel('Edad')
-          ax[i].set_ylabel('Porcentaje de personas afectadas')
+          for k in range(3):
+            ax[i][k].set_yticks(y_test_df_avg[i].columns)
 
-          # Agrega los títulos
-          if self._type == 'global':
-            # Si encuentra HF en el nombre de la columna, lo agrega al título
-            if 'HF' in y_test_df_avg[i].columns[0]:
-              ax[i].set_title('Fallo Cardiaco (UPTO)')
+            # Configurar la gráfica
+            ax[i][k].set_xlabel('Nivel de HBA1C', fontsize=8, fontweight='bold')
+            ax[i][k].set_ylabel('Edad (hasta)', fontsize=8, fontweight='bold')
+            ax[i][k].set_zlabel('Porcentaje de personas afectadas', fontsize=8, fontweight='bold')
 
-            elif 'MI' in y_test_df_avg[i].columns[0]:
-               ax[i].set_title('Infarto de Miocardio (UPTO)')
+          # Añadir titulo a cada gráfica
+          ax[i][0].set_title('Intervalo de confianza inferior', fontweight='bold', fontsize=10)
+          ax[i][1].set_title('Valor medio', fontweight='bold', fontsize=10)
+          ax[i][2].set_title('Intervalo de confianza superior', fontweight='bold', fontsize=10)
 
-            elif 'ANGINA' in y_test_df_avg[i].columns[0]:
-              ax[i].set_title('Angina (UPTO)')
+          # Añadir titulo a cada fila en el medio de la gráfica
+          if 'HF' in colum_names[i]:
+            ax[i][1].set_title('Fallo Cardiaco (UPTO)', fontsize=10, fontweight='bold')
+          elif 'MI' in colum_names[i]:
+            ax[i][1].set_title('Infarto de Miocardio (UPTO)', fontsize=10, fontweight='bold')
 
-            elif 'STROKE' in y_test_df_avg[i].columns[0]:
-              ax[i].set_title('Ictus (UPTO)')
+          elif 'ANGINA' in colum_names[i]:
+            ax[i][1].set_title('Angina (UPTO)', fontsize=10, fontweight='bold')
 
-            elif 'BLI' in y_test_df_avg[i].columns[0]:
-              ax[i].set_title('Ceguera (UPTO)')
+          elif 'STROKE' in colum_names[i]:
+            ax[i][1].set_title('Ictus (UPTO)', fontsize=10, fontweight='bold')
 
-            elif 'ME' in y_test_df_avg[i].columns[0]:
-              ax[i].set_title('Edema macular diabético (UPTO)')
+          elif 'BLI' in colum_names[i]:
+            ax[i][1].set_title('Ceguera (UPTO)', fontsize=10, fontweight='bold')
 
-            elif 'BGRET' in y_test_df_avg[i].columns[0]:
-              ax[i].set_title('Retinopatía de fondo (UPTO)')
+          elif 'ME' in colum_names[i]:
+            ax[i][1].set_title('Edema macular diabético (UPTO)', fontsize=10, fontweight='bold')
 
-            elif 'PRET' in y_test_df_avg[i].columns[0]:
-              ax[i].set_title('Retinopatía proliferativa (UPTO)')
+          elif 'BGRET' in colum_names[i]:
+            ax[i][1].set_title('Retinopatía de fondo (UPTO)', fontsize=10, fontweight='bold')
 
-            elif 'NEU' in y_test_df_avg[i].columns[0]:
-              ax[i].set_title('Neuropatía individual (UPTO)')
+          elif 'PRET' in colum_names[i]:
+            ax[i][1].set_title('Retinopatía proliferativa (UPTO)', fontsize=10, fontweight='bold')
 
-            elif 'LEA' in y_test_df_avg[i].columns[0]:
-              ax[i].set_title('Amputación extremidades inferiores (UPTO)')
+          elif 'NEU' in colum_names[i]:
+            ax[i][1].set_title('Neuropatía individual (UPTO)', fontsize=10, fontweight='bold')
 
-            elif 'ALB1' in y_test_df_avg[i].columns[0]:
-              ax[i].set_title('Microalbuminuria (UPTO)')
+          elif 'LEA' in colum_names[i]:
+            ax[i][1].set_title('Amputación extremidades inferiores (UPTO)', fontsize=10, fontweight='bold')
 
-            elif 'ALB2' in y_test_df_avg[i].columns[0]:
-              ax[i].set_title('Macroalbuminuria (UPTO)')
+          elif 'ALB1' in colum_names[i]:
+            ax[i][1].set_title('Microalbuminuria (UPTO)', fontsize=10, fontweight='bold')
 
-            elif 'ESRD' in y_test_df_avg[i].columns[0]:
-              ax[i].set_title('Enfermedad renal terminal (UPTO)')
-          else:
-            ax[i].set_title(f'{self._trained_data_names[i]}')
-
-      # Agrega la leyenda
-      fig.legend(['Real', 'Predicción'])
+          elif 'ALB2' in colum_names[i]:
+            ax[i][1].set_title('Macroalbuminuria (UPTO)')
 
       # Agrega el título general
-      fig.suptitle(f'{self._name}', fontsize=30 if self._type == 'multiple' or self._type == 'global'  else 20)
+      fig.suptitle(f'{self._name}', fontweight='bold', fontsize=15 if self._type == 'multiple' or self._type == 'global' else 12)
+
+      # Agrega la leyenda
+      fig.legend(['Valor generado (modelo simulación)', 'Valor predicho (modelo subrogado)'], fontsize=10, ncol=2)
 
       # Configura el layout
-      fig.set_layout_engine('compressed')
+      fig.set_layout_engine('constrained')
 
       # Guarda la gráfica
       if self._type == 'single':

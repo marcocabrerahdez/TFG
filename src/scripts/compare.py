@@ -77,7 +77,7 @@ def compare_avg_metrics(models_list: List[str], directory_name: List[str],
         df_disease_l95ci = df_l95ci.get_group(disease)
         df_disease_u95ci = df_u95ci.get_group(disease)
         bar_colors = [colors[j] for x in range(df_disease.shape[0])]
-        plot1 = df_disease.plot.bar(
+        df_disease.plot.bar(
           x='Tipo',
           y=metric,
           rot=0,

@@ -106,8 +106,8 @@ def main() -> None:
     automl.save()
 
     # Graficar los resultados
-    # automl.plot_upto_time()
-    automl.plot_avg_time()
+    automl.plot_upto_time()
+    # automl.plot_avg_time()
   """
   # Comparar las métricas de los resultados de los modelos
   for model in compare_list['compare']:
