@@ -11,12 +11,13 @@ import math
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
+from scipy.spatial import ConvexHull
 
 import settings as st
 import utils as ut
@@ -92,10 +93,25 @@ class AutoML:
     # Guardar los datos de entrenamiento y prueba
     ut.save_splitted_data(self._X_train, self._X_test, self._y_train, self._y_test, self._columns_X, self._columns_Y, self._name, self._type)
 
+    # Inicializar los atributos
     self._y_pred = None
     self.time = None
     self.cpu = None
     self._metrics_results = []
+
+    # Preprocesar los datos
+    scaler = StandardScaler()
+    scaler.fit(self._X_train)
+    self._X_train = scaler.transform(self._X_train)
+    self._X_test = scaler.transform(self._X_test)
+
+    # Convertir de nuevo a dataframe
+    if self._type == 'single':
+      self._X_train = pd.DataFrame(self._X_train, columns=self._columns_X.columns)
+      self._X_test = pd.DataFrame(self._X_test, columns=self._columns_X.columns)
+    elif self._type == 'multiple' or self._type == 'global':
+      self._X_train = pd.DataFrame(self._X_train, columns=self._columns_X)
+      self._X_test = pd.DataFrame(self._X_test, columns=self._columns_X)
 
 
 
@@ -164,7 +180,6 @@ class AutoML:
       'Elapsed Time': self.time,
       'CPU': self.cpu
     }) for i in range(len(self._model))]
-
 
 
 
@@ -252,30 +267,52 @@ class AutoML:
       y_pred_df = pd.DataFrame(self._y_pred[j], columns=self._y_test.columns)
       y_pred_df.reset_index(drop=True, inplace=True)
 
-      # Unir X_test con y_test
-      Xy_test_df = pd.concat([self._X_test, self._y_test], axis=1)
-      Xy_test_df.reset_index(drop=True, inplace=True)
-      Xy_test_df = pd.concat([Xy_test_df, y_pred_df], axis=1)
-      Xy_test_df.reset_index(drop=True, inplace=True)
-
       # Filtra las columnas que empiezan por AVG y las asigna a un dataframe
-      Xy_test_l95ci_df = Xy_test_df.filter(regex='^(?!(AVG|U95CI)).*')
-      Xy_test_u95ci_df = Xy_test_df.filter(regex='^(?!(AVG|L95CI)).*')
-      Xy_test_df = Xy_test_df.filter(regex='^(?!(L95CI|U95CI)).*')
+      y_test_l95ci_df = self._y_test.filter(regex='^(?!(AVG|U95CI)).*')
+      y_test_u95ci_df = self._y_test.filter(regex='^(?!(AVG|L95CI)).*')
+      y_test_df = self._y_test.filter(regex='^(?!(L95CI|U95CI)).*')
+
+      y_pred_l95ci_df = y_pred_df.filter(regex='^(?!(AVG|U95CI)).*')
+      y_pred_u95ci_df = y_pred_df.filter(regex='^(?!(AVG|L95CI)).*')
+      y_pred_df = y_pred_df.filter(regex='^(?!(L95CI|U95CI)).*')
+
+      # Resetea los índices
+      y_test_l95ci_df.reset_index(drop=True, inplace=True)
+      y_test_u95ci_df.reset_index(drop=True, inplace=True)
+      y_test_df.reset_index(drop=True, inplace=True)
+
+      y_pred_l95ci_df.reset_index(drop=True, inplace=True)
+      y_pred_u95ci_df.reset_index(drop=True, inplace=True)
+      y_pred_df.reset_index(drop=True, inplace=True)
 
       if self._type == 'single':
         # Graficar los resultados
         fig, ax = plt.subplots(figsize=(10, 10))
 
-        # Grafica los valores reales vs predichos como puntos
-        ax.plot(Xy_test_df.iloc[:, 3], Xy_test_df.iloc[:, 3], color=(0.3, 0.8, 0.5), label='Valor ideal')
-        ax.scatter(Xy_test_df.iloc[:, 3], Xy_test_df.iloc[:, 4], color=(0.8, 0.7, 0.2), label='Valor predicho')
+        # Crear la malla convexa
+        avg_points = np.column_stack((y_test_df, y_pred_df))
+        avg_hull = ConvexHull(avg_points)
 
-        # Grafica los intervalos de confianza reales y predichos como líneas
-        ax.plot(Xy_test_df.iloc[:, 3], Xy_test_l95ci_df.iloc[:, 3], color=(0.2, 0.5, 0.5), linestyle='dashed', label='Intervalo de confianza ideal')
-        ax.plot(Xy_test_df.iloc[:, 3], Xy_test_u95ci_df.iloc[:, 3], color=(0.2, 0.5, 0.5), linestyle='dashed')
-        ax.scatter(Xy_test_df.iloc[:, 3], Xy_test_u95ci_df.iloc[:, 4], color=(0.7, 0.8, 0.2), label='Intervalo de confianza predicho')
-        ax.scatter(Xy_test_df.iloc[:, 3], Xy_test_l95ci_df.iloc[:, 4], color=(0.7, 0.8, 0.2))
+        # Grafica los valores reales vs predichos como puntos de AVG
+        ax.plot(y_test_df, y_test_df, color='black', label='Valor ideal tiempo promedio')
+        ax.fill(avg_points[avg_hull.vertices,0], avg_points[avg_hull.vertices,1], 'r', alpha=0.15, label='Area de valores predichos de tiempo promedio')
+        ax.scatter(y_test_df, y_pred_df, color='red', label='Valor predicho tiempo promedio')
+
+        # Grafica los valores reales vs predichos como puntos de L95CI
+        l95ci_points = np.column_stack((y_test_l95ci_df, y_pred_l95ci_df))
+        l95ci_hull = ConvexHull(l95ci_points)
+
+        ax.scatter(y_test_l95ci_df, y_test_l95ci_df, color='orange', label='Valor ideal intervalo inferior', marker='*')
+        ax.fill(l95ci_points[l95ci_hull.vertices,0], l95ci_points[l95ci_hull.vertices,1], color='blue', alpha=0.15, label='Area de valores predichos de intervalo inferior')
+        ax.scatter(y_test_l95ci_df, y_pred_l95ci_df, color='blue', marker='x', label='Valor predicho intervalo inferior')
+
+        # Grafica los valores reales vs predichos como puntos de U95CI
+        u95ci_points = np.column_stack((y_test_u95ci_df, y_pred_u95ci_df))
+        u95ci_hull = ConvexHull(u95ci_points)
+
+        ax.scatter(y_test_u95ci_df, y_test_u95ci_df, color='gold', label='Valor ideal intervalo superior', marker='1')
+        ax.fill(u95ci_points[u95ci_hull.vertices,0], u95ci_points[u95ci_hull.vertices,1], color='green', alpha=0.15, label='Area de valores predichos de intervalo superior')
+        ax.scatter(y_test_u95ci_df, y_pred_u95ci_df, color='green', marker='^', label='Valor predicho intervalo superior')
 
         # Agrega los ejes
         ax.set_xlabel('Valor ideal de tiempo promedio hasta aparición', fontsize=10, fontweight='bold')
@@ -291,21 +328,8 @@ class AutoML:
         fig.set_layout_engine('compressed')
 
       elif self._type == 'multiple' or self._type == 'global':
-        # Quitar las 3 primeras columnas
-        Xy_test_df = Xy_test_df.drop(Xy_test_df.columns[:3], axis=1)
-        Xy_test_l95ci_df = Xy_test_l95ci_df.drop(Xy_test_l95ci_df.columns[:3], axis=1)
-        Xy_test_u95ci_df = Xy_test_u95ci_df.drop(Xy_test_u95ci_df.columns[:3], axis=1)
-
-        # Dividir el dataframe en 2 dataframes
-        y_test_df = Xy_test_df.iloc[:, :int(Xy_test_df.shape[1] / 2)]
-        y_pred_df = Xy_test_df.iloc[:, int(Xy_test_df.shape[1] / 2):]
-        y_test_l95ci_df = Xy_test_l95ci_df.iloc[:, :int(Xy_test_l95ci_df.shape[1] / 2)]
-        y_test_u95ci_df = Xy_test_u95ci_df.iloc[:, :int(Xy_test_u95ci_df.shape[1] / 2)]
-        y_pred_l95ci_df = Xy_test_l95ci_df.iloc[:, int(Xy_test_l95ci_df.shape[1] / 2):]
-        y_pred_u95ci_df = Xy_test_u95ci_df.iloc[:, int(Xy_test_u95ci_df.shape[1] / 2):]
-
         # Crear un subplot para cada columna
-        fig, ax = plt.subplots(figsize=(20, 20) if self._type == 'global' else (10, 10),
+        fig, ax = plt.subplots(figsize=(25, 25) if self._type == 'global' else (15, 15),
                                 nrows=(math.ceil(y_test_df.shape[1] / 2)) if (math.ceil(y_test_df.shape[1] / 2)) >= 2  else y_test_df.shape[1],
                                 ncols=2 if (math.ceil(y_test_df.shape[1] / 2)) >= 2 else 1)
 
@@ -314,25 +338,47 @@ class AutoML:
 
         # Graficar cada columna
         for i in range(y_test_df.shape[1]):
-          # Grafica los valores reales vs predichos como puntos
-          ax[i].plot(y_test_df.iloc[:, i], y_test_df.iloc[:, i], color=(0.3, 0.8, 0.5), label='Valor ideal')
-          ax[i].scatter(y_test_df.iloc[:, i], y_pred_df.iloc[:, i], color=(0.8, 0.7, 0.2), label='Valor predicho')
+          # Crear la malla convexa
+          avg_points = np.column_stack((y_test_df.iloc[:, i], y_pred_df.iloc[:, i]))
+          avg_hull = ConvexHull(avg_points)
 
-          # Grafica los valores reales vs predichos como líneas
-          ax[i].plot(y_test_df.iloc[:, i], y_test_l95ci_df.iloc[:, i], color=(0.2, 0.5, 0.5), linestyle='dashed', label='Intervalo de confianza ideal')
-          ax[i].scatter(y_test_df.iloc[:, i], y_pred_l95ci_df.iloc[:, i], color=(0.7, 0.8, 0.2), label='Intervalo de confianza predicho')
-          ax[i].plot(y_test_df.iloc[:, i], y_test_u95ci_df.iloc[:, i], color=(0.2, 0.5, 0.5), linestyle='dashed')
-          ax[i].scatter(y_test_df.iloc[:, i], y_pred_u95ci_df.iloc[:, i], color=(0.7, 0.8, 0.2))
+          # Grafica los valores reales vs predichos como puntos de AVG
+          ax[i].plot(y_test_df.iloc[:, i], y_test_df.iloc[:, i], color='black', label='Valor ideal tiempo promedio')
+          ax[i].fill(avg_points[avg_hull.vertices,0], avg_points[avg_hull.vertices,1], 'r', alpha=0.15, label='Area de valores predichos de tiempo promedio')
+          ax[i].scatter(y_test_df.iloc[:, i], y_pred_df.iloc[:, i], color='red', label='Valor predicho tiempo promedio')
+
+          # Grafica los valores reales vs predichos como puntos de L95CI
+          l95ci_points = np.column_stack((y_test_l95ci_df.iloc[:, i], y_pred_l95ci_df.iloc[:, i]))
+          l95ci_hull = ConvexHull(l95ci_points)
+
+          ax[i].scatter(y_test_l95ci_df.iloc[:, i], y_test_l95ci_df.iloc[:, i], color='orange', label='Valor ideal intervalo inferior', marker='*')
+          ax[i].fill(l95ci_points[l95ci_hull.vertices,0], l95ci_points[l95ci_hull.vertices,1], color='blue', alpha=0.15, label='Area de valores predichos de intervalo inferior')
+          ax[i].scatter(y_test_l95ci_df.iloc[:, i], y_pred_l95ci_df.iloc[:, i], color='blue', marker='x', label='Valor predicho intervalo inferior')
+
+          # Grafica los valores reales vs predichos como puntos de U95CI
+          u95ci_points = np.column_stack((y_test_u95ci_df.iloc[:, i], y_pred_u95ci_df.iloc[:, i]))
+          u95ci_hull = ConvexHull(u95ci_points)
+
+          ax[i].scatter(y_test_u95ci_df.iloc[:, i], y_test_u95ci_df.iloc[:, i], color='gold', label='Valor ideal intervalo superior', marker='1',)
+          ax[i].fill(u95ci_points[u95ci_hull.vertices,0], u95ci_points[u95ci_hull.vertices,1], color='green', alpha=0.15, label='Area de valores predichos de intervalo superior')
+          ax[i].scatter(y_test_u95ci_df.iloc[:, i], y_pred_u95ci_df.iloc[:, i], color='green', marker='^', label='Valor predicho intervalo superior')
 
           # Agrega los ejes
-          ax[i].set_xlabel('Valor ideal', fontsize=10, fontweight='bold')
-          ax[i].set_ylabel('Valor predicho', fontsize=10, fontweight='bold')
+          ax[i].set_xlabel('Valor ideal de tiempo promedio hasta aparición', fontsize=10, fontweight='bold')
+          ax[i].set_ylabel('Valor predicho de tiempo promedio hasta aparición', fontsize=10, fontweight='bold')
 
           # añadir titulo al subplot
           ax[i].set_title(f'{y_test_df.columns[i]}', fontweight='bold', fontsize=10)
 
-        # Agrega la leyenda
-        fig.legend(['Valor ideal', 'Valor predicho', 'Intervalo de confianza ideal', 'Intervalo de confianza predicho'], fontsize=10)
+          # Borrar las variables
+          avg_points = None
+          avg_hull = None
+          l95ci_points = None
+          l95ci_hull = None
+          u95ci_points = None
+          u95ci_hull = None
+
+          ax[1].legend(fontsize=10)
 
         # Agrega el título
         fig.suptitle(f'Gráfica de tiempo promedio hasta aparición para {self._name}', fontweight='bold', fontsize=15)
@@ -371,6 +417,7 @@ class AutoML:
 
       # Cierra la gráfica
       plt.close()
+
 
 
   def plot_upto_time(self) -> None:
