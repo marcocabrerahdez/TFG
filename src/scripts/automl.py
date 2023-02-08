@@ -183,6 +183,64 @@ class AutoML:
 
 
 
+  def r2_score_to_table(self) -> None:
+    """
+    Calcula el R2, donde, para cada comorbilidad,
+    cruza tipo de modelo y técnica de ML.
+    """
+    if self._type == 'single':
+      r2 = [r2_score(self._y_test, self._y_pred[i], multioutput='variance_weighted') for i in range(len(self._model))]
+
+      single_df = pd.DataFrame({
+        'Modelo': self._model_list_names,
+        self._type: r2
+      })
+
+      column_name = self._y_test.columns[0]
+
+      # Guarda el dataframe en un archivo excel
+      if not os.path.exists(os.path.join(st.SINGLE_R2_TABLE_DIR)):
+        os.mkdir(st.SINGLE_R2_TABLE_DIR)
+      single_df.to_excel(os.path.join(st.SINGLE_R2_TABLE_DIR, f'{column_name}.xlsx'), index=False)
+
+      # Resetea el dataframe
+      single_df = pd.DataFrame()
+      column_name = ''
+
+    elif self._type == 'multiple' or self._type == 'global':
+      r2 = [[r2_score(self._y_test.iloc[:, i:i+3], self._y_pred[j][:, i:i+3], multioutput='variance_weighted')
+              for i in range(0, self._y_test.shape[1], 3)]
+                for j in range(len(self._model))]
+
+      colum_names = [[self._y_test.columns[i] for i in range(i, i+3)][0] for i in range(0, self._y_test.shape[1], 3)]
+
+      # Trasponer la matriz de R2
+      r2 = np.transpose(r2)
+
+      for i in range(len(r2)):
+        multiple_global_df = pd.DataFrame({
+          'Modelo': self._model_list_names,
+          self._type: r2[i]
+        })
+
+        if self._type == 'multiple':
+          if not os.path.exists(os.path.join(st.MULTIPLE_R2_TABLE_DIR)):
+            os.mkdir(st.MULTIPLE_R2_TABLE_DIR)
+          multiple_global_df.to_excel(os.path.join(st.MULTIPLE_R2_TABLE_DIR, f'{colum_names[i]}.xlsx'), index=False)
+
+        elif self._type == 'global':
+          if not os.path.exists(os.path.join(st.GLOBAL_R2_TABLE_DIR)):
+            os.mkdir(st.GLOBAL_R2_TABLE_DIR)
+          multiple_global_df.to_excel(os.path.join(st.GLOBAL_R2_TABLE_DIR, f'{colum_names[i]}.xlsx'), index=False)
+
+        # Resetear el dataframe
+        multiple_global_df = pd.DataFrame()
+
+      # Resetear el column_names
+      colum_names = []
+
+
+
   def _save_predictions_results(self) -> None:
     # Guarda las predicciones en un archivo excel
     for i in range(len(self._model)):
