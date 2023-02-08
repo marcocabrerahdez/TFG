@@ -219,3 +219,22 @@ def compare_models(model: str, directory_name: List[str],
   if not os.path.exists(st.COMPARISION_DIR):
     os.makedirs(st.COMPARISION_DIR)
   plt.savefig(os.path.join(st.COMPARISION_DIR, plot_name + '.png'))
+
+
+
+def create_score_table(metrics_list: List[str], name_list: List[str], path=st.R2_TABLE_DIR) -> None:
+  # Creamos un diccionario para guardar cada dataframe
+  df_results = pd.DataFrame()
+
+  # Recorremos la lista de modelos
+  for metric, name in zip(metrics_list, name_list):
+    # Obtenemos el dataframe de los resultados
+    result = ut.get_score_file(metric, path)
+
+    # Guardamos cada dataframe en un excel
+    if not os.path.exists(os.path.join(path)):
+      os.mkdir(path)
+    result.to_excel(os.path.join(path, f'{name}.xlsx'), index=False)
+
+    # Reseteamos el dataframe
+    result = pd.DataFrame()

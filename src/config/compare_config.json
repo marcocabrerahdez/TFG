@@ -100,5 +100,69 @@
       "RandomForestRegressor"
     ],
     "name": "Comparación modelo de regresión (Enfermedad renal terminal)"
+  },
+  "r2": {
+    "list": [
+      "AVG_TIMETO_ALB1",
+      "AVG_TIMETO_ALB2",
+      "AVG_TIMETO_ANGINA",
+      "AVG_TIMETO_BGRET",
+      "AVG_TIMETO_BLI",
+      "AVG_TIMETO_ESRD",
+      "AVG_TIMETO_HF",
+      "AVG_TIMETO_LEA",
+      "AVG_TIMETO_ME",
+      "AVG_TIMETO_MI",
+      "AVG_TIMETO_NEU",
+      "AVG_TIMETO_PRET",
+      "AVG_TIMETO_STROKE"
+    ],
+    "name_list": [
+      "Fallo Cardiaco",
+      "Infarto de Miocardio",
+      "Angina",
+      "Ictus",
+      "Ceguera",
+      "Edema macular diabético",
+      "Retinopatía de fondo",
+      "Retinopatía proliferativa",
+      "Neuropatía",
+      "Amputación extremidades inferiores",
+      "Microalbuminuria",
+      "Macroalbuminuria",
+      "Enfermedad renal terminal"
+    ]
+  },
+  "mape": {
+    "list": [
+      "AVG_TIMETO_ALB1",
+      "AVG_TIMETO_ALB2",
+      "AVG_TIMETO_ANGINA",
+      "AVG_TIMETO_BGRET",
+      "AVG_TIMETO_BLI",
+      "AVG_TIMETO_ESRD",
+      "AVG_TIMETO_HF",
+      "AVG_TIMETO_LEA",
+      "AVG_TIMETO_ME",
+      "AVG_TIMETO_MI",
+      "AVG_TIMETO_NEU",
+      "AVG_TIMETO_PRET",
+      "AVG_TIMETO_STROKE"
+    ],
+    "name_list": [
+      "Fallo Cardiaco",
+      "Infarto de Miocardio",
+      "Angina",
+      "Ictus",
+      "Ceguera",
+      "Edema macular diabético",
+      "Retinopatía de fondo",
+      "Retinopatía proliferativa",
+      "Neuropatía",
+      "Amputación extremidades inferiores",
+      "Microalbuminuria",
+      "Macroalbuminuria",
+      "Enfermedad renal terminal"
+    ]
   }
 }

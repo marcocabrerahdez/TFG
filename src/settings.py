@@ -38,9 +38,14 @@ METRICS_DIR = os.path.join(ROOT_DIR, 'metrics')
 SINGLE_METRICS_DIR = os.path.join(METRICS_DIR, 'single')
 MULTIPLE_METRICS_DIR = os.path.join(METRICS_DIR, 'multiple')
 GLOBAL_METRICS_DIR = os.path.join(METRICS_DIR, 'global')
-SINGLE_R2_TABLE_DIR = os.path.join(METRICS_DIR, 'R2 tables', 'single')
-MULTIPLE_R2_TABLE_DIR = os.path.join(METRICS_DIR, 'R2 tables', 'multiple')
-GLOBAL_R2_TABLE_DIR = os.path.join(METRICS_DIR, 'R2 tables', 'global')
+R2_TABLE_DIR = os.path.join(METRICS_DIR, 'R2')
+SINGLE_R2_TABLE_DIR = os.path.join(R2_TABLE_DIR, 'single')
+MULTIPLE_R2_TABLE_DIR = os.path.join(R2_TABLE_DIR, 'multiple')
+GLOBAL_R2_TABLE_DIR = os.path.join(R2_TABLE_DIR, 'global')
+MAPE_TABLE_DIR = os.path.join(METRICS_DIR, 'MAPE')
+SINGLE_MAPE_TABLE_DIR = os.path.join(MAPE_TABLE_DIR, 'single')
+MULTIPLE_MAPE_TABLE_DIR = os.path.join(MAPE_TABLE_DIR, 'multiple')
+GLOBAL_MAPE_TABLE_DIR = os.path.join(MAPE_TABLE_DIR, 'global')
 
 # ARCHIVOS DE CONFIGURACIÓN
 DATASET_NAME = "2023-01-11 datos_clusterizados_ML.xlsx"

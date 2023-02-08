@@ -2,6 +2,7 @@
 
 import os
 import glob
+import shutil
 
 import pandas as pd
 import settings as st
@@ -20,6 +21,25 @@ def search_model_file(model_name: str, directory_name: str) -> str:
 
   # Devolvemos el archivo
   return model_file[0]
+
+
+
+def get_score_file(filename: str, path: str) -> pd.DataFrame:
+  # Añadir a filename el .xlsx
+  filename = filename + '.xlsx'
+
+  results = pd.DataFrame()
+
+  for root, dirs, files in os.walk(path):
+    if filename in files:
+      results = pd.concat([results, pd.read_excel(os.path.join(root, filename))], axis=1)
+
+  # Eliminar duplicados
+  results = results.loc[:,~results.columns.duplicated()]
+  # Las columnas van en orden 'single', 'multiple', 'global'
+  results = results.reindex(columns=['Modelo', 'single', 'multiple', 'global'])
+
+  return results
 
 
 

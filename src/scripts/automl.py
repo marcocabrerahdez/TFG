@@ -16,7 +16,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.multioutput import MultiOutputRegressor
-from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, mean_absolute_percentage_error
 from scipy.spatial import ConvexHull
 
 import settings as st
@@ -183,17 +183,23 @@ class AutoML:
 
 
 
-  def r2_score_to_table(self) -> None:
+  def score_to_table(self) -> None:
     """
     Calcula el R2, donde, para cada comorbilidad,
     cruza tipo de modelo y técnica de ML.
     """
     if self._type == 'single':
       r2 = [r2_score(self._y_test, self._y_pred[i], multioutput='variance_weighted') for i in range(len(self._model))]
+      mape = [mean_absolute_percentage_error(self._y_test, self._y_pred[i],  multioutput='uniform_average') for i in range(len(self._model))]
 
-      single_df = pd.DataFrame({
+      single_r2_df = pd.DataFrame({
         'Modelo': self._model_list_names,
         self._type: r2
+      })
+
+      single_mape_df = pd.DataFrame({
+        'Modelo': self._model_list_names,
+        self._type: mape
       })
 
       column_name = self._y_test.columns[0]
@@ -201,10 +207,15 @@ class AutoML:
       # Guarda el dataframe en un archivo excel
       if not os.path.exists(os.path.join(st.SINGLE_R2_TABLE_DIR)):
         os.mkdir(st.SINGLE_R2_TABLE_DIR)
-      single_df.to_excel(os.path.join(st.SINGLE_R2_TABLE_DIR, f'{column_name}.xlsx'), index=False)
+      single_r2_df.to_excel(os.path.join(st.SINGLE_R2_TABLE_DIR, f'{column_name}.xlsx'), index=False)
+
+      if not os.path.exists(os.path.join(st.SINGLE_MAPE_TABLE_DIR)):
+        os.mkdir(st.SINGLE_MAPE_TABLE_DIR)
+      single_mape_df.to_excel(os.path.join(st.SINGLE_MAPE_TABLE_DIR, f'{column_name}.xlsx'), index=False)
 
       # Resetea el dataframe
-      single_df = pd.DataFrame()
+      single_r2_df = pd.DataFrame()
+      single_mape_df = pd.DataFrame()
       column_name = ''
 
     elif self._type == 'multiple' or self._type == 'global':
@@ -212,29 +223,49 @@ class AutoML:
               for i in range(0, self._y_test.shape[1], 3)]
                 for j in range(len(self._model))]
 
+      mape = [[mean_absolute_percentage_error(self._y_test.iloc[:, i:i+3], self._y_pred[j][:, i:i+3], multioutput='uniform_average')
+              for i in range(0, self._y_test.shape[1], 3)]
+                for j in range(len(self._model))]
+
       colum_names = [[self._y_test.columns[i] for i in range(i, i+3)][0] for i in range(0, self._y_test.shape[1], 3)]
 
-      # Trasponer la matriz de R2
+      # Trasponer la matriz de R2 y MAPE
       r2 = np.transpose(r2)
+      mape = np.transpose(mape)
 
       for i in range(len(r2)):
-        multiple_global_df = pd.DataFrame({
+        multiple_global_r2_df = pd.DataFrame({
           'Modelo': self._model_list_names,
           self._type: r2[i]
+        })
+
+        multiple_global_mape_df = pd.DataFrame({
+          'Modelo': self._model_list_names,
+          self._type: mape[i]
         })
 
         if self._type == 'multiple':
           if not os.path.exists(os.path.join(st.MULTIPLE_R2_TABLE_DIR)):
             os.mkdir(st.MULTIPLE_R2_TABLE_DIR)
-          multiple_global_df.to_excel(os.path.join(st.MULTIPLE_R2_TABLE_DIR, f'{colum_names[i]}.xlsx'), index=False)
+          multiple_global_r2_df.to_excel(os.path.join(st.MULTIPLE_R2_TABLE_DIR, f'{colum_names[i]}.xlsx'), index=False)
+
+          if not os.path.exists(os.path.join(st.MULTIPLE_MAPE_TABLE_DIR)):
+            os.mkdir(st.MULTIPLE_MAPE_TABLE_DIR)
+          multiple_global_mape_df.to_excel(os.path.join(st.MULTIPLE_MAPE_TABLE_DIR, f'{colum_names[i]}.xlsx'), index=False)
+
 
         elif self._type == 'global':
           if not os.path.exists(os.path.join(st.GLOBAL_R2_TABLE_DIR)):
             os.mkdir(st.GLOBAL_R2_TABLE_DIR)
-          multiple_global_df.to_excel(os.path.join(st.GLOBAL_R2_TABLE_DIR, f'{colum_names[i]}.xlsx'), index=False)
+          multiple_global_r2_df.to_excel(os.path.join(st.GLOBAL_R2_TABLE_DIR, f'{colum_names[i]}.xlsx'), index=False)
+
+          if not os.path.exists(os.path.join(st.GLOBAL_MAPE_TABLE_DIR)):
+            os.mkdir(st.GLOBAL_MAPE_TABLE_DIR)
+          multiple_global_mape_df.to_excel(os.path.join(st.GLOBAL_MAPE_TABLE_DIR, f'{colum_names[i]}.xlsx'), index=False)
 
         # Resetear el dataframe
-        multiple_global_df = pd.DataFrame()
+        multiple_global_r2_df = pd.DataFrame()
+        multiple_global_mape_df = pd.DataFrame()
 
       # Resetear el column_names
       colum_names = []

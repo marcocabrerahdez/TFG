@@ -132,7 +132,15 @@ dmypy.json
 .DS_Store
 
 # Ficheros
-metrics
+metrics/single
+metrics/multiple
+metrics/global
+metrics/R2/single
+metrics/R2/multiple
+metrics/R2/global
+metrics/MAPE/single
+metrics/MAPE/multiple
+metrics/MAPE/global
 predictions
 data/splited data
 model
