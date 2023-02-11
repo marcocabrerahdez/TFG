@@ -304,89 +304,133 @@ def compare_values_by_type(model_list: List[str], path=st.R2_TABLE_DIR) -> None:
 
     # Usar columns_Y para poner como nombre de columna a y_pred_single
     y_pred_single.columns = columns_Y
-    # Quitar columnas que empiezan por L95CI y U95CI
-    y_pred_single = y_pred_single.loc[:, ~y_pred_single.columns.str.startswith('L95CI')]
-    y_pred_single = y_pred_single.loc[:, ~y_pred_single.columns.str.startswith('U95CI')]
+
+    # Crear un switcher para obtener las columnas de y_pred_multiple
     swithcer_multiple = {
-      'Fallo Cardiaco': 0,
-      'Ceguera': 0,
-      'Neuropatía individual': 0,
-      'Microalbuminuria': 0,
-      'Infarto de Miocardio': 3,
-      'Edema macular diabético': 3,
-      'Amputación extremidades inferiores': 3,
-      'Macroalbuminuria': 3,
-      'Angina': 6,
-      'Retinopatía de fondo': 6,
-      'Enfermedad renal terminal': 6,
-      'Ictus': 9,
-      'Retinopatía proliferativa': 9,
+      'Fallo Cardiaco': [0, 1, 2],
+      'Ceguera': [0, 1, 2],
+      'Neuropatía individual':[0, 1, 2],
+      'Microalbuminuria': [0, 1, 2],
+      'Infarto de Miocardio': [3, 4, 5],
+      'Edema macular diabético': [3, 4, 5],
+      'Amputación extremidades inferiores':[3, 4, 5],
+      'Macroalbuminuria':[3, 4, 5],
+      'Angina': [6, 7, 8],
+      'Retinopatía de fondo': [6, 7, 8],
+      'Enfermedad renal terminal':[6, 7, 8],
+      'Ictus': [9, 10, 11],
+      'Retinopatía proliferativa': [9, 10, 11],
     }
 
-    # Drop todas las columnas excepto swithcer.get(model)
-    y_pred_multiple = y_pred_multiple.drop(y_pred_multiple.columns.difference([swithcer_multiple.get(model)]), 1, inplace=False)
-    # Cambiar el nombre de la columna por el primer valor de columns_Y
-    y_pred_multiple.columns = [columns_Y[0]]
+    # Obtener las columnas de y_pred_multiple a partir del switcher
+    y_pred_multiple = y_pred_multiple.iloc[:, swithcer_multiple.get(model)]
 
+    # Cambiar el nombre de la columna por el primer valor de columns_Y
+    y_pred_multiple.columns = columns_Y
+
+    # Crear un switcher para obtener las columnas de y_pred_global
     swithcer_global = {
-      'Fallo Cardiaco': 0,
-      'Infarto de Miocardio': 3,
-      'Angina': 6,
-      'Ictus': 9,
-      'Ceguera': 12,
-      'Edema macular diabético': 15,
-      'Retinopatía de fondo': 18,
-      'Retinopatía proliferativa': 21,
-      'Neuropatía individual': 24,
-      'Amputación extremidades inferiores': 27,
-      'Microalbuminuria': 30,
-      'Macroalbuminuria': 33,
-      'Enfermedad renal terminal': 36,
+      'Fallo Cardiaco': [0, 1, 2],
+      'Infarto de Miocardio': [3, 4, 5],
+      'Angina': [6, 7, 8],
+      'Ictus': [9, 10, 11],
+      'Ceguera': [12, 13, 14],
+      'Edema macular diabético': [15, 16, 17],
+      'Retinopatía de fondo': [18, 19, 20],
+      'Retinopatía proliferativa': [21, 22, 23],
+      'Neuropatía individual': [24, 25, 26],
+      'Amputación extremidades inferiores': [27, 28, 29],
+      'Microalbuminuria': [30, 31, 32],
+      'Macroalbuminuria': [33, 34, 35],
+      'Enfermedad renal terminal': [36, 37, 38],
     }
 
-    # Drop todas las columnas excepto swithcer.get(model)
-    y_pred_global = y_pred_global.drop(y_pred_global.columns.difference([swithcer_global.get(model)]), 1, inplace=False)
-    # Cambiar el nombre de la columna por el primer valor de columns_Y
-    y_pred_global.columns = [columns_Y[0]]
+    # Obtener las columnas de y_pred_multiple a partir del switcher
+    y_pred_global = y_pred_global.iloc[:, swithcer_global.get(model)]
 
-    # Quitar columnas que empiezan por L95CI y U95CI
-    y_test = y_test.loc[:, ~y_test.columns.str.startswith('L95CI')]
-    y_test = y_test.loc[:, ~y_test.columns.str.startswith('U95CI')]
+    # Cambiar el nombre de la columna por el primer valor de columns_Y
+    y_pred_global.columns = columns_Y
 
     # Crear una figura
-    fig, ax = plt.subplots(figsize=(10, 10))
+    fig, ax = plt.subplots(figsize=(12, 12), ncols=1, nrows=3)
 
-    # Crea una malla convenxa
-    single_points = np.column_stack((y_test, y_pred_single))
-    multiple_points = np.column_stack((y_test, y_pred_multiple))
-    global_points = np.column_stack((y_test, y_pred_global))
+    ax = ax.ravel()
 
-    single_hull = ConvexHull(single_points)
-    multiple_hull = ConvexHull(multiple_points)
-    global_hull = ConvexHull(global_points)
+    # Crea una malla convenxa para los tiempo promedio
+    single_avg_points = np.column_stack((y_test.iloc[:, 0], y_pred_single.iloc[:, 0])); single_avg_hull = ConvexHull(single_avg_points)
+    multiple_avg_points = np.column_stack((y_test.iloc[:, 0], y_pred_multiple.iloc[:, 0])); multiple_avg_hull = ConvexHull(multiple_avg_points)
+    global_avg_points = np.column_stack((y_test.iloc[:, 0], y_pred_global.iloc[:, 0]));  global_avg_hull = ConvexHull(global_avg_points)
 
-    # Grafica los valores predichos y los valores reales
-    ax.plot(y_test, y_test, color='black', label='Valor ideal tiempo promedio')
-    ax.fill(single_points[single_hull.vertices, 0], single_points[single_hull.vertices, 1], 'r', alpha=0.15, label='Area de valores predichos (single)')
-    ax.scatter(y_test, y_pred_single, color='red', label='Valores predichos (single)')
+    # Crea una malla convenxa para el intervalo inferior de tiempo promedio
+    single_avg_l95ci_points = np.column_stack((y_test.iloc[:, 1], y_pred_single.iloc[:, 1])); single_avg_l95ci_hull = ConvexHull(single_avg_l95ci_points)
+    multiple_avg_l95ci_points = np.column_stack((y_test.iloc[:, 1], y_pred_multiple.iloc[:, 1])); multiple_avg_l95ci_hull = ConvexHull(multiple_avg_l95ci_points)
+    global_avg_l95ci_points = np.column_stack((y_test.iloc[:, 1], y_pred_global.iloc[:, 1])); global_avg_l95ci_hull = ConvexHull(global_avg_l95ci_points)
 
-    # Grafica los valores reales y los valores predichos de tipo multiple
-    ax.fill(multiple_points[multiple_hull.vertices, 0], multiple_points[multiple_hull.vertices, 1],  color='blue', alpha=0.15, label='Area de valores predichos (multiple)')
-    ax.scatter(y_test, y_pred_multiple, color='blue', marker='x', label='Valores predichos (multiple)')
+    # Crea una malla convenxa para el intervalo superior de tiempo promedio
+    single_avg_u95ci_points = np.column_stack((y_test.iloc[:, 2], y_pred_single.iloc[:, 2])); single_avg_u95ci_hull = ConvexHull(single_avg_u95ci_points)
+    multiple_avg_u95ci_points = np.column_stack((y_test.iloc[:, 2], y_pred_multiple.iloc[:, 2])); multiple_avg_u95ci_hull = ConvexHull(multiple_avg_u95ci_points)
+    global_avg_u95ci_points = np.column_stack((y_test.iloc[:, 2], y_pred_global.iloc[:, 2])); global_avg_u95ci_hull = ConvexHull(global_avg_u95ci_points)
 
-    # Grafica los valores reales y los valores predichos de tipo global
-    ax.fill(global_points[global_hull.vertices, 0], global_points[global_hull.vertices, 1], color='green', alpha=0.15, label='Area de valores predichos (global)')
-    ax.scatter(y_test, y_pred_global, color='green', marker='^', label='Valores predichos (global)')
+    # Grafica los puntos de tiempo promedio ideal
+    ax[0].plot(y_test.iloc[:, 0], y_test.iloc[:, 0], color='black', label='Valor ideal tiempo promedio')
+
+    # Grafica los puntos de tiempo promedio
+    ax[0].fill(single_avg_points[single_avg_hull.vertices, 0], single_avg_points[single_avg_hull.vertices, 1], 'r', alpha=0.15, label='Area de valores predichos de tiempo promedio (single)')
+    ax[0].scatter(y_test.iloc[:, 0], y_pred_single.iloc[:, 0], color='red', label='Valores predichos de tiempo promedio (single)')
+
+    # Grafica los puntos de tiempo promedio
+    ax[0].fill(multiple_avg_points[multiple_avg_hull.vertices, 0], multiple_avg_points[multiple_avg_hull.vertices, 1], 'b', alpha=0.15, label='Area de valores predichos de tiempo promedio (multiple)')
+    ax[0].scatter(y_test.iloc[:, 0], y_pred_multiple.iloc[:, 0],  marker='x', color='blue', label='Valores predichos de tiempo promedio (multiple)')
+
+    # Grafica los puntos de tiempo promedio
+    ax[0].fill(global_avg_points[global_avg_hull.vertices, 0], global_avg_points[global_avg_hull.vertices, 1], 'g', alpha=0.15, label='Area de valores predichos de tiempo promedio (global)')
+    ax[0].scatter(y_test.iloc[:, 0], y_pred_global.iloc[:, 0], color='green',  marker='^', label='Valores predichos de tiempo promedio (global)')
+
+    # Grafica los puntos de tiempo promedio ideal
+    ax[1].plot(y_test.iloc[:, 1], y_test.iloc[:, 1], color='black', label='Valor ideal intervalo inferior')
+
+    # Grafica los puntos de intervalo inferior de tiempo promedio
+    ax[1].fill(single_avg_l95ci_points[single_avg_l95ci_hull.vertices, 0], single_avg_l95ci_points[single_avg_l95ci_hull.vertices, 1] , 'r', alpha=0.15, label='Area de valores predichos de intervalo inferior de tiempo promedio (single)')
+    ax[1].scatter(y_test.iloc[:, 1], y_pred_single.iloc[:, 1],  color='red', label='Valores predichos de intervalo inferior de tiempo promedio (single)')
+
+    # Grafica los puntos de intervalo inferior de tiempo promedio
+    ax[1].fill(multiple_avg_l95ci_points[multiple_avg_l95ci_hull.vertices, 0], multiple_avg_l95ci_points[multiple_avg_l95ci_hull.vertices, 1], 'b', alpha=0.15, label='Area de valores predichos de intervalo inferior de tiempo promedio (multiple)')
+    ax[1].scatter(y_test.iloc[:, 1], y_pred_multiple.iloc[:, 1], marker='x', color='blue', label='Valores predichos de intervalo inferior de tiempo promedio (multiple)')
+
+    # Grafica los puntos de intervalo inferior de tiempo promedio
+    ax[1].fill(global_avg_l95ci_points[global_avg_l95ci_hull.vertices, 0], global_avg_l95ci_points[global_avg_l95ci_hull.vertices, 1], 'g', alpha=0.15, label='Area de valores predichos de intervalo inferior de tiempo promedio (global)')
+    ax[1].scatter(y_test.iloc[:, 1], y_pred_global.iloc[:, 1], color='green',  marker='^', label='Valores predichos de intervalo inferior de tiempo promedio (global)')
+
+    # Grafica los puntos de tiempo promedio ideal
+    ax[2].plot(y_test.iloc[:, 2], y_test.iloc[:, 2], color='black', label='Valor ideal intervalo superior')
+
+    # Grafica los puntos de intervalo superior de tiempo promedio
+    ax[2].fill(single_avg_u95ci_points[single_avg_u95ci_hull.vertices, 0], single_avg_u95ci_points[single_avg_u95ci_hull.vertices, 1], 'r', alpha=0.15, label='Area de valores predichos de intervalo superior de tiempo promedio (single)')
+    ax[2].scatter(y_test.iloc[:, 2], y_pred_single.iloc[:, 2], color='red', label='Valores predichos de intervalo superior de tiempo promedio (single)')
+
+    # Grafica los puntos de intervalo superior de tiempo promedio
+    ax[2].fill(multiple_avg_u95ci_points[multiple_avg_u95ci_hull.vertices, 0], multiple_avg_u95ci_points[multiple_avg_u95ci_hull.vertices, 1], 'b', alpha=0.15, label='Area de valores predichos de intervalo superior de tiempo promedio (multiple)')
+    ax[2].scatter(y_test.iloc[:, 2], y_pred_multiple.iloc[:, 2], marker='x', color='blue', label='Valores predichos de intervalo superior de tiempo promedio (multiple)')
+
+    # Grafica los puntos de intervalo superior de tiempo promedio
+    ax[2].fill(global_avg_u95ci_points[global_avg_u95ci_hull.vertices, 0], global_avg_u95ci_points[global_avg_u95ci_hull.vertices, 1], 'g', alpha=0.15, label='Area de valores predichos de intervalo superior de tiempo promedio (global)')
+    ax[2].scatter(y_test.iloc[:, 2], y_pred_global.iloc[:, 2], color='green',  marker='^', label='Valores predichos de intervalo superior de tiempo promedio (global)')
 
     # Agrega una leyenda
-    ax.legend()
-
-    # Agrega un titulo
-    ax.set_title('Resultados de predicción para ' + model + ' con ' + max_model)
+    ax[0].legend(fontsize='10')
+    ax[1].legend(fontsize='10')
+    ax[2].legend(fontsize='10')
 
     # Agrega etiquetas a los ejes
-    ax.set_xlabel('Tiempo real')
-    ax.set_ylabel('Tiempo predicho')
+    for i in range(3):
+      ax[i].set_xlabel('Tiempo real', fontweight='bold')
+      ax[i].set_ylabel('Tiempo predicho', fontweight='bold')
+
+    # Agrega un titulo
+    fig.suptitle('Resultados de predicción para ' + model + ' con ' + max_model, fontweight='bold')
+
+    # Configura el layout
+    fig.set_layout_engine('compressed')
 
     # Guarda la figura
     fig.savefig(os.path.join(st.PLOTS_DIR, model + '.png'))
