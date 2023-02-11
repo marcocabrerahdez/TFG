@@ -164,5 +164,22 @@
       "Macroalbuminuria",
       "Enfermedad renal terminal"
     ]
+  },
+  "compare_type": {
+    "list": [
+      "Fallo Cardiaco",
+      "Infarto de Miocardio",
+      "Angina",
+      "Ictus",
+      "Ceguera",
+      "Edema macular diabético",
+      "Retinopatía de fondo",
+      "Retinopatía proliferativa",
+      "Neuropatía individual",
+      "Amputación extremidades inferiores",
+      "Microalbuminuria",
+      "Macroalbuminuria",
+      "Enfermedad renal terminal"
+    ]
   }
 }

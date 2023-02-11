@@ -4,6 +4,7 @@ from typing import List
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.spatial import ConvexHull
 
 import settings as st
 import utils as ut
@@ -238,3 +239,163 @@ def create_score_table(metrics_list: List[str], name_list: List[str], path=st.R2
 
     # Reseteamos el dataframe
     result = pd.DataFrame()
+
+
+
+def compare_values_by_type(model_list: List[str], path=st.R2_TABLE_DIR) -> None:
+  """
+  Compara los valores predichos y reales de cada modelo.
+  Eligiendo una técnica de ML y una comorbilidad,
+  muestra una gráfica de dispersión donde cada serie de datos
+  corresponde a un tipo de modelo (single, multiple, global).
+  """
+  print('Comprobando los valores predichos y reales de cada modelo...')
+  # Busca el archivo de la lista de modelos
+  for model in model_list:
+    # Obtener el dataframe de los resultados
+    model_df = ut.get_score_file(model, path)
+
+    # Obtener el valor más grande de entre las columnas (single, multiple, global)
+    max_value = model_df[['single', 'multiple', 'global']].max().max()
+
+    # Obtener el indice del valor más grande
+    max_index = model_df[['single', 'multiple', 'global']].idxmax().max()
+
+    # Obtener el nombre de la columna donde está el valor más grande
+    column_name = model_df[['single', 'multiple', 'global']].idxmax().idxmax()
+
+    # Obtener el nombre de la fila donde está el valor más grande
+    max_model = model_df.loc[max_index, 'Modelo']
+
+    # Buscar el archivo de los datos de entrenamiento y test
+    X_train, X_test, y_train, y_test, columns_X, columns_Y = ut.get_splited_data([model], 'multiple')
+
+    # Buscar el archivo de predicciones
+    pred_single_path = os.path.join(st.SINGLE_PREDICTIONS_DIR, max_model, model + '.xlsx')
+
+    # Abrir el archivo de predicciones
+    with open(pred_single_path, 'rb') as f:
+      y_pred_single = pd.read_excel(f)
+
+    if model == 'Fallo Cardiaco' or model == 'Infarto de Miocardio' or model == 'Angina' or model == 'Ictus':
+      pred_multiple_path = os.path.join(st.MULTIPLE_PREDICTIONS_DIR, max_model, 'Enfermedades cardíacas' + '.xlsx')
+
+    elif model == 'Ceguera' or model == 'Edema macular diabético' or model == 'Retinopatía de fondo' or model == 'Retinopatía proliferativa':
+      pred_multiple_path = os.path.join(st.MULTIPLE_PREDICTIONS_DIR, max_model, 'Retinopatías' + '.xlsx')
+
+    elif model == 'Neuropatía individual' or model == 'Amputación extremidades inferiores':
+      pred_multiple_path = os.path.join(st.MULTIPLE_PREDICTIONS_DIR, max_model, 'Neuropatías' + '.xlsx')
+
+    else:
+      pred_multiple_path = os.path.join(st.MULTIPLE_PREDICTIONS_DIR, max_model, 'Nefropatías' + '.xlsx')
+
+    with open(pred_multiple_path, 'rb') as f:
+      y_pred_multiple = pd.read_excel(f)
+
+    pred_global_path = os.path.join(st.GLOBAL_PREDICTIONS_DIR, max_model, 'Comorbilidades' + '.xlsx')
+
+    with open(pred_global_path, 'rb') as f:
+      y_pred_global = pd.read_excel(f)
+
+    # Quitar las columnas HBA1C, AGE, DURATION
+    y_pred_single = y_pred_single.drop(columns=['HBA1C', 'AGE', 'DURATION'])
+    y_pred_multiple = y_pred_multiple.drop(columns=['HBA1C', 'AGE', 'DURATION'])
+    y_pred_global = y_pred_global.drop(columns=['HBA1C', 'AGE', 'DURATION'])
+
+    # Usar columns_Y para poner como nombre de columna a y_pred_single
+    y_pred_single.columns = columns_Y
+    # Quitar columnas que empiezan por L95CI y U95CI
+    y_pred_single = y_pred_single.loc[:, ~y_pred_single.columns.str.startswith('L95CI')]
+    y_pred_single = y_pred_single.loc[:, ~y_pred_single.columns.str.startswith('U95CI')]
+    swithcer_multiple = {
+      'Fallo Cardiaco': 0,
+      'Ceguera': 0,
+      'Neuropatía individual': 0,
+      'Microalbuminuria': 0,
+      'Infarto de Miocardio': 3,
+      'Edema macular diabético': 3,
+      'Amputación extremidades inferiores': 3,
+      'Macroalbuminuria': 3,
+      'Angina': 6,
+      'Retinopatía de fondo': 6,
+      'Enfermedad renal terminal': 6,
+      'Ictus': 9,
+      'Retinopatía proliferativa': 9,
+    }
+
+    # Drop todas las columnas excepto swithcer.get(model)
+    y_pred_multiple = y_pred_multiple.drop(y_pred_multiple.columns.difference([swithcer_multiple.get(model)]), 1, inplace=False)
+    # Cambiar el nombre de la columna por el primer valor de columns_Y
+    y_pred_multiple.columns = [columns_Y[0]]
+
+    swithcer_global = {
+      'Fallo Cardiaco': 0,
+      'Infarto de Miocardio': 3,
+      'Angina': 6,
+      'Ictus': 9,
+      'Ceguera': 12,
+      'Edema macular diabético': 15,
+      'Retinopatía de fondo': 18,
+      'Retinopatía proliferativa': 21,
+      'Neuropatía individual': 24,
+      'Amputación extremidades inferiores': 27,
+      'Microalbuminuria': 30,
+      'Macroalbuminuria': 33,
+      'Enfermedad renal terminal': 36,
+    }
+
+    # Drop todas las columnas excepto swithcer.get(model)
+    y_pred_global = y_pred_global.drop(y_pred_global.columns.difference([swithcer_global.get(model)]), 1, inplace=False)
+    # Cambiar el nombre de la columna por el primer valor de columns_Y
+    y_pred_global.columns = [columns_Y[0]]
+
+    # Quitar columnas que empiezan por L95CI y U95CI
+    y_test = y_test.loc[:, ~y_test.columns.str.startswith('L95CI')]
+    y_test = y_test.loc[:, ~y_test.columns.str.startswith('U95CI')]
+
+    # Crear una figura
+    fig, ax = plt.subplots(figsize=(10, 10))
+
+    # Crea una malla convenxa
+    single_points = np.column_stack((y_test, y_pred_single))
+    multiple_points = np.column_stack((y_test, y_pred_multiple))
+    global_points = np.column_stack((y_test, y_pred_global))
+
+    single_hull = ConvexHull(single_points)
+    multiple_hull = ConvexHull(multiple_points)
+    global_hull = ConvexHull(global_points)
+
+    # Grafica los valores predichos y los valores reales
+    ax.plot(y_test, y_test, color='black', label='Valor ideal tiempo promedio')
+    ax.fill(single_points[single_hull.vertices, 0], single_points[single_hull.vertices, 1], 'r', alpha=0.15, label='Area de valores predichos (single)')
+    ax.scatter(y_test, y_pred_single, color='red', label='Valores predichos (single)')
+
+    # Grafica los valores reales y los valores predichos de tipo multiple
+    ax.fill(multiple_points[multiple_hull.vertices, 0], multiple_points[multiple_hull.vertices, 1],  color='blue', alpha=0.15, label='Area de valores predichos (multiple)')
+    ax.scatter(y_test, y_pred_multiple, color='blue', marker='x', label='Valores predichos (multiple)')
+
+    # Grafica los valores reales y los valores predichos de tipo global
+    ax.fill(global_points[global_hull.vertices, 0], global_points[global_hull.vertices, 1], color='green', alpha=0.15, label='Area de valores predichos (global)')
+    ax.scatter(y_test, y_pred_global, color='green', marker='^', label='Valores predichos (global)')
+
+    # Agrega una leyenda
+    ax.legend()
+
+    # Agrega un titulo
+    ax.set_title('Resultados de predicción para ' + model + ' con ' + max_model)
+
+    # Agrega etiquetas a los ejes
+    ax.set_xlabel('Tiempo real')
+    ax.set_ylabel('Tiempo predicho')
+
+    # Guarda la figura
+    fig.savefig(os.path.join(st.PLOTS_DIR, model + '.png'))
+
+    # Resetear los valores de y_pred_single, y_pred_multiple y y_pred_global
+    y_pred_single = pd.DataFrame()
+    y_pred_multiple = pd.DataFrame()
+    y_pred_global = pd.DataFrame()
+    columns_Y = []
+
+    # Cerrar la figura
+    plt.close(fig)

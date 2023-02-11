@@ -26,6 +26,7 @@ SINGLE_PLOTS_DIR = os.path.join(PLOTS_DIR, 'single')
 MULTIPLE_PLOTS_DIR = os.path.join(PLOTS_DIR, 'multiple')
 GLOBAL_PLOTS_DIR = os.path.join(PLOTS_DIR, 'global')
 
+
 # PREDICCIONES
 PREDICTIONS_DIR = os.path.join(ROOT_DIR, 'predictions')
 SINGLE_PREDICTIONS_DIR = os.path.join(PREDICTIONS_DIR, 'single')
