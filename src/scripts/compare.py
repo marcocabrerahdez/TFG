@@ -384,7 +384,7 @@ def compare_values_by_type(model_list: List[str], path=st.R2_TABLE_DIR) -> None:
 
     # Grafica los puntos de tiempo promedio
     ax[0].fill(global_avg_points[global_avg_hull.vertices, 0], global_avg_points[global_avg_hull.vertices, 1], 'g', alpha=0.15, label='Area de valores predichos de tiempo promedio (global)')
-    ax[0].scatter(y_test.iloc[:, 0], y_pred_global.iloc[:, 0], color='green',  marker='^', label='Valores predichos de tiempo promedio (global)')
+    ax[0].scatter(y_test.iloc[:, 0], y_pred_global.iloc[:, 0], color='green',  marker='1', label='Valores predichos de tiempo promedio (global)')
 
     # Grafica los puntos de tiempo promedio ideal
     ax[1].plot(y_test.iloc[:, 1], y_test.iloc[:, 1], color='black', label='Valor ideal intervalo inferior')
@@ -399,7 +399,7 @@ def compare_values_by_type(model_list: List[str], path=st.R2_TABLE_DIR) -> None:
 
     # Grafica los puntos de intervalo inferior de tiempo promedio
     ax[1].fill(global_avg_l95ci_points[global_avg_l95ci_hull.vertices, 0], global_avg_l95ci_points[global_avg_l95ci_hull.vertices, 1], 'g', alpha=0.15, label='Area de valores predichos de intervalo inferior de tiempo promedio (global)')
-    ax[1].scatter(y_test.iloc[:, 1], y_pred_global.iloc[:, 1], color='green',  marker='^', label='Valores predichos de intervalo inferior de tiempo promedio (global)')
+    ax[1].scatter(y_test.iloc[:, 1], y_pred_global.iloc[:, 1], color='green',  marker='1', label='Valores predichos de intervalo inferior de tiempo promedio (global)')
 
     # Grafica los puntos de tiempo promedio ideal
     ax[2].plot(y_test.iloc[:, 2], y_test.iloc[:, 2], color='black', label='Valor ideal intervalo superior')
@@ -414,12 +414,12 @@ def compare_values_by_type(model_list: List[str], path=st.R2_TABLE_DIR) -> None:
 
     # Grafica los puntos de intervalo superior de tiempo promedio
     ax[2].fill(global_avg_u95ci_points[global_avg_u95ci_hull.vertices, 0], global_avg_u95ci_points[global_avg_u95ci_hull.vertices, 1], 'g', alpha=0.15, label='Area de valores predichos de intervalo superior de tiempo promedio (global)')
-    ax[2].scatter(y_test.iloc[:, 2], y_pred_global.iloc[:, 2], color='green',  marker='^', label='Valores predichos de intervalo superior de tiempo promedio (global)')
+    ax[2].scatter(y_test.iloc[:, 2], y_pred_global.iloc[:, 2], color='green',  marker='1', label='Valores predichos de intervalo superior de tiempo promedio (global)')
 
     # Agrega una leyenda
-    ax[0].legend(fontsize='10')
-    ax[1].legend(fontsize='10')
-    ax[2].legend(fontsize='10')
+    ax[0].legend(fontsize='8')
+    ax[1].legend(fontsize='8')
+    ax[2].legend(fontsize='8')
 
     # Agrega etiquetas a los ejes
     for i in range(3):
