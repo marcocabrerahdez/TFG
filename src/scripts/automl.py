@@ -57,7 +57,6 @@ class AutoML:
     'time',
     'cpu',
     '_trained_data_names',
-    '_metrics_results'
   ]
 
   def __init__(self, name: str, class_name, model, type_model: str, params,
@@ -97,7 +96,6 @@ class AutoML:
     self._y_pred = None
     self.time = None
     self.cpu = None
-    self._metrics_results = []
 
     # Preprocesar los datos
     scaler = StandardScaler()
@@ -157,33 +155,7 @@ class AutoML:
 
 
 
-  def metrics(self) -> None:
-    # Calcula el R2 y el error cuadrático medio de cada salida del modelo
-    r2 = [[r2_score(self._y_test.iloc[:, i], self._y_pred[j][:, i])
-            for i in range(self._y_test.shape[1])]
-              for j in range(len(self._model))]
-    mse = [[mean_squared_error(self._y_test.iloc[:, i], self._y_pred[j][:, i])
-            for i in range(self._y_test.shape[1])]
-              for j in range(len(self._model))]
-    mae = [[mean_absolute_error(self._y_test.iloc[:, i],self._y_pred[j][:, i])
-            for i in range(self._y_test.shape[1])]
-              for j in range(len(self._model))]
-
-    # Crea un dataframe con los resultados de cada modelo
-    self._metrics_results = [pd.DataFrame({
-      'Enfermedad': self._y_test.columns,
-      'MSE': mse[i],
-      'R2': r2[i],
-      'MAE': mae[i],
-      'Tipo': self._type,
-      'Modelo': self._model[i],
-      'Elapsed Time': self.time,
-      'CPU': self.cpu
-    }) for i in range(len(self._model))]
-
-
-
-  def score_to_table(self) -> None:
+  def metrics(self, increment=3) -> None:
     """
     Calcula el R2, donde, para cada comorbilidad,
     cruza tipo de modelo y técnica de ML.
@@ -219,15 +191,15 @@ class AutoML:
       column_name = ''
 
     elif self._type == 'multiple' or self._type == 'global':
-      r2 = [[r2_score(self._y_test.iloc[:, i:i+3], self._y_pred[j][:, i:i+3], multioutput='variance_weighted')
-              for i in range(0, self._y_test.shape[1], 3)]
+      r2 = [[r2_score(self._y_test.iloc[:, i:i+increment], self._y_pred[j][:, i:i+increment], multioutput='variance_weighted')
+              for i in range(0, self._y_test.shape[1], increment)]
                 for j in range(len(self._model))]
 
-      mape = [[mean_absolute_percentage_error(self._y_test.iloc[:, i:i+3], self._y_pred[j][:, i:i+3], multioutput='uniform_average')
-              for i in range(0, self._y_test.shape[1], 3)]
+      mape = [[mean_absolute_percentage_error(self._y_test.iloc[:, i:i+increment], self._y_pred[j][:, i:i+increment], multioutput='uniform_average')
+              for i in range(0, self._y_test.shape[1], increment)]
                 for j in range(len(self._model))]
 
-      colum_names = [[self._y_test.columns[i] for i in range(i, i+3)][0] for i in range(0, self._y_test.shape[1], 3)]
+      colum_names = [[self._y_test.columns[i] for i in range(i, i+increment)][0] for i in range(0, self._y_test.shape[1], increment)]
 
       # Trasponer la matriz de R2 y MAPE
       r2 = np.transpose(r2)
@@ -298,25 +270,6 @@ class AutoML:
 
 
 
-  def _save_metrics_results(self) -> None:
-    # Guarda los resultados en un archivo excel
-    for i in range(len(self._model)):
-      if self._type == 'single':
-        if not os.path.exists(os.path.join(st.SINGLE_METRICS_DIR, self._model_list_names[i])):
-          os.makedirs(os.path.join(st.SINGLE_METRICS_DIR, self._model_list_names[i]))
-        self._metrics_results[i].to_excel(os.path.join(st.SINGLE_METRICS_DIR, self._model_list_names[i], f'{self._name}.xlsx'), index=False)
-
-      elif self._type == 'multiple':
-        if not os.path.exists(os.path.join(st.MULTIPLE_METRICS_DIR, self._model_list_names[i])):
-          os.makedirs(os.path.join(st.MULTIPLE_METRICS_DIR, self._model_list_names[i]))
-        self._metrics_results[i].to_excel(os.path.join(st.MULTIPLE_METRICS_DIR, self._model_list_names[i], f'{self._name}.xlsx'), index=False)
-      elif self._type == 'global':
-        if not os.path.exists(os.path.join(st.GLOBAL_METRICS_DIR, self._model_list_names[i])):
-          os.makedirs(os.path.join(st.GLOBAL_METRICS_DIR, self._model_list_names[i]))
-        self._metrics_results[i].to_excel(os.path.join(st.GLOBAL_METRICS_DIR, self._model_list_names[i], f'{self._name}.xlsx'), index=False)
-
-
-
   def _save_model(self) -> None:
     ''' Guarda los modelos. '''
     model_path = []
@@ -341,7 +294,6 @@ class AutoML:
   def save(self) -> None:
     """ Guarda """
     self._save_model()
-    self._save_metrics_results()
     self._save_predictions_results()
 
 
@@ -383,28 +335,25 @@ class AutoML:
         avg_hull = ConvexHull(avg_points)
 
         # Grafica los valores reales vs predichos como puntos de AVG
-        ax.plot(y_test_df, y_test_df, color='black', label='Valor ideal tiempo promedio')
-        ax.fill(avg_points[avg_hull.vertices,0], avg_points[avg_hull.vertices,1], 'r', alpha=0.15, label='Area de valores predichos de tiempo promedio')
-        ax.scatter(y_test_df, y_pred_df, color='red', label='Valor predicho tiempo promedio')
+        ax.fill(avg_points[avg_hull.vertices,0], avg_points[avg_hull.vertices,1], 'r', alpha=0.15, label='Area de valores predichos de tiempo promedio hasta aparición')
+        ax.scatter(y_test_df, y_pred_df, color='red', label='Valor predicho de tiempo promedio hasta aparición')
 
         # Grafica los valores reales vs predichos como puntos de L95CI
         l95ci_points = np.column_stack((y_test_l95ci_df, y_pred_l95ci_df))
         l95ci_hull = ConvexHull(l95ci_points)
 
-        ax.scatter(y_test_l95ci_df, y_test_l95ci_df, color='orange', label='Valor ideal intervalo inferior', marker='*')
-        ax.fill(l95ci_points[l95ci_hull.vertices,0], l95ci_points[l95ci_hull.vertices,1], color='blue', alpha=0.15, label='Area de valores predichos de intervalo inferior')
-        ax.scatter(y_test_l95ci_df, y_pred_l95ci_df, color='blue', marker='x', label='Valor predicho intervalo inferior')
+        ax.fill(l95ci_points[l95ci_hull.vertices,0], l95ci_points[l95ci_hull.vertices,1], color='blue', alpha=0.15, label='Area de valores predichos del intervalo de confianza inferior')
+        ax.scatter(y_test_l95ci_df, y_pred_l95ci_df, color='blue', marker='x', label='Valor predicho del intervalo de confianza inferior')
 
         # Grafica los valores reales vs predichos como puntos de U95CI
         u95ci_points = np.column_stack((y_test_u95ci_df, y_pred_u95ci_df))
         u95ci_hull = ConvexHull(u95ci_points)
 
-        ax.scatter(y_test_u95ci_df, y_test_u95ci_df, color='gold', label='Valor ideal intervalo superior', marker='1')
-        ax.fill(u95ci_points[u95ci_hull.vertices,0], u95ci_points[u95ci_hull.vertices,1], color='green', alpha=0.15, label='Area de valores predichos de intervalo superior')
-        ax.scatter(y_test_u95ci_df, y_pred_u95ci_df, color='green', marker='^', label='Valor predicho intervalo superior')
+        ax.fill(u95ci_points[u95ci_hull.vertices,0], u95ci_points[u95ci_hull.vertices,1], color='green', alpha=0.15, label='Area de valores predichos de intervalo de confianza superior')
+        ax.scatter(y_test_u95ci_df, y_pred_u95ci_df, color='green', marker='^', label='Valor predicho del intervalo de confianza superior')
 
         # Agrega los ejes
-        ax.set_xlabel('Valor ideal de tiempo promedio hasta aparición', fontsize=10, fontweight='bold')
+        ax.set_xlabel('Valor real de tiempo promedio hasta aparición', fontsize=10, fontweight='bold')
         ax.set_ylabel('Valor predicho de tiempo promedio hasta aparición', fontsize=10, fontweight='bold')
 
         # Agrega la leyenda
@@ -432,28 +381,25 @@ class AutoML:
           avg_hull = ConvexHull(avg_points)
 
           # Grafica los valores reales vs predichos como puntos de AVG
-          ax[i].plot(y_test_df.iloc[:, i], y_test_df.iloc[:, i], color='black', label='Valor ideal tiempo promedio')
-          ax[i].fill(avg_points[avg_hull.vertices,0], avg_points[avg_hull.vertices,1], 'r', alpha=0.15, label='Area de valores predichos de tiempo promedio')
-          ax[i].scatter(y_test_df.iloc[:, i], y_pred_df.iloc[:, i], color='red', label='Valor predicho tiempo promedio')
+          ax[i].fill(avg_points[avg_hull.vertices,0], avg_points[avg_hull.vertices,1], 'r', alpha=0.15, label='Area de valores predichos de tiempo promedio hasta aparición')
+          ax[i].scatter(y_test_df.iloc[:, i], y_pred_df.iloc[:, i], color='red', label='Valor predicho de tiempo promedio hasta aparición')
 
           # Grafica los valores reales vs predichos como puntos de L95CI
           l95ci_points = np.column_stack((y_test_l95ci_df.iloc[:, i], y_pred_l95ci_df.iloc[:, i]))
           l95ci_hull = ConvexHull(l95ci_points)
 
-          ax[i].scatter(y_test_l95ci_df.iloc[:, i], y_test_l95ci_df.iloc[:, i], color='orange', label='Valor ideal intervalo inferior', marker='*')
-          ax[i].fill(l95ci_points[l95ci_hull.vertices,0], l95ci_points[l95ci_hull.vertices,1], color='blue', alpha=0.15, label='Area de valores predichos de intervalo inferior')
-          ax[i].scatter(y_test_l95ci_df.iloc[:, i], y_pred_l95ci_df.iloc[:, i], color='blue', marker='x', label='Valor predicho intervalo inferior')
+          ax[i].fill(l95ci_points[l95ci_hull.vertices,0], l95ci_points[l95ci_hull.vertices,1], color='blue', alpha=0.15, label='Area de valores predichos de intervalo de confianza inferior')
+          ax[i].scatter(y_test_l95ci_df.iloc[:, i], y_pred_l95ci_df.iloc[:, i], color='blue', marker='x', label='Valor predicho de intervalo de confianza inferior')
 
           # Grafica los valores reales vs predichos como puntos de U95CI
           u95ci_points = np.column_stack((y_test_u95ci_df.iloc[:, i], y_pred_u95ci_df.iloc[:, i]))
           u95ci_hull = ConvexHull(u95ci_points)
 
-          ax[i].scatter(y_test_u95ci_df.iloc[:, i], y_test_u95ci_df.iloc[:, i], color='gold', label='Valor ideal intervalo superior', marker='1',)
-          ax[i].fill(u95ci_points[u95ci_hull.vertices,0], u95ci_points[u95ci_hull.vertices,1], color='green', alpha=0.15, label='Area de valores predichos de intervalo superior')
-          ax[i].scatter(y_test_u95ci_df.iloc[:, i], y_pred_u95ci_df.iloc[:, i], color='green', marker='^', label='Valor predicho intervalo superior')
+          ax[i].fill(u95ci_points[u95ci_hull.vertices,0], u95ci_points[u95ci_hull.vertices,1], color='green', alpha=0.15, label='Area de valores predichos de intervalo de confianza superior')
+          ax[i].scatter(y_test_u95ci_df.iloc[:, i], y_pred_u95ci_df.iloc[:, i], color='green', marker='^', label='Valor predicho intervalo de confianza superior')
 
           # Agrega los ejes
-          ax[i].set_xlabel('Valor ideal de tiempo promedio hasta aparición', fontsize=10, fontweight='bold')
+          ax[i].set_xlabel('Valor real de tiempo promedio hasta aparición', fontsize=10, fontweight='bold')
           ax[i].set_ylabel('Valor predicho de tiempo promedio hasta aparición', fontsize=10, fontweight='bold')
 
           # añadir titulo al subplot
@@ -679,3 +625,6 @@ class AutoML:
                       self._model_list_names[j]))
         plt.savefig(os.path.join(st.GLOBAL_PLOTS_DIR,
                     self._model_list_names[j], f'{self._name}.png'))
+
+      # Cierra la gráfica
+      plt.close()
