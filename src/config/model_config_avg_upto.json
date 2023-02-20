@@ -1,7 +1,7 @@
 {
   "config_list": [
     {
-      "name":"Fallo Cardiaco (UPTO)",
+      "name":"Fallo Cardiaco (AVG + UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -68,7 +68,7 @@
       ]
     },
     {
-      "name":"Infarto de Miocardio (UPTO)",
+      "name":"Infarto de Miocardio (AVG + UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -135,7 +135,7 @@
       ]
     },
     {
-      "name":"Angina (UPTO)",
+      "name":"Angina (AVG + UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -202,7 +202,7 @@
       ]
     },
     {
-      "name":"Ictus (UPTO)",
+      "name":"Ictus (AVG + UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -269,7 +269,7 @@
       ]
     },
     {
-      "name":"Ceguera (UPTO)",
+      "name":"Ceguera (AVG + UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -336,7 +336,7 @@
       ]
     },
     {
-      "name":"Edema macular diabético (UPTO)",
+      "name":"Edema macular diabético (AVG + UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -403,7 +403,7 @@
       ]
     },
     {
-      "name":"Retinopatía de fondo (UPTO)",
+      "name":"Retinopatía de fondo (AVG + UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -470,7 +470,7 @@
       ]
     },
     {
-      "name":"Retinopatía proliferativa (UPTO)",
+      "name":"Retinopatía proliferativa (AVG + UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -537,7 +537,7 @@
       ]
     },
     {
-      "name":"Neuropatía individual (UPTO)",
+      "name":"Neuropatía individual (AVG + UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -604,7 +604,7 @@
       ]
     },
     {
-      "name":"Amputación extremidades inferiores (UPTO)",
+      "name":"Amputación extremidades inferiores (AVG + UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -671,7 +671,7 @@
       ]
     },
     {
-      "name":"Microalbuminuria (UPTO)",
+      "name":"Microalbuminuria (AVG + UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -738,7 +738,7 @@
       ]
     },
     {
-      "name":"Macroalbuminuria (UPTO)",
+      "name":"Macroalbuminuria (AVG + UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -805,7 +805,7 @@
       ]
     },
     {
-      "name":"Enfermedad renal terminal (UPTO)",
+      "name":"Enfermedad renal terminal (AVG + UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -872,7 +872,7 @@
       ]
     },
     {
-      "name":"Enfermedades cardíacas (UPTO)",
+      "name":"Enfermedades cardíacas (AVG + UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -904,14 +904,14 @@
       ],
       "type": "multiple",
       "trained_data_names": [
-        "Fallo Cardiaco (UPTO)",
-        "Infarto de Miocardio (UPTO)",
-        "Angina (UPTO)",
-        "Ictus (UPTO)"
+        "Fallo Cardiaco (AVG + UPTO)",
+        "Infarto de Miocardio (AVG + UPTO)",
+        "Angina (AVG + UPTO)",
+        "Ictus (AVG + UPTO)"
       ]
     },
     {
-      "name":"Retinopatías (UPTO)",
+      "name":"Retinopatías (AVG + UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -943,14 +943,14 @@
       ],
       "type": "multiple",
       "trained_data_names": [
-        "Ceguera (UPTO)",
-        "Edema macular diabético (UPTO)",
-        "Retinopatía de fondo (UPTO)",
-        "Retinopatía proliferativa (UPTO)"
+        "Ceguera (AVG + UPTO)",
+        "Edema macular diabético (AVG + UPTO)",
+        "Retinopatía de fondo (AVG + UPTO)",
+        "Retinopatía proliferativa (AVG + UPTO)"
       ]
     },
     {
-      "name":"Neuropatías (UPTO)",
+      "name":"Neuropatías (AVG + UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -982,12 +982,12 @@
       ],
       "type": "multiple",
       "trained_data_names": [
-        "Neuropatía individual (UPTO)",
-        "Amputación extremidades inferiores (UPTO)"
+        "Neuropatía individual (AVG + UPTO)",
+        "Amputación extremidades inferiores (AVG + UPTO)"
       ]
     },
     {
-      "name":"Nefropatías (UPTO)",
+      "name":"Nefropatías (AVG + UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -1019,13 +1019,13 @@
       ],
       "type": "multiple",
       "trained_data_names": [
-        "Microalbuminuria (UPTO)",
-        "Macroalbuminuria (UPTO)",
-        "Enfermedad renal terminal (UPTO)"
+        "Microalbuminuria (AVG + UPTO)",
+        "Macroalbuminuria (AVG + UPTO)",
+        "Enfermedad renal terminal (AVG + UPTO)"
       ]
     },
     {
-      "name":"Comorbilidades (UPTO)",
+      "name":"Comorbilidades (AVG + UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -1057,10 +1057,10 @@
       ],
       "type": "global",
       "trained_data_names": [
-        "Enfermedades cardíacas (UPTO)",
-        "Retinopatías (UPTO)",
-        "Neuropatías (UPTO)",
-        "Nefropatías (UPTO)"
+        "Enfermedades cardíacas (AVG + UPTO)",
+        "Retinopatías (AVG + UPTO)",
+        "Neuropatías (AVG + UPTO)",
+        "Nefropatías (AVG + UPTO)"
       ]
     }
   ]

@@ -80,7 +80,7 @@ def main() -> None:
   # Preprocesar los datos
   df_cols = data_frame.columns[data_frame.columns.str.contains('UPTO')]
   data_frame[df_cols] = data_frame[df_cols].div(500) * 100
-
+  """
   # Para cada modelo en la lista de modelos
   for config in config_list['config_list']:
     # Crear el objeto AutoML
@@ -112,7 +112,7 @@ def main() -> None:
   # Comparar las métricas de los resultados de los modelos
   cp.create_score_table(compare_list['r2']['list'], compare_list['r2']['name_list'], st.R2_TABLE_DIR)
   cp.create_score_table(compare_list['mape']['list'], compare_list['mape']['name_list'], st.MAPE_TABLE_DIR)
-
+  """
   cp.compare_values_by_type(compare_list['compare_type']['list'], st.R2_TABLE_DIR)
 
   for model in compare_list['compare']:

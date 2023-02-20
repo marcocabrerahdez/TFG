@@ -175,6 +175,7 @@ class AutoML:
       })
 
       column_name = self._y_test.columns[0]
+      print(f'Columna: {column_name}')
 
       # Guarda el dataframe en un archivo excel
       if not os.path.exists(os.path.join(st.SINGLE_R2_TABLE_DIR)):
