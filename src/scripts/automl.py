@@ -175,16 +175,15 @@ class AutoML:
       })
 
       column_name = self._y_test.columns[0]
-      print(f'Columna: {column_name}')
 
       # Guarda el dataframe en un archivo excel
       if not os.path.exists(os.path.join(st.SINGLE_R2_TABLE_DIR)):
         os.mkdir(st.SINGLE_R2_TABLE_DIR)
-      single_r2_df.to_excel(os.path.join(st.SINGLE_R2_TABLE_DIR, f'{column_name}.xlsx'), index=False)
+      single_r2_df.to_excel(os.path.join(st.SINGLE_R2_TABLE_DIR, f'{column_name}_UPTO.xlsx'), index=False)
 
       if not os.path.exists(os.path.join(st.SINGLE_MAPE_TABLE_DIR)):
         os.mkdir(st.SINGLE_MAPE_TABLE_DIR)
-      single_mape_df.to_excel(os.path.join(st.SINGLE_MAPE_TABLE_DIR, f'{column_name}.xlsx'), index=False)
+      single_mape_df.to_excel(os.path.join(st.SINGLE_MAPE_TABLE_DIR, f'{column_name}_UPTO.xlsx'), index=False)
 
       # Resetea el dataframe
       single_r2_df = pd.DataFrame()
@@ -220,21 +219,21 @@ class AutoML:
         if self._type == 'multiple':
           if not os.path.exists(os.path.join(st.MULTIPLE_R2_TABLE_DIR)):
             os.mkdir(st.MULTIPLE_R2_TABLE_DIR)
-          multiple_global_r2_df.to_excel(os.path.join(st.MULTIPLE_R2_TABLE_DIR, f'{colum_names[i]}.xlsx'), index=False)
+          multiple_global_r2_df.to_excel(os.path.join(st.MULTIPLE_R2_TABLE_DIR, f'{colum_names[i]}_UPTO.xlsx'), index=False)
 
           if not os.path.exists(os.path.join(st.MULTIPLE_MAPE_TABLE_DIR)):
             os.mkdir(st.MULTIPLE_MAPE_TABLE_DIR)
-          multiple_global_mape_df.to_excel(os.path.join(st.MULTIPLE_MAPE_TABLE_DIR, f'{colum_names[i]}.xlsx'), index=False)
+          multiple_global_mape_df.to_excel(os.path.join(st.MULTIPLE_MAPE_TABLE_DIR, f'{colum_names[i]}_UPTO.xlsx'), index=False)
 
 
         elif self._type == 'global':
           if not os.path.exists(os.path.join(st.GLOBAL_R2_TABLE_DIR)):
             os.mkdir(st.GLOBAL_R2_TABLE_DIR)
-          multiple_global_r2_df.to_excel(os.path.join(st.GLOBAL_R2_TABLE_DIR, f'{colum_names[i]}.xlsx'), index=False)
+          multiple_global_r2_df.to_excel(os.path.join(st.GLOBAL_R2_TABLE_DIR, f'{colum_names[i]}_UPTO.xlsx'), index=False)
 
           if not os.path.exists(os.path.join(st.GLOBAL_MAPE_TABLE_DIR)):
             os.mkdir(st.GLOBAL_MAPE_TABLE_DIR)
-          multiple_global_mape_df.to_excel(os.path.join(st.GLOBAL_MAPE_TABLE_DIR, f'{colum_names[i]}.xlsx'), index=False)
+          multiple_global_mape_df.to_excel(os.path.join(st.GLOBAL_MAPE_TABLE_DIR, f'{colum_names[i]}_UPTO.xlsx'), index=False)
 
         # Resetear el dataframe
         multiple_global_r2_df = pd.DataFrame()

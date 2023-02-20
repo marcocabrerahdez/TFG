@@ -100,13 +100,13 @@ def main() -> None:
     automl.predict()
 
     # R2 and MAPE score
-    automl.metrics(increment=27)
+    automl.metrics(increment=30)
 
     # Guardar el modelo, las predicciones y las metricas
     automl.save()
 
     # Graficar los resultados
-    automl.plot_upto_time()
+    #automl.plot_upto_time()
     #automl.plot_avg_time()
   """
   # Comparar las métricas de los resultados de los modelos
