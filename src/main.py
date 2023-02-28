@@ -113,8 +113,6 @@ def main() -> None:
   cp.create_score_table(compare_list['r2']['list'], compare_list['r2']['name_list'], st.R2_TABLE_DIR)
   cp.create_score_table(compare_list['mape']['list'], compare_list['mape']['name_list'], st.MAPE_TABLE_DIR)
   """
-  cp.compare_values_by_type(compare_list['compare_type']['list'], st.R2_TABLE_DIR)
-
   for model in compare_list['compare']:
     cp.compare_avg_metrics(model['model'], model['directory'], model['name'])
     #cp.compare_upto_metrics(model['model'], model['directory'], model['name'])

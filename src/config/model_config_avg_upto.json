@@ -1,6 +1,1069 @@
 {
   "config_list": [
     {
+      "name":"Fallo Cardiaco (AVG + UPTO)",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__learning_rate": [1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "HBA1C",
+        "AGE",
+        "DURATION"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_HF",
+        "L95CI_TIMETO_HF",
+        "U95CI_TIMETO_HF",
+        "AVG_HF_UPTO_20",
+        "L95CI_HF_UPTO_20",
+        "U95CI_HF_UPTO_20",
+        "AVG_HF_UPTO_30",
+        "L95CI_HF_UPTO_30",
+        "U95CI_HF_UPTO_30",
+        "AVG_HF_UPTO_40",
+        "L95CI_HF_UPTO_40",
+        "U95CI_HF_UPTO_40",
+        "AVG_HF_UPTO_50",
+        "L95CI_HF_UPTO_50",
+        "U95CI_HF_UPTO_50",
+        "AVG_HF_UPTO_60",
+        "L95CI_HF_UPTO_60",
+        "U95CI_HF_UPTO_60",
+        "AVG_HF_UPTO_70",
+        "L95CI_HF_UPTO_70",
+        "U95CI_HF_UPTO_70",
+        "AVG_HF_UPTO_80",
+        "L95CI_HF_UPTO_80",
+        "U95CI_HF_UPTO_80",
+        "AVG_HF_UPTO_90",
+        "L95CI_HF_UPTO_90",
+        "U95CI_HF_UPTO_90",
+        "AVG_HF_UPTO_100",
+        "L95CI_HF_UPTO_100",
+        "U95CI_HF_UPTO_100"
+      ]
+    },
+    {
+      "name":"Infarto de Miocardio (AVG + UPTO)",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__learning_rate": [1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "HBA1C",
+        "AGE",
+        "DURATION"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_MI",
+        "L95CI_TIMETO_MI",
+        "U95CI_TIMETO_MI",
+        "AVG_MI_UPTO_20",
+        "L95CI_MI_UPTO_20",
+        "U95CI_MI_UPTO_20",
+        "AVG_MI_UPTO_30",
+        "L95CI_MI_UPTO_30",
+        "U95CI_MI_UPTO_30",
+        "AVG_MI_UPTO_40",
+        "L95CI_MI_UPTO_40",
+        "U95CI_MI_UPTO_40",
+        "AVG_MI_UPTO_50",
+        "L95CI_MI_UPTO_50",
+        "U95CI_MI_UPTO_50",
+        "AVG_MI_UPTO_60",
+        "L95CI_MI_UPTO_60",
+        "U95CI_MI_UPTO_60",
+        "AVG_MI_UPTO_70",
+        "L95CI_MI_UPTO_70",
+        "U95CI_MI_UPTO_70",
+        "AVG_MI_UPTO_80",
+        "L95CI_MI_UPTO_80",
+        "U95CI_MI_UPTO_80",
+        "AVG_MI_UPTO_90",
+        "L95CI_MI_UPTO_90",
+        "U95CI_MI_UPTO_90",
+        "AVG_MI_UPTO_100",
+        "L95CI_MI_UPTO_100",
+        "U95CI_MI_UPTO_100"
+      ]
+    },
+    {
+      "name":"Angina (AVG + UPTO)",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__learning_rate": [1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "HBA1C",
+        "AGE",
+        "DURATION"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_ANGINA",
+        "L95CI_TIMETO_ANGINA",
+        "U95CI_TIMETO_ANGINA",
+        "AVG_ANGINA_UPTO_20",
+        "L95CI_ANGINA_UPTO_20",
+        "U95CI_ANGINA_UPTO_20",
+        "AVG_ANGINA_UPTO_30",
+        "L95CI_ANGINA_UPTO_30",
+        "U95CI_ANGINA_UPTO_30",
+        "AVG_ANGINA_UPTO_40",
+        "L95CI_ANGINA_UPTO_40",
+        "U95CI_ANGINA_UPTO_40",
+        "AVG_ANGINA_UPTO_50",
+        "L95CI_ANGINA_UPTO_50",
+        "U95CI_ANGINA_UPTO_50",
+        "AVG_ANGINA_UPTO_60",
+        "L95CI_ANGINA_UPTO_60",
+        "U95CI_ANGINA_UPTO_60",
+        "AVG_ANGINA_UPTO_70",
+        "L95CI_ANGINA_UPTO_70",
+        "U95CI_ANGINA_UPTO_70",
+        "AVG_ANGINA_UPTO_80",
+        "L95CI_ANGINA_UPTO_80",
+        "U95CI_ANGINA_UPTO_80",
+        "AVG_ANGINA_UPTO_90",
+        "L95CI_ANGINA_UPTO_90",
+        "U95CI_ANGINA_UPTO_90",
+        "AVG_ANGINA_UPTO_100",
+        "L95CI_ANGINA_UPTO_100",
+        "U95CI_ANGINA_UPTO_100"
+      ]
+    },
+    {
+      "name":"Ictus (AVG + UPTO)",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__learning_rate": [1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "HBA1C",
+        "AGE",
+        "DURATION"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_STROKE",
+        "L95CI_TIMETO_STROKE",
+        "U95CI_TIMETO_STROKE",
+        "AVG_STROKE_UPTO_20",
+        "L95CI_STROKE_UPTO_20",
+        "U95CI_STROKE_UPTO_20",
+        "AVG_STROKE_UPTO_30",
+        "L95CI_STROKE_UPTO_30",
+        "U95CI_STROKE_UPTO_30",
+        "AVG_STROKE_UPTO_40",
+        "L95CI_STROKE_UPTO_40",
+        "U95CI_STROKE_UPTO_40",
+        "AVG_STROKE_UPTO_50",
+        "L95CI_STROKE_UPTO_50",
+        "U95CI_STROKE_UPTO_50",
+        "AVG_STROKE_UPTO_60",
+        "L95CI_STROKE_UPTO_60",
+        "U95CI_STROKE_UPTO_60",
+        "AVG_STROKE_UPTO_70",
+        "L95CI_STROKE_UPTO_70",
+        "U95CI_STROKE_UPTO_70",
+        "AVG_STROKE_UPTO_80",
+        "L95CI_STROKE_UPTO_80",
+        "U95CI_STROKE_UPTO_80",
+        "AVG_STROKE_UPTO_90",
+        "L95CI_STROKE_UPTO_90",
+        "U95CI_STROKE_UPTO_90",
+        "AVG_STROKE_UPTO_100",
+        "L95CI_STROKE_UPTO_100",
+        "U95CI_STROKE_UPTO_100"
+      ]
+    },
+    {
+      "name":"Ceguera (AVG + UPTO)",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__learning_rate": [1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "HBA1C",
+        "AGE",
+        "DURATION"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_BLI",
+        "L95CI_TIMETO_BLI",
+        "U95CI_TIMETO_BLI",
+        "AVG_BLI_UPTO_20",
+        "L95CI_BLI_UPTO_20",
+        "U95CI_BLI_UPTO_20",
+        "AVG_BLI_UPTO_30",
+        "L95CI_BLI_UPTO_30",
+        "U95CI_BLI_UPTO_30",
+        "AVG_BLI_UPTO_40",
+        "L95CI_BLI_UPTO_40",
+        "U95CI_BLI_UPTO_40",
+        "AVG_BLI_UPTO_50",
+        "L95CI_BLI_UPTO_50",
+        "U95CI_BLI_UPTO_50",
+        "AVG_BLI_UPTO_60",
+        "L95CI_BLI_UPTO_60",
+        "U95CI_BLI_UPTO_60",
+        "AVG_BLI_UPTO_70",
+        "L95CI_BLI_UPTO_70",
+        "U95CI_BLI_UPTO_70",
+        "AVG_BLI_UPTO_80",
+        "L95CI_BLI_UPTO_80",
+        "U95CI_BLI_UPTO_80",
+        "AVG_BLI_UPTO_90",
+        "L95CI_BLI_UPTO_90",
+        "U95CI_BLI_UPTO_90",
+        "AVG_BLI_UPTO_100",
+        "L95CI_BLI_UPTO_100",
+        "U95CI_BLI_UPTO_100"
+      ]
+    },
+    {
+      "name":"Edema macular diabético (AVG + UPTO)",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__learning_rate": [1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "HBA1C",
+        "AGE",
+        "DURATION"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_ME",
+        "L95CI_TIMETO_ME",
+        "U95CI_TIMETO_ME",
+        "AVG_ME_UPTO_20",
+        "L95CI_ME_UPTO_20",
+        "U95CI_ME_UPTO_20",
+        "AVG_ME_UPTO_30",
+        "L95CI_ME_UPTO_30",
+        "U95CI_ME_UPTO_30",
+        "AVG_ME_UPTO_40",
+        "L95CI_ME_UPTO_40",
+        "U95CI_ME_UPTO_40",
+        "AVG_ME_UPTO_50",
+        "L95CI_ME_UPTO_50",
+        "U95CI_ME_UPTO_50",
+        "AVG_ME_UPTO_60",
+        "L95CI_ME_UPTO_60",
+        "U95CI_ME_UPTO_60",
+        "AVG_ME_UPTO_70",
+        "L95CI_ME_UPTO_70",
+        "U95CI_ME_UPTO_70",
+        "AVG_ME_UPTO_80",
+        "L95CI_ME_UPTO_80",
+        "U95CI_ME_UPTO_80",
+        "AVG_ME_UPTO_90",
+        "L95CI_ME_UPTO_90",
+        "U95CI_ME_UPTO_90",
+        "AVG_ME_UPTO_100",
+        "L95CI_ME_UPTO_100",
+        "U95CI_ME_UPTO_100"
+      ]
+    },
+    {
+      "name":"Retinopatía de fondo (AVG + UPTO)",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__learning_rate": [1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "HBA1C",
+        "AGE",
+        "DURATION"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_BGRET",
+        "L95CI_TIMETO_BGRET",
+        "U95CI_TIMETO_BGRET",
+        "AVG_BGRET_UPTO_20",
+        "L95CI_BGRET_UPTO_20",
+        "U95CI_BGRET_UPTO_20",
+        "AVG_BGRET_UPTO_30",
+        "L95CI_BGRET_UPTO_30",
+        "U95CI_BGRET_UPTO_30",
+        "AVG_BGRET_UPTO_40",
+        "L95CI_BGRET_UPTO_40",
+        "U95CI_BGRET_UPTO_40",
+        "AVG_BGRET_UPTO_50",
+        "L95CI_BGRET_UPTO_50",
+        "U95CI_BGRET_UPTO_50",
+        "AVG_BGRET_UPTO_60",
+        "L95CI_BGRET_UPTO_60",
+        "U95CI_BGRET_UPTO_60",
+        "AVG_BGRET_UPTO_70",
+        "L95CI_BGRET_UPTO_70",
+        "U95CI_BGRET_UPTO_70",
+        "AVG_BGRET_UPTO_80",
+        "L95CI_BGRET_UPTO_80",
+        "U95CI_BGRET_UPTO_80",
+        "AVG_BGRET_UPTO_90",
+        "L95CI_BGRET_UPTO_90",
+        "U95CI_BGRET_UPTO_90",
+        "AVG_BGRET_UPTO_100",
+        "L95CI_BGRET_UPTO_100",
+        "U95CI_BGRET_UPTO_100"
+      ]
+    },
+    {
+      "name":"Retinopatía proliferativa (AVG + UPTO)",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__learning_rate": [1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "HBA1C",
+        "AGE",
+        "DURATION"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_PRET",
+        "L95CI_TIMETO_PRET",
+        "U95CI_TIMETO_PRET",
+        "AVG_PRET_UPTO_20",
+        "L95CI_PRET_UPTO_20",
+        "U95CI_PRET_UPTO_20",
+        "AVG_PRET_UPTO_30",
+        "L95CI_PRET_UPTO_30",
+        "U95CI_PRET_UPTO_30",
+        "AVG_PRET_UPTO_40",
+        "L95CI_PRET_UPTO_40",
+        "U95CI_PRET_UPTO_40",
+        "AVG_PRET_UPTO_50",
+        "L95CI_PRET_UPTO_50",
+        "U95CI_PRET_UPTO_50",
+        "AVG_PRET_UPTO_60",
+        "L95CI_PRET_UPTO_60",
+        "U95CI_PRET_UPTO_60",
+        "AVG_PRET_UPTO_70",
+        "L95CI_PRET_UPTO_70",
+        "U95CI_PRET_UPTO_70",
+        "AVG_PRET_UPTO_80",
+        "L95CI_PRET_UPTO_80",
+        "U95CI_PRET_UPTO_80",
+        "AVG_PRET_UPTO_90",
+        "L95CI_PRET_UPTO_90",
+        "U95CI_PRET_UPTO_90",
+        "AVG_PRET_UPTO_100",
+        "L95CI_PRET_UPTO_100",
+        "U95CI_PRET_UPTO_100"
+      ]
+    },
+    {
+      "name":"Neuropatía individual (AVG + UPTO)",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__learning_rate": [1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "HBA1C",
+        "AGE",
+        "DURATION"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_NEU",
+        "L95CI_TIMETO_NEU",
+        "U95CI_TIMETO_NEU",
+        "AVG_NEU_UPTO_20",
+        "L95CI_NEU_UPTO_20",
+        "U95CI_NEU_UPTO_20",
+        "AVG_NEU_UPTO_30",
+        "L95CI_NEU_UPTO_30",
+        "U95CI_NEU_UPTO_30",
+        "AVG_NEU_UPTO_40",
+        "L95CI_NEU_UPTO_40",
+        "U95CI_NEU_UPTO_40",
+        "AVG_NEU_UPTO_50",
+        "L95CI_NEU_UPTO_50",
+        "U95CI_NEU_UPTO_50",
+        "AVG_NEU_UPTO_60",
+        "L95CI_NEU_UPTO_60",
+        "U95CI_NEU_UPTO_60",
+        "AVG_NEU_UPTO_70",
+        "L95CI_NEU_UPTO_70",
+        "U95CI_NEU_UPTO_70",
+        "AVG_NEU_UPTO_80",
+        "L95CI_NEU_UPTO_80",
+        "U95CI_NEU_UPTO_80",
+        "AVG_NEU_UPTO_90",
+        "L95CI_NEU_UPTO_90",
+        "U95CI_NEU_UPTO_90",
+        "AVG_NEU_UPTO_100",
+        "L95CI_NEU_UPTO_100",
+        "U95CI_NEU_UPTO_100"
+      ]
+    },
+    {
+      "name":"Amputación extremidades inferiores (AVG + UPTO)",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__learning_rate": [1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "HBA1C",
+        "AGE",
+        "DURATION"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_LEA",
+        "L95CI_TIMETO_LEA",
+        "U95CI_TIMETO_LEA",
+        "AVG_LEA_UPTO_20",
+        "L95CI_LEA_UPTO_20",
+        "U95CI_LEA_UPTO_20",
+        "AVG_LEA_UPTO_30",
+        "L95CI_LEA_UPTO_30",
+        "U95CI_LEA_UPTO_30",
+        "AVG_LEA_UPTO_40",
+        "L95CI_LEA_UPTO_40",
+        "U95CI_LEA_UPTO_40",
+        "AVG_LEA_UPTO_50",
+        "L95CI_LEA_UPTO_50",
+        "U95CI_LEA_UPTO_50",
+        "AVG_LEA_UPTO_60",
+        "L95CI_LEA_UPTO_60",
+        "U95CI_LEA_UPTO_60",
+        "AVG_LEA_UPTO_70",
+        "L95CI_LEA_UPTO_70",
+        "U95CI_LEA_UPTO_70",
+        "AVG_LEA_UPTO_80",
+        "L95CI_LEA_UPTO_80",
+        "U95CI_LEA_UPTO_80",
+        "AVG_LEA_UPTO_90",
+        "L95CI_LEA_UPTO_90",
+        "U95CI_LEA_UPTO_90",
+        "AVG_LEA_UPTO_100",
+        "L95CI_LEA_UPTO_100",
+        "U95CI_LEA_UPTO_100"
+      ]
+    },
+    {
+      "name":"Microalbuminuria (AVG + UPTO)",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__learning_rate": [1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "HBA1C",
+        "AGE",
+        "DURATION"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_ALB1",
+        "L95CI_TIMETO_ALB1",
+        "U95CI_TIMETO_ALB1",
+        "AVG_ALB1_UPTO_20",
+        "L95CI_ALB1_UPTO_20",
+        "U95CI_ALB1_UPTO_20",
+        "AVG_ALB1_UPTO_30",
+        "L95CI_ALB1_UPTO_30",
+        "U95CI_ALB1_UPTO_30",
+        "AVG_ALB1_UPTO_40",
+        "L95CI_ALB1_UPTO_40",
+        "U95CI_ALB1_UPTO_40",
+        "AVG_ALB1_UPTO_50",
+        "L95CI_ALB1_UPTO_50",
+        "U95CI_ALB1_UPTO_50",
+        "AVG_ALB1_UPTO_60",
+        "L95CI_ALB1_UPTO_60",
+        "U95CI_ALB1_UPTO_60",
+        "AVG_ALB1_UPTO_70",
+        "L95CI_ALB1_UPTO_70",
+        "U95CI_ALB1_UPTO_70",
+        "AVG_ALB1_UPTO_80",
+        "L95CI_ALB1_UPTO_80",
+        "U95CI_ALB1_UPTO_80",
+        "AVG_ALB1_UPTO_90",
+        "L95CI_ALB1_UPTO_90",
+        "U95CI_ALB1_UPTO_90",
+        "AVG_ALB1_UPTO_100",
+        "L95CI_ALB1_UPTO_100",
+        "U95CI_ALB1_UPTO_100"
+      ]
+    },
+    {
+      "name":"Macroalbuminuria (AVG + UPTO)",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__learning_rate": [1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "HBA1C",
+        "AGE",
+        "DURATION"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_ALB2",
+        "L95CI_TIMETO_ALB2",
+        "U95CI_TIMETO_ALB2",
+        "AVG_ALB2_UPTO_20",
+        "L95CI_ALB2_UPTO_20",
+        "U95CI_ALB2_UPTO_20",
+        "AVG_ALB2_UPTO_30",
+        "L95CI_ALB2_UPTO_30",
+        "U95CI_ALB2_UPTO_30",
+        "AVG_ALB2_UPTO_40",
+        "L95CI_ALB2_UPTO_40",
+        "U95CI_ALB2_UPTO_40",
+        "AVG_ALB2_UPTO_50",
+        "L95CI_ALB2_UPTO_50",
+        "U95CI_ALB2_UPTO_50",
+        "AVG_ALB2_UPTO_60",
+        "L95CI_ALB2_UPTO_60",
+        "U95CI_ALB2_UPTO_60",
+        "AVG_ALB2_UPTO_70",
+        "L95CI_ALB2_UPTO_70",
+        "U95CI_ALB2_UPTO_70",
+        "AVG_ALB2_UPTO_80",
+        "L95CI_ALB2_UPTO_80",
+        "U95CI_ALB2_UPTO_80",
+        "AVG_ALB2_UPTO_90",
+        "L95CI_ALB2_UPTO_90",
+        "U95CI_ALB2_UPTO_90",
+        "AVG_ALB2_UPTO_100",
+        "L95CI_ALB2_UPTO_100",
+        "U95CI_ALB2_UPTO_100"
+      ]
+    },
+    {
+      "name":"Enfermedad renal terminal (AVG + UPTO)",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__learning_rate": [1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "HBA1C",
+        "AGE",
+        "DURATION"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_ESRD",
+        "L95CI_TIMETO_ESRD",
+        "U95CI_TIMETO_ESRD",
+        "AVG_ESRD_UPTO_20",
+        "L95CI_ESRD_UPTO_20",
+        "U95CI_ESRD_UPTO_20",
+        "AVG_ESRD_UPTO_30",
+        "L95CI_ESRD_UPTO_30",
+        "U95CI_ESRD_UPTO_30",
+        "AVG_ESRD_UPTO_40",
+        "L95CI_ESRD_UPTO_40",
+        "U95CI_ESRD_UPTO_40",
+        "AVG_ESRD_UPTO_50",
+        "L95CI_ESRD_UPTO_50",
+        "U95CI_ESRD_UPTO_50",
+        "AVG_ESRD_UPTO_60",
+        "L95CI_ESRD_UPTO_60",
+        "U95CI_ESRD_UPTO_60",
+        "AVG_ESRD_UPTO_70",
+        "L95CI_ESRD_UPTO_70",
+        "U95CI_ESRD_UPTO_70",
+        "AVG_ESRD_UPTO_80",
+        "L95CI_ESRD_UPTO_80",
+        "U95CI_ESRD_UPTO_80",
+        "AVG_ESRD_UPTO_90",
+        "L95CI_ESRD_UPTO_90",
+        "U95CI_ESRD_UPTO_90",
+        "AVG_ESRD_UPTO_100",
+        "L95CI_ESRD_UPTO_100",
+        "U95CI_ESRD_UPTO_100"
+      ]
+    },
+    {
+      "name":"Enfermedades cardíacas (AVG + UPTO)",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__learning_rate": [1.0]
+        }
+      ],
+      "type": "multiple",
+      "trained_data_names": [
+        "Fallo Cardiaco (AVG + UPTO)",
+        "Infarto de Miocardio (AVG + UPTO)",
+        "Angina (AVG + UPTO)",
+        "Ictus (AVG + UPTO)"
+      ]
+    },
+    {
+      "name":"Retinopatías (AVG + UPTO)",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__learning_rate": [1.0]
+        }
+      ],
+      "type": "multiple",
+      "trained_data_names": [
+        "Ceguera (AVG + UPTO)",
+        "Edema macular diabético (AVG + UPTO)",
+        "Retinopatía de fondo (AVG + UPTO)",
+        "Retinopatía proliferativa (AVG + UPTO)"
+      ]
+    },
+    {
+      "name":"Neuropatías (AVG + UPTO)",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__learning_rate": [1.0]
+        }
+      ],
+      "type": "multiple",
+      "trained_data_names": [
+        "Neuropatía individual (AVG + UPTO)",
+        "Amputación extremidades inferiores (AVG + UPTO)"
+      ]
+    },
+    {
+      "name":"Nefropatías (AVG + UPTO)",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__max_depth": [7]
+        },
+        {
+          "model__n_estimators": [150],
+          "model__learning_rate": [1.0]
+        }
+      ],
+      "type": "multiple",
+      "trained_data_names": [
+        "Microalbuminuria (AVG + UPTO)",
+        "Macroalbuminuria (AVG + UPTO)",
+        "Enfermedad renal terminal (AVG + UPTO)"
+      ]
+    },
+    {
       "name":"Comorbilidades (AVG + UPTO)",
       "class_name": [
         "sklearn.linear_model",

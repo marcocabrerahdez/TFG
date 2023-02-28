@@ -54,8 +54,6 @@ class AutoML:
     '_y_test',
     '_y_pred',
     '_model_list_names',
-    'time',
-    'cpu',
     '_trained_data_names',
   ]
 
@@ -94,8 +92,6 @@ class AutoML:
 
     # Inicializar los atributos
     self._y_pred = None
-    self.time = None
-    self.cpu = None
 
     # Preprocesar los datos
     scaler = StandardScaler()
@@ -115,13 +111,6 @@ class AutoML:
 
   def train(self) -> None:
     ''' Entrena un conjunto de modelos '''
-    # Medir el tiempo de ejecución
-    # y el uso de recursos antes de entrenar el modelo
-    start_time = time.perf_counter()
-    process = psutil.Process()
-    cpu_before = process.cpu_percent()
-
-    ''' Entrena un conjunto de modelos '''
     # Crea un pipeline con el modelo y los parámetros del parametro grid
     pipe = [Pipeline([('model', self._model[i])])
             for i in range(len(self._model))]
@@ -137,14 +126,6 @@ class AutoML:
     # Entrena el modelo
     for i in range(len(self._model)):
       self._model[i].fit(self._X_train, self._y_train)
-    # Medir el tiempo de ejecución
-    # y el uso de recursos después de entrenar el modelo
-    elapsed_time = time.perf_counter() - start_time
-    cpu_after = process.cpu_percent()
-
-    # Calcular el tiempo de ejecución y el uso de recursos
-    self.time = elapsed_time / 60
-    self.cpu = (cpu_after - cpu_before) / 100
 
 
 
@@ -161,7 +142,7 @@ class AutoML:
     cruza tipo de modelo y técnica de ML.
     """
     if self._type == 'single':
-      r2 = [r2_score(self._y_test, self._y_pred[i], multioutput='variance_weighted') for i in range(len(self._model))]
+      r2 = [r2_score(self._y_test, self._y_pred[i], multioutput='uniform_average') for i in range(len(self._model))]
       mape = [mean_absolute_percentage_error(self._y_test, self._y_pred[i],  multioutput='uniform_average') for i in range(len(self._model))]
 
       single_r2_df = pd.DataFrame({
@@ -178,12 +159,12 @@ class AutoML:
 
       # Guarda el dataframe en un archivo excel
       if not os.path.exists(os.path.join(st.SINGLE_R2_TABLE_DIR)):
-        os.mkdir(st.SINGLE_R2_TABLE_DIR)
-      single_r2_df.to_excel(os.path.join(st.SINGLE_R2_TABLE_DIR, f'{column_name}_UPTO.xlsx'), index=False)
+        os.mkdir(os.path.join(st.SINGLE_R2_TABLE_DIR,))
+      single_r2_df.to_excel(os.path.join(st.SINGLE_R2_TABLE_DIR, f'{column_name}.xlsx'), index=False)
 
       if not os.path.exists(os.path.join(st.SINGLE_MAPE_TABLE_DIR)):
         os.mkdir(st.SINGLE_MAPE_TABLE_DIR)
-      single_mape_df.to_excel(os.path.join(st.SINGLE_MAPE_TABLE_DIR, f'{column_name}_UPTO.xlsx'), index=False)
+      single_mape_df.to_excel(os.path.join(st.SINGLE_MAPE_TABLE_DIR, f'{column_name}.xlsx'), index=False)
 
       # Resetea el dataframe
       single_r2_df = pd.DataFrame()
@@ -191,7 +172,7 @@ class AutoML:
       column_name = ''
 
     elif self._type == 'multiple' or self._type == 'global':
-      r2 = [[r2_score(self._y_test.iloc[:, i:i+increment], self._y_pred[j][:, i:i+increment], multioutput='variance_weighted')
+      r2 = [[r2_score(self._y_test.iloc[:, i:i+increment], self._y_pred[j][:, i:i+increment], multioutput='uniform_average')
               for i in range(0, self._y_test.shape[1], increment)]
                 for j in range(len(self._model))]
 
@@ -219,21 +200,21 @@ class AutoML:
         if self._type == 'multiple':
           if not os.path.exists(os.path.join(st.MULTIPLE_R2_TABLE_DIR)):
             os.mkdir(st.MULTIPLE_R2_TABLE_DIR)
-          multiple_global_r2_df.to_excel(os.path.join(st.MULTIPLE_R2_TABLE_DIR, f'{colum_names[i]}_UPTO.xlsx'), index=False)
+          multiple_global_r2_df.to_excel(os.path.join(st.MULTIPLE_R2_TABLE_DIR, f'{colum_names[i]}.xlsx'), index=False)
 
           if not os.path.exists(os.path.join(st.MULTIPLE_MAPE_TABLE_DIR)):
             os.mkdir(st.MULTIPLE_MAPE_TABLE_DIR)
-          multiple_global_mape_df.to_excel(os.path.join(st.MULTIPLE_MAPE_TABLE_DIR, f'{colum_names[i]}_UPTO.xlsx'), index=False)
+          multiple_global_mape_df.to_excel(os.path.join(st.MULTIPLE_MAPE_TABLE_DIR, f'{colum_names[i]}.xlsx'), index=False)
 
 
         elif self._type == 'global':
           if not os.path.exists(os.path.join(st.GLOBAL_R2_TABLE_DIR)):
             os.mkdir(st.GLOBAL_R2_TABLE_DIR)
-          multiple_global_r2_df.to_excel(os.path.join(st.GLOBAL_R2_TABLE_DIR, f'{colum_names[i]}_UPTO.xlsx'), index=False)
+          multiple_global_r2_df.to_excel(os.path.join(st.GLOBAL_R2_TABLE_DIR, f'{colum_names[i]}.xlsx'), index=False)
 
           if not os.path.exists(os.path.join(st.GLOBAL_MAPE_TABLE_DIR)):
             os.mkdir(st.GLOBAL_MAPE_TABLE_DIR)
-          multiple_global_mape_df.to_excel(os.path.join(st.GLOBAL_MAPE_TABLE_DIR, f'{colum_names[i]}_UPTO.xlsx'), index=False)
+          multiple_global_mape_df.to_excel(os.path.join(st.GLOBAL_MAPE_TABLE_DIR, f'{colum_names[i]}.xlsx'), index=False)
 
         # Resetear el dataframe
         multiple_global_r2_df = pd.DataFrame()
@@ -247,23 +228,25 @@ class AutoML:
   def _save_predictions_results(self) -> None:
     # Guarda las predicciones en un archivo excel
     for i in range(len(self._model)):
+      # Añadir el nombre de las columnas
+      self._y_pred[i] = pd.DataFrame(self._y_pred[i], columns=self._y_test.columns)
       if self._type == 'single':
         if not os.path.exists(os.path.join(st.SINGLE_PREDICTIONS_DIR, self._model_list_names[i])):
           os.makedirs(os.path.join(st.SINGLE_PREDICTIONS_DIR, self._model_list_names[i]))
-        # Guardar las predicciones con sus datos de entrada
-        pd.concat([self._X_test, pd.DataFrame(self._y_pred[i])], axis=1).to_excel(os.path.join(st.SINGLE_PREDICTIONS_DIR, self._model_list_names[i], f'{self._name}.xlsx'), index=False)
+        # Guardar las predicciones
+        self._y_pred[i].to_excel(os.path.join(st.SINGLE_PREDICTIONS_DIR, self._model_list_names[i], f'{self._name}.xlsx'), index=False)
 
       elif self._type == 'multiple':
         if not os.path.exists(os.path.join(st.MULTIPLE_PREDICTIONS_DIR, self._model_list_names[i])):
           os.makedirs(os.path.join(st.MULTIPLE_PREDICTIONS_DIR, self._model_list_names[i]))
-        # Guardar las predicciones con sus datos de entrada
-        pd.concat([self._X_test, pd.DataFrame(self._y_pred[i])], axis=1).to_excel(os.path.join(st.MULTIPLE_PREDICTIONS_DIR, self._model_list_names[i], f'{self._name}.xlsx'), index=False)
+        # Guardar las predicciones
+        self._y_pred[i].to_excel(os.path.join(st.MULTIPLE_PREDICTIONS_DIR, self._model_list_names[i], f'{self._name}.xlsx'), index=False)
 
       elif self._type == 'global':
         if not os.path.exists(os.path.join(st.GLOBAL_PREDICTIONS_DIR, self._model_list_names[i])):
           os.makedirs(os.path.join(st.GLOBAL_PREDICTIONS_DIR, self._model_list_names[i]))
-         # Guardar las predicciones con sus datos de entrada
-        pd.concat([self._X_test, pd.DataFrame(self._y_pred[i])], axis=1).to_excel(os.path.join(st.GLOBAL_PREDICTIONS_DIR, self._model_list_names[i], f'{self._name}.xlsx'), index=False)
+         # Guardar las predicciones
+        self._y_pred[i].to_excel(os.path.join(st.GLOBAL_PREDICTIONS_DIR, self._model_list_names[i], f'{self._name}.xlsx'), index=False)
 
       else:
         raise Exception('El tipo de modelo no es válido.')
@@ -305,7 +288,7 @@ class AutoML:
     # Para cada modelo
     for j in range(len(self._model_list_names)):
       # Convertir los valores predichos  a un dataframe
-      y_pred_df = pd.DataFrame(self._y_pred[j], columns=self._y_test.columns)
+      y_pred_df = pd.DataFrame(self._y_pred[j])
       y_pred_df.reset_index(drop=True, inplace=True)
 
       # Filtra las columnas que empiezan por AVG y las asigna a un dataframe
@@ -329,6 +312,10 @@ class AutoML:
       if self._type == 'single':
         # Graficar los resultados
         fig, ax = plt.subplots(figsize=(10, 10))
+
+        # Normalizar los ejes x e y
+        ax.set_xlim([0, max(y_test_df.values.max(), y_pred_df.values.max(), y_test_l95ci_df.values.max(), y_pred_l95ci_df.values.max(), y_test_u95ci_df.values.max(), y_pred_u95ci_df.values.max()) + 1])
+        ax.set_ylim([0, max(y_test_df.values.max(), y_pred_df.values.max(), y_test_l95ci_df.values.max(), y_pred_l95ci_df.values.max(), y_test_u95ci_df.values.max(), y_pred_u95ci_df.values.max()) + 1])
 
         # Crear la malla convexa
         avg_points = np.column_stack((y_test_df, y_pred_df))
@@ -376,6 +363,10 @@ class AutoML:
 
         # Graficar cada columna
         for i in range(y_test_df.shape[1]):
+          # Normalizar los ejes x e y
+          ax[i].set_xlim([0, max(y_test_df.iloc[:, i].values.max(), y_pred_df.iloc[:, i].values.max(), y_test_l95ci_df.iloc[:, i].values.max(), y_pred_l95ci_df.iloc[:, i].values.max(), y_test_u95ci_df.iloc[:, i].values.max(), y_pred_u95ci_df.iloc[:, i].values.max()) + 1])
+          ax[i].set_ylim([0, max(y_test_df.iloc[:, i].values.max(), y_pred_df.iloc[:, i].values.max(), y_test_l95ci_df.iloc[:, i].values.max(), y_pred_l95ci_df.iloc[:, i].values.max(), y_test_u95ci_df.iloc[:, i].values.max(), y_pred_u95ci_df.iloc[:, i].values.max()) + 1])
+
           # Crear la malla convexa
           avg_points = np.column_stack((y_test_df.iloc[:, i], y_pred_df.iloc[:, i]))
           avg_hull = ConvexHull(avg_points)
@@ -430,25 +421,25 @@ class AutoML:
       # Guarda la gráfica
       if self._type == 'single':
         if not os.path.exists(os.path.join(st.SINGLE_PLOTS_DIR,
-                              self._model_list_names[j])):
+                              self._model_list_names[j], 'average time')):
           os.makedirs(os.path.join(st.SINGLE_PLOTS_DIR,
-                      self._model_list_names[j]))
+                      self._model_list_names[j], 'average time'))
         plt.savefig(os.path.join(st.SINGLE_PLOTS_DIR,
-                    self._model_list_names[j], f'{self._name}.png'))
+                    self._model_list_names[j], 'average time', f'{self._name}.png'))
       elif self._type == 'multiple':
         if not os.path.exists(os.path.join(st.MULTIPLE_PLOTS_DIR,
-                              self._model_list_names[j])):
+                              self._model_list_names[j], 'average time')):
           os.makedirs(os.path.join(st.MULTIPLE_PLOTS_DIR,
-                      self._model_list_names[j]))
+                      self._model_list_names[j], 'average time'))
         plt.savefig(os.path.join(st.MULTIPLE_PLOTS_DIR,
-                    self._model_list_names[j], f'{self._name}.png'))
+                    self._model_list_names[j], 'average time', f'{self._name}.png'))
       elif self._type == 'global':
         if not os.path.exists(os.path.join(st.GLOBAL_PLOTS_DIR,
-                              self._model_list_names[j])):
+                              self._model_list_names[j], 'average time')):
           os.makedirs(os.path.join(st.GLOBAL_PLOTS_DIR,
-                      self._model_list_names[j]))
+                      self._model_list_names[j], 'average time'))
         plt.savefig(os.path.join(st.GLOBAL_PLOTS_DIR,
-                    self._model_list_names[j], f'{self._name}.png'))
+                    self._model_list_names[j], 'average time', f'{self._name}.png'))
 
       # Cierra la gráfica
       plt.close()
@@ -462,7 +453,7 @@ class AutoML:
     # Para cada modelo
     for j in range(len(self._model_list_names)):
       # Convertir los valores predichos  a un dataframe
-      y_pred_df = pd.DataFrame(self._y_pred[j], columns=self._y_test.columns)
+      y_pred_df = pd.DataFrame(self._y_pred[j])
 
       # Filtra las columnas que empiezan por AVG y las asigna a un dataframe
       y_pred_df_avg = y_pred_df.filter(regex='^AVG')
@@ -606,25 +597,25 @@ class AutoML:
       # Guarda la gráfica
       if self._type == 'single':
         if not os.path.exists(os.path.join(st.SINGLE_PLOTS_DIR,
-                              self._model_list_names[j])):
+                              self._model_list_names[j], 'upto time')):
           os.makedirs(os.path.join(st.SINGLE_PLOTS_DIR,
-                      self._model_list_names[j]))
+                      self._model_list_names[j], 'upto time'))
         plt.savefig(os.path.join(st.SINGLE_PLOTS_DIR,
-                    self._model_list_names[j], f'{self._name}.png'))
+                    self._model_list_names[j], 'upto time', f'{self._name}.png'))
       elif self._type == 'multiple':
         if not os.path.exists(os.path.join(st.MULTIPLE_PLOTS_DIR,
-                              self._model_list_names[j])):
+                              self._model_list_names[j], 'upto time')):
           os.makedirs(os.path.join(st.MULTIPLE_PLOTS_DIR,
-                      self._model_list_names[j]))
+                      self._model_list_names[j], 'upto time'))
         plt.savefig(os.path.join(st.MULTIPLE_PLOTS_DIR,
-                    self._model_list_names[j], f'{self._name}.png'))
+                    self._model_list_names[j], 'upto time', f'{self._name}.png'))
       elif self._type == 'global':
         if not os.path.exists(os.path.join(st.GLOBAL_PLOTS_DIR,
-                              self._model_list_names[j])):
+                              self._model_list_names[j], 'upto time')):
           os.makedirs(os.path.join(st.GLOBAL_PLOTS_DIR,
-                      self._model_list_names[j]))
+                      self._model_list_names[j], 'upto time'))
         plt.savefig(os.path.join(st.GLOBAL_PLOTS_DIR,
-                    self._model_list_names[j], f'{self._name}.png'))
+                    self._model_list_names[j], 'upto time', f'{self._name}.png'))
 
       # Cierra la gráfica
       plt.close()
