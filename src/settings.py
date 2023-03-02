@@ -25,6 +25,10 @@ PLOTS_DIR = os.path.join(ROOT_DIR, 'figures')
 SINGLE_PLOTS_DIR = os.path.join(PLOTS_DIR, 'single')
 MULTIPLE_PLOTS_DIR = os.path.join(PLOTS_DIR, 'multiple')
 GLOBAL_PLOTS_DIR = os.path.join(PLOTS_DIR, 'global')
+R2_PLOTS_DIR = os.path.join(PLOTS_DIR, 'R2')
+R2_AVERAGE_TIME_PLOT_DIR = os.path.join(R2_PLOTS_DIR, 'average time')
+R2_UPTO_TIME_PLOT_DIR = os.path.join(R2_PLOTS_DIR, 'upto time')
+R2_AVERAGE_UPTO_TIME_PLOT_DIR = os.path.join(R2_PLOTS_DIR, 'average & upto')
 
 
 # PREDICCIONES
@@ -47,6 +51,9 @@ MAPE_TABLE_DIR = os.path.join(METRICS_DIR, 'MAPE')
 SINGLE_MAPE_TABLE_DIR = os.path.join(MAPE_TABLE_DIR, 'single')
 MULTIPLE_MAPE_TABLE_DIR = os.path.join(MAPE_TABLE_DIR, 'multiple')
 GLOBAL_MAPE_TABLE_DIR = os.path.join(MAPE_TABLE_DIR, 'global')
+R2_AVERAGE_TIME_DIR = os.path.join(R2_TABLE_DIR, 'average time')
+R2_UPTO_TIME_DIR = os.path.join(R2_TABLE_DIR, 'upto time')
+R2_AVERAGE_UPTO_TIME_DIR = os.path.join(R2_TABLE_DIR, 'average & upto')
 
 # ARCHIVOS DE CONFIGURACIÓN
 DATASET_NAME = "2023-01-11 datos_clusterizados_ML.xlsx"
