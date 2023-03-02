@@ -141,6 +141,5 @@ metrics/R2/global
 metrics/MAPE/single
 metrics/MAPE/multiple
 metrics/MAPE/global
-predictions
 data/splited data
 model
