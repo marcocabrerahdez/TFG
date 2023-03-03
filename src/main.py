@@ -78,7 +78,7 @@ def main() -> None:
       print('Argumento no válido.')
       sys.exit()
 
-  """
+
   # Preprocesar los datos
   df_cols = data_frame.columns[data_frame.columns.str.contains('UPTO')]
   data_frame[df_cols] = data_frame[df_cols].div(500) * 100
@@ -124,7 +124,7 @@ def main() -> None:
   cp.compare_models(compare_list['compare_model']['list'],
                     compare_list['compare_model']['directory'],
                     compare_list['compare_model']['name'])
-  """
+
   # Carga los datos de la API
   patient = api.load_data()
 
