@@ -1,0 +1,16 @@
+{
+	"patient" : {
+		"man" : "false",
+		"age" : "21",
+		"durationOfDiabetes" : "17",
+		"hypoRate" : "2",
+		"hypoRateRR" : "0.5",
+		"baseHbA1cLevel" : "50",
+		"objHbA1cLevel" : "8",
+		"annualCost" : "3000",
+		"manifestations": [
+			"ANGINA",
+			"NEU"
+		]
+	}
+}

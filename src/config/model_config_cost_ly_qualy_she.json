@@ -1,0 +1,176 @@
+{
+  "config_list": [
+    {
+      "name":"Cost",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "HBA1C",
+        "AGE",
+        "DURATION"
+      ],
+      "columns_Y": [
+        "AVG_C",
+        "L95CI_C",
+        "U95CI_C"
+      ]
+    },
+    {
+      "name":"LY",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "HBA1C",
+        "AGE",
+        "DURATION"
+      ],
+      "columns_Y": [
+        "AVG_LY",
+        "L95CI_LY",
+        "U95CI_LY"
+      ]
+    },
+    {
+      "name":"QUALY",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "HBA1C",
+        "AGE",
+        "DURATION"
+      ],
+      "columns_Y": [
+        "AVG_QALY",
+        "L95CI_QALY",
+        "U95CI_QALY"
+      ]
+    },
+    {
+      "name":"SHE",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "HBA1C",
+        "AGE",
+        "DURATION"
+      ],
+      "columns_Y": [
+        "AVG_SHE",
+        "L95CI_SHE",
+        "U95CI_SHE"
+      ]
+    }
+  ]
+}

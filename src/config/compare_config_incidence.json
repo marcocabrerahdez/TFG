@@ -1,0 +1,83 @@
+{
+  "r2": {
+    "list": [
+      "AVG_INC_ALB1",
+      "AVG_INC_ALB2",
+      "AVG_INC_ANGINA",
+      "AVG_INC_BGRET",
+      "AVG_INC_BLI",
+      "AVG_INC_ESRD",
+      "AVG_INC_HF",
+      "AVG_INC_LEA",
+      "AVG_INC_ME",
+      "AVG_INC_MI",
+      "AVG_INC_NEU",
+      "AVG_INC_PRET",
+      "AVG_INC_STROKE"
+    ],
+    "name_list": [
+      "Fallo Cardiaco (INC)",
+      "Infarto de Miocardio (INC)",
+      "Angina (INC)",
+      "Ictus (INC)",
+      "Ceguera (INC)",
+      "Edema macular diabético (INC)",
+      "Retinopatía de fondo (INC)",
+      "Retinopatía proliferativa (INC)",
+      "Neuropatía (INC)",
+      "Amputación extremidades inferiores (INC)",
+      "Microalbuminuria (INC)",
+      "Macroalbuminuria (INC)",
+      "Enfermedad renal terminal (INC)"
+    ]
+  },
+  "mape": {
+    "list": [
+      "AVG_INC_ALB1",
+      "AVG_INC_ALB2",
+      "AVG_INC_ANGINA",
+      "AVG_INC_BGRET",
+      "AVG_INC_BLI",
+      "AVG_INC_ESRD",
+      "AVG_INC_HF",
+      "AVG_INC_LEA",
+      "AVG_INC_ME",
+      "AVG_INC_MI",
+      "AVG_INC_NEU",
+      "AVG_INC_PRET",
+      "AVG_INC_STROKE"
+    ],
+    "name_list": [
+      "Fallo Cardiaco (INC)",
+      "Infarto de Miocardio (INC)",
+      "Angina (INC)",
+      "Ictus (INC)",
+      "Ceguera (INC)",
+      "Edema macular diabético (INC)",
+      "Retinopatía de fondo (INC)",
+      "Retinopatía proliferativa (INC)",
+      "Neuropatía (INC)",
+      "Amputación extremidades inferiores (INC)",
+      "Microalbuminuria (INC)",
+      "Macroalbuminuria (INC)",
+      "Enfermedad renal terminal (INC)"
+    ]
+  },
+  "compare_type": {
+    "list": [
+      "Fallo Cardiaco",
+      "Infarto de Miocardio",
+      "Angina",
+      "Ictus",
+      "Ceguera",
+      "Edema macular diabético",
+      "Retinopatía de fondo",
+      "Retinopatía proliferativa",
+      "Neuropatía individual",
+      "Amputación extremidades inferiores",
+      "Microalbuminuria",
+      "Macroalbuminuria",
+      "Enfermedad renal terminal"
+    ]
+  }
+}

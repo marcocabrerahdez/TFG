@@ -28,6 +28,7 @@ import pandas as pd
 import settings as st
 from scripts import automl as ml
 from scripts import compare as cp
+from api import api
 
 
 def main() -> None:
@@ -77,10 +78,11 @@ def main() -> None:
       print('Argumento no válido.')
       sys.exit()
 
+  """
   # Preprocesar los datos
   df_cols = data_frame.columns[data_frame.columns.str.contains('UPTO')]
   data_frame[df_cols] = data_frame[df_cols].div(500) * 100
-  """
+
   # Para cada modelo en la lista de modelos
   for config in config_list['config_list']:
     # Crear el objeto AutoML
@@ -108,12 +110,12 @@ def main() -> None:
     # Graficar los resultados
     #automl.plot_upto_time()
     #automl.plot_avg_time()
-  """
+
   # Comparar las métricas de los resultados de los modelos
   #cp.create_score_table(compare_list['r2']['list'], compare_list['r2']['name_list'], st.R2_TABLE_DIR)
   #cp.create_score_table(compare_list['mape']['list'], compare_list['mape']['name_list'], st.MAPE_TABLE_DIR)
   cp.compare_r2_tables(compare_list['r2']['name_list'], st.R2_AVERAGE_UPTO_TIME_PLOT_DIR, st.R2_AVERAGE_UPTO_TIME_DIR)
-  """
+
   for model in compare_list['compare']:
     cp.compare_avg_metrics(model['model'], model['directory'], model['name'])
     #cp.compare_upto_metrics(model['model'], model['directory'], model['name'])
@@ -122,6 +124,29 @@ def main() -> None:
   cp.compare_models(compare_list['compare_model']['list'],
                     compare_list['compare_model']['directory'],
                     compare_list['compare_model']['name'])
+  """
+  # Carga los datos de la API
+  patient = api.load_data()
+
+  # Datos necesarios: age, durationOfDiabetes y baseHbA1cLevel
+  patient_data = patient[['baseHbA1cLevel', 'age', 'durationOfDiabetes']].rename(columns={'baseHbA1cLevel': 'HBA1C', 'age': 'AGE', 'durationOfDiabetes': 'DURATION'})
+
+  # Carga los modelos de la API
+  model_time_to_event, model_incidence, model_left_years, model_quality_of_life, model_severe_hypoglucemic_event, model_cost = api.load_models()
+
+  # Predice el time to event
+  time_to_event, incidence, left_years, quality_of_life, severe_hypoglucemic_event, cost = api.predict(patient_data, model_time_to_event, model_incidence, model_left_years, model_quality_of_life, model_severe_hypoglucemic_event, model_cost)
+
+  # Crea un JSON con los resultados
+  json_file = api.create_json_file(time_to_event, incidence, left_years, quality_of_life, severe_hypoglucemic_event, cost)
+  """
+  # Hace la petición POST
+  url = ""
+  headers = {"Content-Type": "application/json"}
+  response = requests.post(url, data=data, headers=headers)
+
+  print(response.status_code) # Imprime el código de estado HTTP de la respuesta
+  print(response.json()) # Imprime los datos de la respuesta en formato JSON
   """
 if __name__ == '__main__':
   main()
