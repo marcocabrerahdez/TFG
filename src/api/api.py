@@ -25,6 +25,7 @@ def load_models():
   path_quality_of_life = os.path.join(st.API_MODEL_QALY, 'QUALY.pkl')
   path_severe_hypoglucemic_event = os.path.join(st.API_MODEL_SHE, 'SHE.pkl')
   path_cost = os.path.join(st.API_MODEL_COST, 'Cost.pkl')
+  path_risk = os.path.join(st.API_MODEL_RISK, 'Comorbilidades (UPTO).pkl')
 
   # Abre el archivo y carga el modelo
   with open(path_time_to_event, 'rb') as f:
@@ -45,11 +46,14 @@ def load_models():
   with open(path_cost, 'rb') as f:
     model_cost = joblib.load(f)
 
-  return model_time_to_event, model_incidence, model_left_years, model_quality_of_life, model_severe_hypoglucemic_event, model_cost
+  with open(path_risk, 'rb') as f:
+    model_risk = joblib.load(f)
+
+  return model_time_to_event, model_incidence, model_left_years, model_quality_of_life, model_severe_hypoglucemic_event, model_cost, model_risk
 
 
 
-def predict(data, model_time_to_event, model_incidence, model_left_years, model_quality_of_life, model_severe_hypoglucemic_event, model_cost):
+def predict(data, model_time_to_event, model_incidence, model_left_years, model_quality_of_life, model_severe_hypoglucemic_event, model_cost, model_risk):
   # Predice el time to event
   time_to_event = model_time_to_event.predict(data)
   # Predice la incidencia
@@ -62,36 +66,71 @@ def predict(data, model_time_to_event, model_incidence, model_left_years, model_
   severe_hypoglucemic_event = model_severe_hypoglucemic_event.predict(data)
   # Predice el costo
   cost = model_cost.predict(data)
+  # Predice el riesgo
+  risk = model_risk.predict(data)
 
-  return time_to_event, incidence, left_years, quality_of_life, severe_hypoglucemic_event, cost
+  return time_to_event, incidence, left_years, quality_of_life, severe_hypoglucemic_event, cost, risk
 
 
 
-def create_json_file(time_to_event, incidence, left_years, quality_of_life, severe_hypoglucemic_event, cost):
+def create_json_file(time_to_event_base, incidence_base, left_years_base, quality_of_life_base, severe_hypoglucemic_event_base, cost_base, risk_base, time_to_event_int, incidence_int, left_years_int, quality_of_life_int, severe_hypoglucemic_event_int, cost_int, risk_int):
+  list_risk_base = []
+  list_risk_int = []
+  for i in range(0, len(risk_base)):
+    new_list_base = []  # Inicializar la nueva lista fuera del bucle j
+    new_list_int = []  # Inicializar la nueva lista fuera del bucle j
+    for j in range(0, len(risk_base[i]), 3):
+      # Crear lista con los valores de 3 en 3
+      value_base = risk_base[i][j:j+3][0]
+      value_int = risk_int[i][j:j+3][0]
+      for k in range(0, 9):
+        new_list_base.append(value_base)
+        new_list_int.append(value_int)
+      # Agregar la lista a la lista principal
+      list_risk_base.append(new_list_base)
+      list_risk_int.append(new_list_int)
+      # Reiniciar la lista
+      new_list_base = []
+      new_list_int = []
+
+  # Agrupar sublista en listas de 9 elementos
+  list_risk_base = [list_risk_base[i:i+9] for i in range(0, len(list_risk_base), 9)]
+  list_risk_int = [list_risk_int[i:i+9] for i in range(0, len(list_risk_int), 9)]
+
+  # Fusionar los valores de las sublistas
+  list_risk_base = [[elemento for sublista in sublista_grande for elemento in sublista] for sublista_grande in list_risk_base]
+  list_risk_int = [[elemento for sublista in sublista_grande for elemento in sublista] for sublista_grande in list_risk_int]
+  # Añadir el ultimo elemento de la lista por duplicado
+  for sublista in list_risk_base:
+    sublista.append(sublista[-1])
+
+  for sublista in list_risk_base:
+    sublista.append(sublista[-1])
+
   # Crea un diccionario con los resultados
   results = {
               "interventions": [
                 {
                   "cost": {
-                    "avg": cost[0][0],
-                    "uci95": cost[0][2],
-                    "lci95": cost[0][1],
-                    "base": 272932.2822732964
+                    "avg": cost_base[0][0],
+                    "uci95": cost_base[0][2],
+                    "lci95": cost_base[0][1],
+                    "base": cost_base[0][0]
                   },
                   "name": "DIAB+BASE",
                   "QALY": {
-                    "avg": quality_of_life[0][0],
-                    "uci95": quality_of_life[0][2],
-                    "lci95": quality_of_life[0][1],
-                    "base": 7.6482197150538935
+                    "avg": quality_of_life_base[0][0],
+                    "uci95": quality_of_life_base[0][2],
+                    "lci95": quality_of_life_base[0][1],
+                    "base": quality_of_life_base[0][0]
                   },
                   "acute manifestations": [
                     {
                       "number of events": {
-                        "avg": severe_hypoglucemic_event[0][0],
-                        "uci95": severe_hypoglucemic_event[0][2],
-                        "lci95": severe_hypoglucemic_event[0][1],
-                        "base": 63.021
+                        "avg": severe_hypoglucemic_event_base[0][0],
+                        "uci95": severe_hypoglucemic_event_base[0][2],
+                        "lci95": severe_hypoglucemic_event_base[0][1],
+                        "base": severe_hypoglucemic_event_base[0][0]
                       },
                       "name": "Severe hypoglycemic event"
                     }
@@ -99,1314 +138,519 @@ def create_json_file(time_to_event, incidence, left_years, quality_of_life, seve
                   "chronic manifestations": [
                     {
                       "annual risk": [
-                        0.0052,
-                        0.0112,
-                        0.0154,
-                        0.0196,
-                        0.0246,
-                        0.029,
-                        0.0334,
-                        0.0378,
-                        0.0426,
-                        0.0464,
-                        0.0508,
-                        0.0536,
-                        0.0576,
-                        0.062,
-                        0.0652,
-                        0.0696,
-                        0.0734,
-                        0.078,
-                        0.0824,
-                        0.085,
-                        0.0892,
-                        0.0908,
-                        0.0946,
-                        0.0982,
-                        0.1012,
-                        0.1038,
-                        0.1062,
-                        0.1076,
-                        0.1108,
-                        0.114,
-                        0.1156,
-                        0.1184,
-                        0.1206,
-                        0.1232,
-                        0.1246,
-                        0.126,
-                        0.1284,
-                        0.1296,
-                        0.1318,
-                        0.1326,
-                        0.1334,
-                        0.1348,
-                        0.136,
-                        0.137,
-                        0.1382,
-                        0.1392,
-                        0.1398,
-                        0.1406,
-                        0.1416,
-                        0.1418,
-                        0.1418,
-                        0.142,
-                        0.1422,
-                        0.1422,
-                        0.1424,
-                        0.1426,
-                        0.1428,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143,
-                        0.143
                       ],
                       "name": "Background Retinopathy",
                       "time to event": {
-                        "avg": time_to_event[0][18],
-                        "uci95": time_to_event[0][20],
-                        "lci95": time_to_event[0][19],
-                        "base": 0
+                        "avg": time_to_event_base[0][18],
+                        "uci95": time_to_event_base[0][20],
+                        "lci95": time_to_event_base[0][19],
+                        "base": time_to_event_base[0][18],
                       },
                       "incidence": {
-                        "avg": incidence[0][18],
-                        "uci95": incidence[0][20],
-                        "lci95": incidence[0][19],
-                        "base": 0
+                        "avg": incidence_base[0][18],
+                        "uci95": incidence_base[0][20],
+                        "lci95": incidence_base[0][19],
+                        "base": incidence_base[0][18]
                       }
                     },
                     {
                       "annual risk": [
-                        6.0E-4,
-                        6.0E-4,
-                        0.0012,
-                        0.0018,
-                        0.0022,
-                        0.0032,
-                        0.0036,
-                        0.004,
-                        0.0044,
-                        0.0054,
-                        0.0072,
-                        0.0082,
-                        0.0098,
-                        0.0108,
-                        0.012,
-                        0.0128,
-                        0.0134,
-                        0.0146,
-                        0.0152,
-                        0.017,
-                        0.0184,
-                        0.0194,
-                        0.021,
-                        0.022,
-                        0.0234,
-                        0.0248,
-                        0.0266,
-                        0.0272,
-                        0.0284,
-                        0.03,
-                        0.0304,
-                        0.0314,
-                        0.0322,
-                        0.0336,
-                        0.035,
-                        0.0364,
-                        0.0374,
-                        0.0384,
-                        0.0392,
-                        0.0404,
-                        0.0408,
-                        0.0412,
-                        0.0418,
-                        0.0434,
-                        0.0436,
-                        0.0446,
-                        0.046,
-                        0.0472,
-                        0.0478,
-                        0.0478,
-                        0.0484,
-                        0.0488,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492,
-                        0.0492
                       ],
                       "name": "Proliferative Retinopathy",
                       "time to event": {
-                        "avg": time_to_event[0][21],
-                        "uci95": time_to_event[0][23],
-                        "lci95": time_to_event[0][22],
-                        "base": 0
+                        "avg": time_to_event_base[0][21],
+                        "uci95": time_to_event_base[0][23],
+                        "lci95": time_to_event_base[0][22],
+                        "base": time_to_event_base[0][21]
                       },
                       "incidence": {
-                        "avg": incidence[0][21],
-                        "uci95": incidence[0][23],
-                        "lci95": incidence[0][22],
-                        "base": 0
+                        "avg": incidence_base[0][21],
+                        "uci95": incidence_base[0][23],
+                        "lci95": incidence_base[0][22],
+                        "base": incidence_base[0][21]
                       }
                     },
                     {
                       "annual risk": [
-                        4.0E-4,
-                        0.003,
-                        0.005,
-                        0.0068,
-                        0.0092,
-                        0.0114,
-                        0.0144,
-                        0.0166,
-                        0.0196,
-                        0.023,
-                        0.0256,
-                        0.0276,
-                        0.0296,
-                        0.0316,
-                        0.034,
-                        0.0376,
-                        0.0388,
-                        0.0426,
-                        0.046,
-                        0.0496,
-                        0.0516,
-                        0.0544,
-                        0.0564,
-                        0.0598,
-                        0.0632,
-                        0.0654,
-                        0.067,
-                        0.0688,
-                        0.0712,
-                        0.074,
-                        0.077,
-                        0.0796,
-                        0.0812,
-                        0.0842,
-                        0.0866,
-                        0.0886,
-                        0.0902,
-                        0.0918,
-                        0.0938,
-                        0.095,
-                        0.0958,
-                        0.0968,
-                        0.0982,
-                        0.0986,
-                        0.0996,
-                        0.1004,
-                        0.101,
-                        0.1024,
-                        0.1028,
-                        0.1034,
-                        0.1042,
-                        0.1044,
-                        0.1046,
-                        0.105,
-                        0.105,
-                        0.105,
-                        0.1052,
-                        0.1052,
-                        0.1054,
-                        0.1054,
-                        0.1054,
-                        0.1054,
-                        0.1054,
-                        0.1054,
-                        0.1054,
-                        0.1054,
-                        0.1054,
-                        0.1054,
-                        0.1054,
-                        0.1054,
-                        0.1054,
-                        0.1054,
-                        0.1054,
-                        0.1054,
-                        0.1054,
-                        0.1054,
-                        0.1054,
-                        0.1054,
-                        0.1054,
-                        0.1054,
-                        0.1054,
-                        0.1054,
-                        0.1054
                       ],
                       "name": "Macular edema",
                       "time to event": {
-                        "avg": time_to_event[0][15],
-                        "uci95": time_to_event[0][17],
-                        "lci95": time_to_event[0][16],
-                        "base": 0
+                        "avg": time_to_event_base[0][15],
+                        "uci95": time_to_event_base[0][17],
+                        "lci95": time_to_event_base[0][16],
+                        "base": time_to_event_base[0][15]
                       },
                       "incidence": {
-                        "avg": incidence[0][15],
-                        "uci95": incidence[0][17],
-                        "lci95": incidence[0][16],
-                        "base": 0
+                        "avg": incidence_base[0][15],
+                        "uci95": incidence_base[0][17],
+                        "lci95": incidence_base[0][16],
+                        "base": incidence_base[0][15],
                       }
                     },
                     {
                       "annual risk": [
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        4.0E-4,
-                        4.0E-4,
-                        4.0E-4,
-                        4.0E-4,
-                        4.0E-4,
-                        6.0E-4,
-                        8.0E-4,
-                        8.0E-4,
-                        8.0E-4,
-                        8.0E-4,
-                        8.0E-4,
-                        0.001,
-                        0.0012,
-                        0.0012,
-                        0.0014,
-                        0.0014,
-                        0.0016,
-                        0.0018,
-                        0.0018,
-                        0.0018,
-                        0.0024,
-                        0.0026,
-                        0.0026,
-                        0.0026,
-                        0.0028,
-                        0.0028,
-                        0.0028,
-                        0.0032,
-                        0.0032,
-                        0.0032,
-                        0.0036,
-                        0.0038,
-                        0.004,
-                        0.004,
-                        0.0042,
-                        0.0044,
-                        0.0046,
-                        0.0046,
-                        0.005,
-                        0.005,
-                        0.005,
-                        0.0052,
-                        0.0054,
-                        0.0054,
-                        0.0054,
-                        0.0054,
-                        0.0056,
-                        0.0056,
-                        0.0056,
-                        0.0056,
-                        0.0056,
-                        0.0056,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058,
-                        0.0058
                       ],
                       "name": "Blindness",
                       "time to event": {
-                        "avg": time_to_event[0][12],
-                        "uci95": time_to_event[0][14],
-                        "lci95": time_to_event[0][13],
-                        "base": 0
+                        "avg": time_to_event_base[0][12],
+                        "uci95": time_to_event_base[0][14],
+                        "lci95": time_to_event_base[0][13],
+                        "base": time_to_event_base[0][12]
                       },
                       "incidence": {
-                        "avg": incidence[0][12],
-                        "uci95": incidence[0][14],
-                        "lci95": incidence[0][13],
-                        "base": 0
+                        "avg": incidence_base[0][12],
+                        "uci95": incidence_base[0][14],
+                        "lci95": incidence_base[0][13],
+                        "base": incidence_base[0][12]
                       }
                     },
                     {
                       "annual risk": [
-                        0.1114,
-                        0.2094,
-                        0.2966,
-                        0.3776,
-                        0.445,
-                        0.5016,
-                        0.5522,
-                        0.5932,
-                        0.6274,
-                        0.6608,
-                        0.6898,
-                        0.7144,
-                        0.7374,
-                        0.7594,
-                        0.7752,
-                        0.791,
-                        0.8026,
-                        0.814,
-                        0.8236,
-                        0.8294,
-                        0.8368,
-                        0.8442,
-                        0.8494,
-                        0.8546,
-                        0.8588,
-                        0.8636,
-                        0.8678,
-                        0.8702,
-                        0.872,
-                        0.8746,
-                        0.8762,
-                        0.8774,
-                        0.8792,
-                        0.881,
-                        0.8816,
-                        0.8826,
-                        0.8832,
-                        0.884,
-                        0.885,
-                        0.8852,
-                        0.8856,
-                        0.8858,
-                        0.886,
-                        0.8862,
-                        0.8862,
-                        0.8868,
-                        0.887,
-                        0.8874,
-                        0.8876,
-                        0.8876,
-                        0.8876,
-                        0.8876,
-                        0.8876,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878,
-                        0.8878
                       ],
                       "name": "Microalbuminuria",
                       "time to event": {
-                        "avg": time_to_event[0][30],
-                        "uci95": time_to_event[0][32],
-                        "lci95": time_to_event[0][31],
-                        "base": 0
+                        "avg": time_to_event_base[0][30],
+                        "uci95": time_to_event_base[0][32],
+                        "lci95": time_to_event_base[0][31],
+                        "base": time_to_event_base[0][30]
                       },
                       "incidence": {
-                        "avg": incidence[0][30],
-                        "uci95": incidence[0][32],
-                        "lci95": incidence[0][31],
-                        "base": 0
+                        "avg": incidence_base[0][30],
+                        "uci95": incidence_base[0][32],
+                        "lci95": incidence_base[0][31],
+                        "base": incidence_base[0][30]
                       }
                     },
                     {
                       "annual risk": [
-                        0.0018,
-                        0.0074,
-                        0.0134,
-                        0.0198,
-                        0.0312,
-                        0.0422,
-                        0.056,
-                        0.0684,
-                        0.0826,
-                        0.0964,
-                        0.112,
-                        0.1256,
-                        0.1406,
-                        0.156,
-                        0.1694,
-                        0.1802,
-                        0.195,
-                        0.2046,
-                        0.2164,
-                        0.2248,
-                        0.2354,
-                        0.247,
-                        0.2564,
-                        0.267,
-                        0.2752,
-                        0.283,
-                        0.2894,
-                        0.2958,
-                        0.3022,
-                        0.31,
-                        0.3168,
-                        0.323,
-                        0.3306,
-                        0.336,
-                        0.3422,
-                        0.346,
-                        0.3504,
-                        0.3538,
-                        0.3578,
-                        0.361,
-                        0.3654,
-                        0.368,
-                        0.3702,
-                        0.373,
-                        0.375,
-                        0.3766,
-                        0.3784,
-                        0.3802,
-                        0.3816,
-                        0.3826,
-                        0.3834,
-                        0.384,
-                        0.3854,
-                        0.3858,
-                        0.3862,
-                        0.3862,
-                        0.3866,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387,
-                        0.387
                       ],
                       "name": "Macroalbuminuria",
                       "time to event": {
-                        "avg": time_to_event[0][33],
-                        "uci95": time_to_event[0][35],
-                        "lci95": time_to_event[0][34],
-                        "base": 0
+                        "avg": time_to_event_base[0][33],
+                        "uci95": time_to_event_base[0][35],
+                        "lci95": time_to_event_base[0][34],
+                        "base": time_to_event_base[0][33]
                       },
                       "incidence": {
-                        "avg": incidence[0][33],
-                        "uci95": incidence[0][35],
-                        "lci95": incidence[0][34],
-                        "base": 0
+                        "avg": incidence_base[0][33],
+                        "uci95": incidence_base[0][35],
+                        "lci95": incidence_base[0][34],
+                        "base": incidence_base[0][33]
                       }
                     },
                     {
                       "annual risk": [
-                        0.0012,
-                        0.0046,
-                        0.0114,
-                        0.0168,
-                        0.0258,
-                        0.036,
-                        0.0476,
-                        0.0602,
-                        0.075,
-                        0.0882,
-                        0.1034,
-                        0.1206,
-                        0.135,
-                        0.1508,
-                        0.1686,
-                        0.1836,
-                        0.1982,
-                        0.2152,
-                        0.2318,
-                        0.247,
-                        0.265,
-                        0.2782,
-                        0.2906,
-                        0.3068,
-                        0.3204,
-                        0.331,
-                        0.344,
-                        0.3554,
-                        0.3674,
-                        0.3772,
-                        0.384,
-                        0.3934,
-                        0.4026,
-                        0.41,
-                        0.419,
-                        0.427,
-                        0.4346,
-                        0.4444,
-                        0.4496,
-                        0.4562,
-                        0.4616,
-                        0.4666,
-                        0.4714,
-                        0.476,
-                        0.478,
-                        0.481,
-                        0.484,
-                        0.4862,
-                        0.4876,
-                        0.489,
-                        0.4896,
-                        0.4904,
-                        0.491,
-                        0.4916,
-                        0.4922,
-                        0.4922,
-                        0.4926,
-                        0.4932,
-                        0.4934,
-                        0.4934,
-                        0.4934,
-                        0.4934,
-                        0.4934,
-                        0.4934,
-                        0.4934,
-                        0.4934,
-                        0.4934,
-                        0.4934,
-                        0.4934,
-                        0.4934,
-                        0.4934,
-                        0.4934,
-                        0.4934,
-                        0.4934,
-                        0.4934,
-                        0.4934,
-                        0.4934,
-                        0.4934,
-                        0.4934,
-                        0.4934,
-                        0.4934,
-                        0.4934,
-                        0.4934
                       ],
                       "name": "End-Stage Renal Disease",
                       "time to event": {
-                        "avg": time_to_event[0][36],
-                        "uci95": time_to_event[0][38],
-                        "lci95": time_to_event[0][37],
-                        "base": 0
+                        "avg": time_to_event_base[0][36],
+                        "uci95": time_to_event_base[0][38],
+                        "lci95": time_to_event_base[0][37],
+                        "base": time_to_event_base[0][36]
                       },
                       "incidence": {
-                        "avg": incidence[0][36],
-                        "uci95": incidence[0][38],
-                        "lci95": incidence[0][37],
-                        "base": 0
+                        "avg": incidence_base[0][36],
+                        "uci95": incidence_base[0][38],
+                        "lci95": incidence_base[0][37],
+                        "base": incidence_base[0][36]
                       }
                     },
                     {
                       "annual risk": [
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1
                       ],
                       "name": "Angina",
                       "time to event": {
-                        "avg": time_to_event[0][6],
-                        "uci95": time_to_event[0][8],
-                        "lci95": time_to_event[0][7],
-                        "base": 0
+                        "avg": time_to_event_base[0][6],
+                        "uci95": time_to_event_base[0][8],
+                        "lci95": time_to_event_base[0][7],
+                        "base": time_to_event_base[0][6]
                       },
                       "incidence": {
-                        "avg": incidence[0][6],
-                        "uci95": incidence[0][8],
-                        "lci95": incidence[0][7],
-                        "base": 0
+                        "avg": incidence_base[0][6],
+                        "uci95": incidence_base[0][8],
+                        "lci95": incidence_base[0][7],
+                        "base": incidence_base[0][6]
                       }
                     },
                     {
                       "annual risk": [
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0
                       ],
                       "name": "Stroke",
                       "time to event": {
-                        "avg": time_to_event[0][9],
-                        "uci95": time_to_event[0][11],
-                        "lci95": time_to_event[0][10],
-                        "base": 0
+                        "avg": time_to_event_base[0][9],
+                        "uci95": time_to_event_base[0][11],
+                        "lci95": time_to_event_base[0][10],
+                        "base": time_to_event_base[0][9]
                       },
                       "incidence": {
-                        "avg": incidence[0][9],
-                        "uci95": incidence[0][11],
-                        "lci95": incidence[0][10],
-                        "base": 0
+                        "avg": incidence_base[0][9],
+                        "uci95": incidence_base[0][11],
+                        "lci95": incidence_base[0][10],
+                        "base": incidence_base[0][9]
                       }
                     },
                     {
                       "annual risk": [
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0
                       ],
                       "name": "Myocardial Infarction",
                       "time to event": {
-                        "avg": time_to_event[0][3],
-                        "uci95": time_to_event[0][5],
-                        "lci95": time_to_event[0][4],
-                        "base": 0
+                        "avg": time_to_event_base[0][3],
+                        "uci95": time_to_event_base[0][5],
+                        "lci95": time_to_event_base[0][4],
+                        "base": time_to_event_base[0][3]
                       },
                       "incidence": {
-                        "avg": incidence[0][3],
-                        "uci95": incidence[0][5],
-                        "lci95": incidence[0][4],
-                        "base": 0
+                        "avg": incidence_base[0][3],
+                        "uci95": incidence_base[0][5],
+                        "lci95": incidence_base[0][4],
+                        "base": incidence_base[0][3]
                       }
                     },
                     {
                       "annual risk": [
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0
+
                       ],
                       "name": "Heart Failure",
                       "time to event": {
-                        "avg": time_to_event[0][0],
-                        "uci95": time_to_event[0][2],
-                        "lci95": time_to_event[0][1],
-                        "base": 0
+                        "avg": time_to_event_base[0][0],
+                        "uci95": time_to_event_base[0][2],
+                        "lci95": time_to_event_base[0][1],
+                        "base": time_to_event_base[0][0]
                       },
                       "incidence": {
-                        "avg": incidence[0][0],
-                        "uci95": incidence[0][2],
-                        "lci95": incidence[0][1],
-                        "base": 0
+                        "avg": incidence_base[0][0],
+                        "uci95": incidence_base[0][2],
+                        "lci95": incidence_base[0][1],
+                        "base": incidence_base[0][0]
                       }
                     },
                     {
                       "annual risk": [
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1
                       ],
                       "name": "Neuropathy",
                       "time to event": {
-                        "avg": time_to_event[0][24],
-                        "uci95": time_to_event[0][26],
-                        "lci95": time_to_event[0][25],
-                        "base": 0
+                        "avg": time_to_event_base[0][24],
+                        "uci95": time_to_event_base[0][26],
+                        "lci95": time_to_event_base[0][25],
+                        "base": time_to_event_base[0][24]
                       },
                       "incidence": {
-                        "avg": incidence[0][24],
-                        "uci95": incidence[0][26],
-                        "lci95": incidence[0][25],
-                        "base": 0
+                        "avg": incidence_base[0][24],
+                        "uci95": incidence_base[0][26],
+                        "lci95": incidence_base[0][25],
+                        "base": incidence_base[0][24]
                       }
                     },
                     {
                       "annual risk": [
-                        0.016,
-                        0.0306,
-                        0.0436,
-                        0.057,
-                        0.0694,
-                        0.0834,
-                        0.0994,
-                        0.109,
-                        0.12,
-                        0.131,
-                        0.1406,
-                        0.1514,
-                        0.1612,
-                        0.1706,
-                        0.1828,
-                        0.1902,
-                        0.1992,
-                        0.2108,
-                        0.2176,
-                        0.2268,
-                        0.2336,
-                        0.2394,
-                        0.248,
-                        0.255,
-                        0.2632,
-                        0.2708,
-                        0.2772,
-                        0.2824,
-                        0.2884,
-                        0.294,
-                        0.3,
-                        0.305,
-                        0.3084,
-                        0.314,
-                        0.3192,
-                        0.3234,
-                        0.3282,
-                        0.332,
-                        0.3352,
-                        0.3372,
-                        0.3406,
-                        0.3428,
-                        0.3454,
-                        0.3474,
-                        0.349,
-                        0.35,
-                        0.3524,
-                        0.3532,
-                        0.3544,
-                        0.3556,
-                        0.3564,
-                        0.3572,
-                        0.3576,
-                        0.358,
-                        0.3584,
-                        0.3584,
-                        0.3588,
-                        0.3588,
-                        0.3588,
-                        0.359,
-                        0.359,
-                        0.359,
-                        0.359,
-                        0.359,
-                        0.359,
-                        0.359,
-                        0.359,
-                        0.359,
-                        0.359,
-                        0.359,
-                        0.359,
-                        0.359,
-                        0.359,
-                        0.359,
-                        0.359,
-                        0.359,
-                        0.359,
-                        0.359,
-                        0.359,
-                        0.359,
-                        0.359,
-                        0.359,
-                        0.359
                       ],
                       "name": "Low extremity amputation",
                       "time to event": {
-                        "avg": time_to_event[0][27],
-                        "uci95": time_to_event[0][29],
-                        "lci95": time_to_event[0][28],
-                        "base": 0
+                        "avg": time_to_event_base[0][27],
+                        "uci95": time_to_event_base[0][29],
+                        "lci95": time_to_event_base[0][28],
+                        "base": time_to_event_base[0][27]
                       },
                       "incidence": {
-                        "avg": incidence[0][27],
-                        "uci95": incidence[0][29],
-                        "lci95": incidence[0][28],
-                        "base": 0
+                        "avg": incidence_base[0][27],
+                        "uci95": incidence_base[0][29],
+                        "lci95": incidence_base[0][28],
+                        "base": incidence_base[0][27]
                       }
                     }
                   ],
                   "LY": {
-                    "avg": left_years[0][0],
-                    "uci95": left_years[0][2],
-                    "lci95": left_years[0][1],
-                    "base": 19.03405816092942
+                    "avg": left_years_base[0][0],
+                    "uci95": left_years_base[0][2],
+                    "lci95": left_years_base[0][1],
+                    "base": left_years_base[0][0]
+                  }
+                },
+                {
+                  "cost": {
+                    "avg": cost_int[0][0],
+                    "uci95": cost_int[0][2],
+                    "lci95": cost_int[0][1],
+                    "base": cost_int[0][0]
+                  },
+                  "name": "DIAB+INT",
+                  "QALY": {
+                    "avg": quality_of_life_int[0][0],
+                    "uci95": quality_of_life_int[0][2],
+                    "lci95": quality_of_life_int[0][1],
+                    "base": quality_of_life_int[0][0]
+                  },
+                  "acute manifestations": [
+                    {
+                      "number of events": {
+                        "avg": severe_hypoglucemic_event_int[0][0],
+                        "uci95": severe_hypoglucemic_event_int[0][2],
+                        "lci95": severe_hypoglucemic_event_int[0][1],
+                        "base": severe_hypoglucemic_event_int[0][0]
+                      },
+                      "name": "Severe hypoglycemic event"
+                    }
+                  ],
+                  "chronic manifestations": [
+                    {
+                      "annual risk": [
+                      ],
+                      "name": "Background Retinopathy",
+                      "time to event": {
+                        "avg": time_to_event_int[0][18],
+                        "uci95": time_to_event_int[0][20],
+                        "lci95": time_to_event_int[0][19],
+                        "base": time_to_event_int[0][18],
+                      },
+                      "incidence": {
+                        "avg": incidence_int[0][18],
+                        "uci95": incidence_int[0][20],
+                        "lci95": incidence_int[0][19],
+                        "base": incidence_int[0][18]
+                      }
+                    },
+                    {
+                      "annual risk": [
+                      ],
+                      "name": "Proliferative Retinopathy",
+                      "time to event": {
+                        "avg": time_to_event_int[0][21],
+                        "uci95": time_to_event_int[0][23],
+                        "lci95": time_to_event_int[0][22],
+                        "base": time_to_event_int[0][21]
+                      },
+                      "incidence": {
+                        "avg": incidence_int[0][21],
+                        "uci95": incidence_int[0][23],
+                        "lci95": incidence_int[0][22],
+                        "base": incidence_int[0][21]
+                      }
+                    },
+                    {
+                      "annual risk": [
+                      ],
+                      "name": "Macular edema",
+                      "time to event": {
+                        "avg": time_to_event_int[0][15],
+                        "uci95": time_to_event_int[0][17],
+                        "lci95": time_to_event_int[0][16],
+                        "base": time_to_event_int[0][15]
+                      },
+                      "incidence": {
+                        "avg": incidence_int[0][15],
+                        "uci95": incidence_int[0][17],
+                        "lci95": incidence_int[0][16],
+                        "base": incidence_int[0][15],
+                      }
+                    },
+                    {
+                      "annual risk": [
+                      ],
+                      "name": "Blindness",
+                      "time to event": {
+                        "avg": time_to_event_int[0][12],
+                        "uci95": time_to_event_int[0][14],
+                        "lci95": time_to_event_int[0][13],
+                        "base": time_to_event_int[0][12]
+                      },
+                      "incidence": {
+                        "avg": incidence_int[0][12],
+                        "uci95": incidence_int[0][14],
+                        "lci95": incidence_int[0][13],
+                        "base": incidence_int[0][12]
+                      }
+                    },
+                    {
+                      "annual risk": [
+                      ],
+                      "name": "Microalbuminuria",
+                      "time to event": {
+                        "avg": time_to_event_int[0][30],
+                        "uci95": time_to_event_int[0][32],
+                        "lci95": time_to_event_int[0][31],
+                        "base": time_to_event_int[0][30]
+                      },
+                      "incidence": {
+                        "avg": incidence_int[0][30],
+                        "uci95": incidence_int[0][32],
+                        "lci95": incidence_int[0][31],
+                        "base": incidence_int[0][30]
+                      }
+                    },
+                    {
+                      "annual risk": [
+                      ],
+                      "name": "Macroalbuminuria",
+                      "time to event": {
+                        "avg": time_to_event_int[0][33],
+                        "uci95": time_to_event_int[0][35],
+                        "lci95": time_to_event_int[0][34],
+                        "base": time_to_event_int[0][33]
+                      },
+                      "incidence": {
+                        "avg": incidence_int[0][33],
+                        "uci95": incidence_int[0][35],
+                        "lci95": incidence_int[0][34],
+                        "base": incidence_int[0][33]
+                      }
+                    },
+                    {
+                      "annual risk": [
+                      ],
+                      "name": "End-Stage Renal Disease",
+                      "time to event": {
+                        "avg": time_to_event_int[0][36],
+                        "uci95": time_to_event_int[0][38],
+                        "lci95": time_to_event_int[0][37],
+                        "base": time_to_event_int[0][36]
+                      },
+                      "incidence": {
+                        "avg": incidence_int[0][36],
+                        "uci95": incidence_int[0][38],
+                        "lci95": incidence_int[0][37],
+                        "base": incidence_int[0][36]
+                      }
+                    },
+                    {
+                      "annual risk": [
+                      ],
+                      "name": "Angina",
+                      "time to event": {
+                        "avg": time_to_event_int[0][6],
+                        "uci95": time_to_event_int[0][8],
+                        "lci95": time_to_event_int[0][7],
+                        "base": time_to_event_int[0][6]
+                      },
+                      "incidence": {
+                        "avg": incidence_int[0][6],
+                        "uci95": incidence_int[0][8],
+                        "lci95": incidence_int[0][7],
+                        "base": incidence_int[0][6]
+                      }
+                    },
+                    {
+                      "annual risk": [
+                      ],
+                      "name": "Stroke",
+                      "time to event": {
+                        "avg": time_to_event_int[0][9],
+                        "uci95": time_to_event_int[0][11],
+                        "lci95": time_to_event_int[0][10],
+                        "base": time_to_event_int[0][9]
+                      },
+                      "incidence": {
+                        "avg": incidence_int[0][9],
+                        "uci95": incidence_int[0][11],
+                        "lci95": incidence_int[0][10],
+                        "base": incidence_int[0][9]
+                      }
+                    },
+                    {
+                      "annual risk": [
+                      ],
+                      "name": "Myocardial Infarction",
+                      "time to event": {
+                        "avg": time_to_event_int[0][3],
+                        "uci95": time_to_event_int[0][5],
+                        "lci95": time_to_event_int[0][4],
+                        "base": time_to_event_int[0][3]
+                      },
+                      "incidence": {
+                        "avg": incidence_int[0][3],
+                        "uci95": incidence_int[0][5],
+                        "lci95": incidence_int[0][4],
+                        "base": incidence_int[0][3]
+                      }
+                    },
+                    {
+                      "annual risk": [
+                      ],
+                      "name": "Heart Failure",
+                      "time to event": {
+                        "avg": time_to_event_int[0][0],
+                        "uci95": time_to_event_int[0][2],
+                        "lci95": time_to_event_int[0][1],
+                        "base": time_to_event_int[0][0]
+                      },
+                      "incidence": {
+                        "avg": incidence_int[0][0],
+                        "uci95": incidence_int[0][2],
+                        "lci95": incidence_int[0][1],
+                        "base": incidence_int[0][0]
+                      }
+                    },
+                    {
+                      "annual risk": [
+                      ],
+                      "name": "Neuropathy",
+                      "time to event": {
+                        "avg": time_to_event_int[0][24],
+                        "uci95": time_to_event_int[0][26],
+                        "lci95": time_to_event_int[0][25],
+                        "base": time_to_event_int[0][24]
+                      },
+                      "incidence": {
+                        "avg": incidence_int[0][24],
+                        "uci95": incidence_int[0][26],
+                        "lci95": incidence_int[0][25],
+                        "base": incidence_int[0][24]
+                      }
+                    },
+                    {
+                      "annual risk": [
+                      ],
+                      "name": "Low extremity amputation",
+                      "time to event": {
+                        "avg": time_to_event_int[0][27],
+                        "uci95": time_to_event_int[0][29],
+                        "lci95": time_to_event_int[0][28],
+                        "base": time_to_event_int[0][27]
+                      },
+                      "incidence": {
+                        "avg": incidence_int[0][27],
+                        "uci95": incidence_int[0][29],
+                        "lci95": incidence_int[0][28],
+                        "base": incidence_int[0][27]
+                      }
+                    }
+                  ],
+                  "LY": {
+                    "avg": left_years_int[0][0],
+                    "uci95": left_years_int[0][2],
+                    "lci95": left_years_int[0][1],
+                    "base": left_years_int[0][0]
                   }
                 }
               ]
             }
+  # Add the risk of the base case to the results
+  results["interventions"][0]["chronic manifestations"][0]["annual risk"] = list_risk_base[6]
+  results["interventions"][0]["chronic manifestations"][1]["annual risk"] = list_risk_base[7]
+  results["interventions"][0]["chronic manifestations"][2]["annual risk"] = list_risk_base[5]
+  results["interventions"][0]["chronic manifestations"][3]["annual risk"] = list_risk_base[4]
+  results["interventions"][0]["chronic manifestations"][4]["annual risk"] = list_risk_base[10]
+  results["interventions"][0]["chronic manifestations"][5]["annual risk"] = list_risk_base[11]
+  results["interventions"][0]["chronic manifestations"][6]["annual risk"] = list_risk_base[12]
+  results["interventions"][0]["chronic manifestations"][7]["annual risk"] = list_risk_base[2]
+  results["interventions"][0]["chronic manifestations"][8]["annual risk"] = list_risk_base[3]
+  results["interventions"][0]["chronic manifestations"][9]["annual risk"] = list_risk_base[1]
+  results["interventions"][0]["chronic manifestations"][10]["annual risk"] = list_risk_base[0]
+  results["interventions"][0]["chronic manifestations"][11]["annual risk"] = list_risk_base[8]
+  results["interventions"][0]["chronic manifestations"][12]["annual risk"] = list_risk_base[9]
+
+  results["interventions"][1]["chronic manifestations"][0]["annual risk"] = list_risk_int[6]
+  results["interventions"][1]["chronic manifestations"][1]["annual risk"] = list_risk_int[7]
+  results["interventions"][1]["chronic manifestations"][2]["annual risk"] = list_risk_int[5]
+  results["interventions"][1]["chronic manifestations"][3]["annual risk"] = list_risk_int[4]
+  results["interventions"][1]["chronic manifestations"][4]["annual risk"] = list_risk_int[10]
+  results["interventions"][1]["chronic manifestations"][5]["annual risk"] = list_risk_int[11]
+  results["interventions"][1]["chronic manifestations"][6]["annual risk"] = list_risk_int[12]
+  results["interventions"][1]["chronic manifestations"][7]["annual risk"] = list_risk_int[2]
+  results["interventions"][1]["chronic manifestations"][8]["annual risk"] = list_risk_int[3]
+  results["interventions"][1]["chronic manifestations"][9]["annual risk"] = list_risk_int[1]
+  results["interventions"][1]["chronic manifestations"][10]["annual risk"] = list_risk_int[0]
+  results["interventions"][1]["chronic manifestations"][11]["annual risk"] = list_risk_int[8]
+  results["interventions"][1]["chronic manifestations"][12]["annual risk"] = list_risk_int[9]
 
   # Crea un JSON con los resultados
   path_results = os.path.join(st.API_DATA, 'results.json')

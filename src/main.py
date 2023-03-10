@@ -82,7 +82,7 @@ def main() -> None:
   # Preprocesar los datos
   df_cols = data_frame.columns[data_frame.columns.str.contains('UPTO')]
   data_frame[df_cols] = data_frame[df_cols].div(500) * 100
-
+  """
   # Para cada modelo en la lista de modelos
   for config in config_list['config_list']:
     # Crear el objeto AutoML
@@ -124,21 +124,23 @@ def main() -> None:
   cp.compare_models(compare_list['compare_model']['list'],
                     compare_list['compare_model']['directory'],
                     compare_list['compare_model']['name'])
-
+  """
   # Carga los datos de la API
   patient = api.load_data()
 
   # Datos necesarios: age, durationOfDiabetes y baseHbA1cLevel
-  patient_data = patient[['baseHbA1cLevel', 'age', 'durationOfDiabetes']].rename(columns={'baseHbA1cLevel': 'HBA1C', 'age': 'AGE', 'durationOfDiabetes': 'DURATION'})
+  patient_data_base = patient[['baseHbA1cLevel', 'age', 'durationOfDiabetes']].rename(columns={'baseHbA1cLevel': 'HBA1C', 'age': 'AGE', 'durationOfDiabetes': 'DURATION'})
+  patient_data_int = patient[['objHbA1cLevel', 'age', 'durationOfDiabetes']].rename(columns={'objHbA1cLevel': 'HBA1C', 'age': 'AGE', 'durationOfDiabetes': 'DURATION'})
 
   # Carga los modelos de la API
-  model_time_to_event, model_incidence, model_left_years, model_quality_of_life, model_severe_hypoglucemic_event, model_cost = api.load_models()
+  model_time_to_event, model_incidence, model_left_years, model_quality_of_life, model_severe_hypoglucemic_event, model_cost, model_risk = api.load_models()
 
-  # Predice el time to event
-  time_to_event, incidence, left_years, quality_of_life, severe_hypoglucemic_event, cost = api.predict(patient_data, model_time_to_event, model_incidence, model_left_years, model_quality_of_life, model_severe_hypoglucemic_event, model_cost)
+  # Predice con los modelos
+  time_to_event_base, incidence_base, left_years_base, quality_of_life_base, severe_hypoglucemic_event_base, cost_base, risk_base = api.predict(patient_data_base, model_time_to_event, model_incidence, model_left_years, model_quality_of_life, model_severe_hypoglucemic_event, model_cost, model_risk)
+  time_to_event_int, incidence_int, left_years_int, quality_of_life_int, severe_hypoglucemic_event_int, cost_int, risk_int = api.predict(patient_data_int, model_time_to_event, model_incidence, model_left_years, model_quality_of_life, model_severe_hypoglucemic_event, model_cost, model_risk)
 
   # Crea un JSON con los resultados
-  json_file = api.create_json_file(time_to_event, incidence, left_years, quality_of_life, severe_hypoglucemic_event, cost)
+  json_file = api.create_json_file(time_to_event_base, incidence_base, left_years_base, quality_of_life_base, severe_hypoglucemic_event_base, cost_base, risk_base, time_to_event_int, incidence_int, left_years_int, quality_of_life_int, severe_hypoglucemic_event_int, cost_int, risk_int)
   """
   # Hace la petición POST
   url = ""

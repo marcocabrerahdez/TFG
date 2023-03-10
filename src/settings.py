@@ -68,6 +68,7 @@ API_MODEL_LY = os.path.join(SINGLE_MODEL_DIR, 'GradientBoostingRegressor', 'left
 API_MODEL_QALY = os.path.join(SINGLE_MODEL_DIR, 'GradientBoostingRegressor', 'quality of life')
 API_MODEL_SHE = os.path.join(SINGLE_MODEL_DIR, 'GradientBoostingRegressor', 'severe hypoglycemic event')
 API_MODEL_COST = os.path.join(SINGLE_MODEL_DIR, 'GradientBoostingRegressor', 'cost')
+API_MODEL_RISK = os.path.join(GLOBAL_MODEL_DIR, 'GradientBoostingRegressor', 'upto time')
 
 # PARÁMETROS DE ENTRENAMIENTO
 TEST_SIZE = 0.2
