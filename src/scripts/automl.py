@@ -317,27 +317,30 @@ class AutoML:
         ax.set_xlim([0, max(y_test_df.values.max(), y_pred_df.values.max(), y_test_l95ci_df.values.max(), y_pred_l95ci_df.values.max(), y_test_u95ci_df.values.max(), y_pred_u95ci_df.values.max()) + 1])
         ax.set_ylim([0, max(y_test_df.values.max(), y_pred_df.values.max(), y_test_l95ci_df.values.max(), y_pred_l95ci_df.values.max(), y_test_u95ci_df.values.max(), y_pred_u95ci_df.values.max()) + 1])
 
+        # Grafica la diagonal
+        ax.plot([0, max(y_test_df.values.max(), y_pred_df.values.max(), y_test_l95ci_df.values.max(), y_pred_l95ci_df.values.max(), y_test_u95ci_df.values.max(), y_pred_u95ci_df.values.max()) + 1], [0, max(y_test_df.values.max(), y_pred_df.values.max(), y_test_l95ci_df.values.max(), y_pred_l95ci_df.values.max(), y_test_u95ci_df.values.max(), y_pred_u95ci_df.values.max()) + 1], color='black', linestyle='-', label='Valor Ideal')
+
         # Crear la malla convexa
         avg_points = np.column_stack((y_test_df, y_pred_df))
         avg_hull = ConvexHull(avg_points)
 
         # Grafica los valores reales vs predichos como puntos de AVG
         ax.fill(avg_points[avg_hull.vertices,0], avg_points[avg_hull.vertices,1], 'r', alpha=0.15, label='Area de valores predichos de tiempo promedio hasta aparición')
-        ax.scatter(y_test_df, y_pred_df, color='red', label='Valor predicho de tiempo promedio hasta aparición')
+        ax.scatter(y_test_df, y_pred_df, color='red', alpha=0.85, label='Valor predicho de tiempo promedio hasta aparición')
 
         # Grafica los valores reales vs predichos como puntos de L95CI
         l95ci_points = np.column_stack((y_test_l95ci_df, y_pred_l95ci_df))
         l95ci_hull = ConvexHull(l95ci_points)
 
         ax.fill(l95ci_points[l95ci_hull.vertices,0], l95ci_points[l95ci_hull.vertices,1], color='blue', alpha=0.15, label='Area de valores predichos del intervalo de confianza inferior')
-        ax.scatter(y_test_l95ci_df, y_pred_l95ci_df, color='blue', marker='x', label='Valor predicho del intervalo de confianza inferior')
+        ax.scatter(y_test_l95ci_df, y_pred_l95ci_df, color='blue', marker='x', alpha=0.85, label='Valor predicho del intervalo de confianza inferior')
 
         # Grafica los valores reales vs predichos como puntos de U95CI
         u95ci_points = np.column_stack((y_test_u95ci_df, y_pred_u95ci_df))
         u95ci_hull = ConvexHull(u95ci_points)
 
         ax.fill(u95ci_points[u95ci_hull.vertices,0], u95ci_points[u95ci_hull.vertices,1], color='green', alpha=0.15, label='Area de valores predichos de intervalo de confianza superior')
-        ax.scatter(y_test_u95ci_df, y_pred_u95ci_df, color='green', marker='^', label='Valor predicho del intervalo de confianza superior')
+        ax.scatter(y_test_u95ci_df, y_pred_u95ci_df, color='green', marker='^', alpha=0.85, label='Valor predicho del intervalo de confianza superior')
 
         # Agrega los ejes
         ax.set_xlabel('Valor real de tiempo promedio hasta aparición', fontsize=10, fontweight='bold')
@@ -367,27 +370,30 @@ class AutoML:
           ax[i].set_xlim([0, max(y_test_df.iloc[:, i].values.max(), y_pred_df.iloc[:, i].values.max(), y_test_l95ci_df.iloc[:, i].values.max(), y_pred_l95ci_df.iloc[:, i].values.max(), y_test_u95ci_df.iloc[:, i].values.max(), y_pred_u95ci_df.iloc[:, i].values.max()) + 1])
           ax[i].set_ylim([0, max(y_test_df.iloc[:, i].values.max(), y_pred_df.iloc[:, i].values.max(), y_test_l95ci_df.iloc[:, i].values.max(), y_pred_l95ci_df.iloc[:, i].values.max(), y_test_u95ci_df.iloc[:, i].values.max(), y_pred_u95ci_df.iloc[:, i].values.max()) + 1])
 
+          # Grafica la diagonal
+          ax[i].plot([0, max(y_test_df.iloc[:, i].values.max(), y_pred_df.iloc[:, i].values.max(), y_test_l95ci_df.iloc[:, i].values.max(), y_pred_l95ci_df.iloc[:, i].values.max(), y_test_u95ci_df.iloc[:, i].values.max(), y_pred_u95ci_df.iloc[:, i].values.max()) + 1], [0, max(y_test_df.iloc[:, i].values.max(), y_pred_df.iloc[:, i].values.max(), y_test_l95ci_df.iloc[:, i].values.max(), y_pred_l95ci_df.iloc[:, i].values.max(), y_test_u95ci_df.iloc[:, i].values.max(), y_pred_u95ci_df.iloc[:, i].values.max()) + 1], color='black', linestyle='-', label='Valor Ideal')
+
           # Crear la malla convexa
           avg_points = np.column_stack((y_test_df.iloc[:, i], y_pred_df.iloc[:, i]))
           avg_hull = ConvexHull(avg_points)
 
           # Grafica los valores reales vs predichos como puntos de AVG
           ax[i].fill(avg_points[avg_hull.vertices,0], avg_points[avg_hull.vertices,1], 'r', alpha=0.15, label='Area de valores predichos de tiempo promedio hasta aparición')
-          ax[i].scatter(y_test_df.iloc[:, i], y_pred_df.iloc[:, i], color='red', label='Valor predicho de tiempo promedio hasta aparición')
+          ax[i].scatter(y_test_df.iloc[:, i], y_pred_df.iloc[:, i], color='red', alpha=0.85, label='Valor predicho de tiempo promedio hasta aparición')
 
           # Grafica los valores reales vs predichos como puntos de L95CI
           l95ci_points = np.column_stack((y_test_l95ci_df.iloc[:, i], y_pred_l95ci_df.iloc[:, i]))
           l95ci_hull = ConvexHull(l95ci_points)
 
           ax[i].fill(l95ci_points[l95ci_hull.vertices,0], l95ci_points[l95ci_hull.vertices,1], color='blue', alpha=0.15, label='Area de valores predichos de intervalo de confianza inferior')
-          ax[i].scatter(y_test_l95ci_df.iloc[:, i], y_pred_l95ci_df.iloc[:, i], color='blue', marker='x', label='Valor predicho de intervalo de confianza inferior')
+          ax[i].scatter(y_test_l95ci_df.iloc[:, i], y_pred_l95ci_df.iloc[:, i], color='blue', marker='x', alpha=0.85, label='Valor predicho de intervalo de confianza inferior')
 
           # Grafica los valores reales vs predichos como puntos de U95CI
           u95ci_points = np.column_stack((y_test_u95ci_df.iloc[:, i], y_pred_u95ci_df.iloc[:, i]))
           u95ci_hull = ConvexHull(u95ci_points)
 
           ax[i].fill(u95ci_points[u95ci_hull.vertices,0], u95ci_points[u95ci_hull.vertices,1], color='green', alpha=0.15, label='Area de valores predichos de intervalo de confianza superior')
-          ax[i].scatter(y_test_u95ci_df.iloc[:, i], y_pred_u95ci_df.iloc[:, i], color='green', marker='^', label='Valor predicho intervalo de confianza superior')
+          ax[i].scatter(y_test_u95ci_df.iloc[:, i], y_pred_u95ci_df.iloc[:, i], color='green', marker='^', alpha=0.85, label='Valor predicho intervalo de confianza superior')
 
           # Agrega los ejes
           ax[i].set_xlabel('Valor real de tiempo promedio hasta aparición', fontsize=10, fontweight='bold')
