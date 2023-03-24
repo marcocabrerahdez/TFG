@@ -77,12 +77,20 @@ def main() -> None:
     else:
       print('Argumento no válido.')
       sys.exit()
-
-
+  """
   # Preprocesar los datos
   df_cols = data_frame.columns[data_frame.columns.str.contains('UPTO')]
   data_frame[df_cols] = data_frame[df_cols].div(500) * 100
-  """
+
+  # Cambiar SEX: MAN -> 1, WOMAN -> 0
+  data_frame['SEX'] = data_frame['SEX'].replace({'MAN': 0, 'WOMAN': 1})
+
+  # Guardar posiciones de los valores NaN
+  nan_pos = data_frame.isna()
+
+  # Valores NaN a 0
+  data_frame = data_frame.fillna(0)
+
   # Para cada modelo en la lista de modelos
   for config in config_list['config_list']:
     # Crear el objeto AutoML
@@ -102,20 +110,20 @@ def main() -> None:
     automl.predict()
 
     # R2 and MAPE score
-    automl.metrics(increment=30)
+    automl.metrics(nan_pos, increment=3)
 
     # Guardar el modelo, las predicciones y las metricas
     automl.save()
 
     # Graficar los resultados
     #automl.plot_upto_time()
-    #automl.plot_avg_time()
-
+    automl.plot_avg_time(nan_pos)
+  """
   # Comparar las métricas de los resultados de los modelos
-  #cp.create_score_table(compare_list['r2']['list'], compare_list['r2']['name_list'], st.R2_TABLE_DIR)
-  #cp.create_score_table(compare_list['mape']['list'], compare_list['mape']['name_list'], st.MAPE_TABLE_DIR)
-  cp.compare_r2_tables(compare_list['r2']['name_list'], st.R2_AVERAGE_UPTO_TIME_PLOT_DIR, st.R2_AVERAGE_UPTO_TIME_DIR)
-
+  cp.create_score_table(compare_list['r2']['list'], compare_list['r2']['name_list'], st.R2_TABLE_DIR, st.R2_AVERAGE_TIME_DIR)
+  cp.create_score_table(compare_list['mape']['list'], compare_list['mape']['name_list'], st.MAPE_TABLE_DIR, st.MAPE_AVERAGE_TIME_DIR)
+  #cp.compare_r2_tables(compare_list['r2']['name_list'], st.R2_AVERAGE_UPTO_TIME_PLOT_DIR, st.R2_AVERAGE_UPTO_TIME_DIR)
+  """
   for model in compare_list['compare']:
     cp.compare_avg_metrics(model['model'], model['directory'], model['name'])
     #cp.compare_upto_metrics(model['model'], model['directory'], model['name'])
@@ -124,7 +132,7 @@ def main() -> None:
   cp.compare_models(compare_list['compare_model']['list'],
                     compare_list['compare_model']['directory'],
                     compare_list['compare_model']['name'])
-  """
+
   # Carga los datos de la API
   patient = api.load_data()
 
@@ -141,7 +149,7 @@ def main() -> None:
 
   # Crea un JSON con los resultados
   json_file = api.create_json_file(time_to_event_base, incidence_base, left_years_base, quality_of_life_base, severe_hypoglucemic_event_base, cost_base, risk_base, time_to_event_int, incidence_int, left_years_int, quality_of_life_int, severe_hypoglucemic_event_int, cost_int, risk_int)
-  """
+
   # Hace la petición POST
   url = ""
   headers = {"Content-Type": "application/json"}
@@ -152,3 +160,4 @@ def main() -> None:
   """
 if __name__ == '__main__':
   main()
+  os.system('afplay /System/Library/Sounds/Glass.aiff')
