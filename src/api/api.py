@@ -53,23 +53,39 @@ def load_models():
 
 
 
-def predict(data, model_time_to_event, model_incidence, model_left_years, model_quality_of_life, model_severe_hypoglucemic_event, model_cost, model_risk):
-  # Predice el time to event
-  time_to_event = model_time_to_event.predict(data)
-  # Predice la incidencia
-  incidence = model_incidence.predict(data)
-  # Predice los años restantes
-  left_years = model_left_years.predict(data)
-  # Predice la calidad de vida
-  quality_of_life = model_quality_of_life.predict(data)
-  # Predice el evento severo de hipoglucemia
-  severe_hypoglucemic_event = model_severe_hypoglucemic_event.predict(data)
-  # Predice el costo
-  cost = model_cost.predict(data)
-  # Predice el riesgo
-  risk = model_risk.predict(data)
+def predict(data_base, data_int):
+  # Carga los modelos
+  model_time_to_event, model_incidence, model_left_years, model_quality_of_life, model_severe_hypoglucemic_event, model_cost, model_risk = load_models()
 
-  return time_to_event, incidence, left_years, quality_of_life, severe_hypoglucemic_event, cost, risk
+  # Predice el time to event
+  time_to_event_base = model_time_to_event.predict(data_base)
+  time_to_event_int = model_time_to_event.predict(data_int)
+
+  # Predice la incidencia
+  incidence_base = model_incidence.predict(data_base)
+  incidence_int = model_incidence.predict(data_int)
+
+  # Predice los años restantes
+  left_years_base = model_left_years.predict(data_base)
+  left_years_int = model_left_years.predict(data_int)
+
+  # Predice la calidad de vida
+  quality_of_life_base = model_quality_of_life.predict(data_base)
+  quality_of_life_int = model_quality_of_life.predict(data_int)
+
+  # Predice el evento severo de hipoglucemia
+  severe_hypoglucemic_event_base = model_severe_hypoglucemic_event.predict(data_base)
+  severe_hypoglucemic_event_int = model_severe_hypoglucemic_event.predict(data_int)
+
+  # Predice el costo
+  cost_base = model_cost.predict(data_base)
+  cost_int = model_cost.predict(data_int)
+
+  # Predice el riesgo
+  risk_base = model_risk.predict(data_base)
+  risk_int = model_risk.predict(data_int)
+
+  return time_to_event_base, incidence_base, left_years_base, quality_of_life_base, severe_hypoglucemic_event_base, cost_base, risk_base, time_to_event_int, incidence_int, left_years_int, quality_of_life_int, severe_hypoglucemic_event_int, cost_int, risk_int
 
 
 
@@ -659,3 +675,9 @@ def create_json_file(time_to_event_base, incidence_base, left_years_base, qualit
 
   # Devuelve el JSON
   return results
+
+
+
+def run(data_base, data_int):
+  time_to_event_base, incidence_base, left_years_base, quality_of_life_base, severe_hypoglucemic_event_base, cost_base, risk_base, time_to_event_int, incidence_int, left_years_int, quality_of_life_int, severe_hypoglucemic_event_int, cost_int, risk_int = predict(data_base, data_int)
+  return create_json(time_to_event_base, incidence_base, left_years_base, quality_of_life_base, severe_hypoglucemic_event_base, cost_base, risk_base, time_to_event_int, incidence_int, left_years_int, quality_of_life_int, severe_hypoglucemic_event_int, cost_int, risk_int)

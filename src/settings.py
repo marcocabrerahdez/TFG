@@ -53,8 +53,11 @@ SINGLE_MAPE_TABLE_DIR = os.path.join(MAPE_TABLE_DIR, 'single')
 MULTIPLE_MAPE_TABLE_DIR = os.path.join(MAPE_TABLE_DIR, 'multiple')
 GLOBAL_MAPE_TABLE_DIR = os.path.join(MAPE_TABLE_DIR, 'global')
 R2_AVERAGE_TIME_DIR = os.path.join(R2_TABLE_DIR, 'average time')
+MAPE_AVERAGE_TIME_DIR = os.path.join(MAPE_TABLE_DIR, 'average time')
 R2_UPTO_TIME_DIR = os.path.join(R2_TABLE_DIR, 'upto time')
-R2_AVERAGE_UPTO_TIME_DIR = os.path.join(R2_TABLE_DIR, 'average & upto')
+MAPE_UPTO_TIME_DIR = os.path.join(MAPE_TABLE_DIR, 'upto time')
+R2_INCIDENCE_DIR = os.path.join(R2_TABLE_DIR, 'incidence')
+MAPE_INCIDENCE_DIR = os.path.join(MAPE_TABLE_DIR, 'incidence')
 
 # ARCHIVOS DE CONFIGURACIÓN
 DATASET_NAME = "2023-01-11 datos_clusterizados_ML.xlsx"

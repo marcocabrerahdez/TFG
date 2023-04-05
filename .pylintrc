@@ -2,8 +2,7 @@
 disable=C0103,C0111,R0903,R0913,R0902,W0511,C0200
 
 [FORMAT]
-indent-string='  '
-max-line-length=80
+max-line-length=72
 
 [SIMILARITIES]
 min-similarity-lines=2

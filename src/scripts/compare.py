@@ -10,96 +10,92 @@ import settings as st
 import utils as ut
 
 
-def create_score_table(metrics_list: List[str], name_list: List[str], path=st.R2_TABLE_DIR) -> None:
-  # Creamos un diccionario para guardar cada dataframe
+def create_score_table(metrics_list: List[str], name_list: List[str], path=st.R2_TABLE_DIR, outdir=st.R2_AVERAGE_TIME_DIR) -> None:
+  """Create Excel files for the R-squared scores for each model.
+
+  Args:
+    metrics_list (List[str]): A list of strings, each representing the name of a metric.
+    name_list (List[str]): A list of strings, each representing the name of a model.
+    path (str, optional): A string representing the directory where the R-squared tables are stored.
+        Defaults to st.R2_TABLE_DIR.
+    outdir (str, optional): A string representing the directory where the output Excel files will be saved.
+        Defaults to st.R2_AVERAGE_TIME_DIR.
+
+  Returns:
+    None
+  """
+  # Create an empty DataFrame to hold the results
   df_results = pd.DataFrame()
 
-  # Recorremos la lista de modelos
+  # Iterate over the list of metrics and model names
   for metric, name in zip(metrics_list, name_list):
-    # Obtenemos el dataframe de los resultados
+    # Retrieve the DataFrame with the score results for the current metric
     result = ut.get_score_file(metric, path)
 
-    # Guardamos cada dataframe en un excel
-    if not os.path.exists(os.path.join(path)):
-      os.mkdir(path)
-    result.to_excel(os.path.join(path, f'{name}.xlsx'), index=False)
+    # Create a new directory to store the Excel files if it does not exist
+    if not os.path.exists(os.path.join(outdir)):
+      os.mkdir(outdir)
 
-    # Reseteamos el dataframe
+    # Save the score results for the current model to an Excel file
+    result.to_excel(os.path.join(outdir, f'{name}.xlsx'), index=False)
+
+    # Reset the DataFrame for the next iteration
     result = pd.DataFrame()
 
 
 def compare_r2_tables(name_list: List[str], figpath=st.R2_AVERAGE_TIME_PLOT_DIR, path=st.R2_TABLE_DIR) -> None:
-  # Creamos un diccionario para guardar cada dataframe
-  results = pd.DataFrame()
+  """ Create and save R2 comparison plots for each model in the given list of names.
+      The function reads R2 scores from .xlsx files in the given directory path and generates
+      three types of comparison plots: single, multiple, and global R2 scores for each model.
 
+  Args:
+    name_list (List[str]): List of names of the models to create R2 comparison plots for.
+    figpath (str, optional): Directory path to save the generated R2 comparison plots. Default is st.R2_AVERAGE_TIME_PLOT_DIR.
+    path : (str, optional): Directory path to read the R2 scores from. Default is st.R2_TABLE_DIR.
+
+  Returns:
+    None
+  """
   for name in name_list:
-    # Obtener el archivo
-    filename = name + '.xlsx'
-    for root, dirs, files in os.walk(path):
-      if filename in files:
-        results = pd.concat([results, pd.read_excel(os.path.join(root, filename))], axis=1)
+    # Initialize empty dataframe to store results
+    results = pd.DataFrame()
 
-    for i in range(3):
-      # Gráficar los resultados
+    # Search for file in directory and concatenate dataframes
+    for root, dirs, files in os.walk(path):
+      if f"{name}.xlsx" in files:
+        filepath = os.path.join(root, f"{name}.xlsx")
+        results = pd.concat([results, pd.read_excel(filepath)], axis=1)
+
+    # Plot and save bar plots for single, multiple, and global R^2 scores
+    for i, col_name in enumerate(["single", "multiple", "global"]):
       fig, ax = plt.subplots(figsize=(10, 10))
 
-      # Grafica de barras
-      results.plot.bar(
-        ax=ax,
-        width=0.4,
-        x='Modelo',
-        y=('single' if i == 0 else 'multiple' if i == 1 else 'global'),
-        color='deepskyblue',
-        rot=0
-      )
+      # Plot bar chart
+      results.plot.bar(ax=ax, width=0.4, x="Modelo", y=col_name, color="deepskyblue", rot=0)
 
-      # Añadir el valor de cada barra
+      # Annotate bars with their values
       for p in ax.patches:
-        ax.annotate(
-          str(round(p.get_height(), 7)),
-          (p.get_x() + p.get_width() / 2., p.get_height()),
-          ha='center',
-          va='center',
-          xytext=(0, 10),
-          textcoords='offset points'
-        )
+          ax.annotate(str(round(p.get_height(), 7)), (p.get_x() + p.get_width() / 2., p.get_height()), ha="center", va="center", xytext=(0, 10), textcoords="offset points")
 
-      # Etiquetas
-      ax.set_xlabel('Modelo', fontsize=12, fontweight='bold')
-      ax.set_ylabel('$\\mathbf{R}^\\mathbf{2}$', fontsize=12, fontweight='bold')
+      # Set x and y labels and title
+      ax.set_xlabel("Modelo", fontsize=12, fontweight="bold")
+      ax.set_ylabel("$\\mathbf{R}^\\mathbf{2}$", fontsize=12, fontweight="bold")
 
-      # Título
       if i == 0:
-        ax.set_title('Comparación entrenamiento single del $\\mathbf{R}^\\mathbf{2}$ para cada modelo', fontsize=15, fontweight='bold')
-
+        ax.set_title(f"Comparación entrenamiento single del $\\mathbf{R}^\\mathbf{2}$ para {name}", fontsize=15, fontweight="bold")
       elif i == 1:
-        ax.set_title('Comparación entrenamiento multiple del $\\mathbf{R}^\\mathbf{2}$ para cada modelo', fontsize=15, fontweight='bold')
-
+        ax.set_title(f"Comparación entrenamiento multiple del $\\mathbf{R}^\\mathbf{2}$ para {name}", fontsize=15, fontweight="bold")
       else:
-        ax.set_title('Comparación entrenamiento global del $\\mathbf{R}^\\mathbf{2}$ para cada modelo', fontsize=15, fontweight='bold')
+        ax.set_title(f"Comparación entrenamiento global del $\\mathbf{R}^\\mathbf{2}$ para {name}", fontsize=15, fontweight="bold")
 
-      # Eliminar leyenda
+      # Remove legend
       ax.legend().set_visible(False)
 
-      # Guardar la gráfica
-      if i == 0:
-        # Crear directorio con el nombre del modelo
-        if not os.path.exists(os.path.join(figpath, name)):
-          os.mkdir(os.path.join(figpath, name))
-        fig.savefig(os.path.join(figpath, name, name + ' (Single).png'), dpi=300, bbox_inches='tight')
+      # Save figure with appropriate file name and directory
+      filename = f"{name} ({col_name.capitalize()}).png"
+      filepath = os.path.join(figpath, name, filename)
+      os.makedirs(os.path.dirname(filepath), exist_ok=True)
+      fig.savefig(filepath, dpi=300, bbox_inches="tight")
 
-      elif i == 1:
-        if not os.path.exists(os.path.join(figpath, name)):
-          os.mkdir(os.path.join(figpath, name))
-        fig.savefig(os.path.join(figpath, name, name + ' (Multiple).png'), dpi=300, bbox_inches='tight')
-
-      else:
-        if not os.path.exists(os.path.join(figpath, name)):
-          os.mkdir(os.path.join(figpath, name))
-        fig.savefig(os.path.join(figpath, name, name + ' (Global).png'), dpi=300, bbox_inches='tight')
-
-      # Cerrar la gráfica
+      # Close the figure
       plt.close(fig)
-
-    # Borrar el dataframe
-    results = pd.DataFrame()

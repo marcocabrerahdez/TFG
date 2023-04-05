@@ -33,9 +33,24 @@
       ],
       "type": "single",
       "columns_X": [
-        "HBA1C",
+        "SEX",
         "AGE",
-        "DURATION"
+        "DURATION",
+        "HYPO_RATE",
+        "BGRET",
+        "PRET",
+        "ME",
+        "BLI",
+        "ALB1",
+        "ALB2",
+        "ESRD",
+        "ANGINA",
+        "STROKE",
+        "MI",
+        "HF",
+        "NEU",
+        "LEA",
+        "HBA1C"
       ],
       "columns_Y": [
         "AVG_C",
@@ -76,9 +91,24 @@
       ],
       "type": "single",
       "columns_X": [
-        "HBA1C",
+        "SEX",
         "AGE",
-        "DURATION"
+        "DURATION",
+        "HYPO_RATE",
+        "BGRET",
+        "PRET",
+        "ME",
+        "BLI",
+        "ALB1",
+        "ALB2",
+        "ESRD",
+        "ANGINA",
+        "STROKE",
+        "MI",
+        "HF",
+        "NEU",
+        "LEA",
+        "HBA1C"
       ],
       "columns_Y": [
         "AVG_LY",
@@ -87,7 +117,7 @@
       ]
     },
     {
-      "name":"QUALY",
+      "name":"QALY",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -119,9 +149,24 @@
       ],
       "type": "single",
       "columns_X": [
-        "HBA1C",
+        "SEX",
         "AGE",
-        "DURATION"
+        "DURATION",
+        "HYPO_RATE",
+        "BGRET",
+        "PRET",
+        "ME",
+        "BLI",
+        "ALB1",
+        "ALB2",
+        "ESRD",
+        "ANGINA",
+        "STROKE",
+        "MI",
+        "HF",
+        "NEU",
+        "LEA",
+        "HBA1C"
       ],
       "columns_Y": [
         "AVG_QALY",
@@ -162,9 +207,24 @@
       ],
       "type": "single",
       "columns_X": [
-        "HBA1C",
+        "SEX",
         "AGE",
-        "DURATION"
+        "DURATION",
+        "HYPO_RATE",
+        "BGRET",
+        "PRET",
+        "ME",
+        "BLI",
+        "ALB1",
+        "ALB2",
+        "ESRD",
+        "ANGINA",
+        "STROKE",
+        "MI",
+        "HF",
+        "NEU",
+        "LEA",
+        "HBA1C"
       ],
       "columns_Y": [
         "AVG_SHE",

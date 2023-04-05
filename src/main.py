@@ -20,16 +20,16 @@
         Marco Antonio Cabrera Hernández
 '''
 
+import json
 import os
 import sys
-import json
+
 import pandas as pd
 
 import settings as st
+from api import api
 from scripts import automl as ml
 from scripts import compare as cp
-from api import api
-
 
 def main() -> None:
   ''' Función principal.
@@ -77,12 +77,14 @@ def main() -> None:
     else:
       print('Argumento no válido.')
       sys.exit()
-  """
+
   # Preprocesar los datos
   df_cols = data_frame.columns[data_frame.columns.str.contains('UPTO')]
   data_frame[df_cols] = data_frame[df_cols].div(500) * 100
+  df_cols = data_frame.columns[data_frame.columns.str.contains('INC')]
+  data_frame[df_cols] = data_frame[df_cols].div(500) * 100
 
-  # Cambiar SEX: MAN -> 1, WOMAN -> 0
+  # Cambiar SEX: MAN -> 0, WOMAN -> 1
   data_frame['SEX'] = data_frame['SEX'].replace({'MAN': 0, 'WOMAN': 1})
 
   # Guardar posiciones de los valores NaN
@@ -122,8 +124,8 @@ def main() -> None:
   # Comparar las métricas de los resultados de los modelos
   cp.create_score_table(compare_list['r2']['list'], compare_list['r2']['name_list'], st.R2_TABLE_DIR, st.R2_AVERAGE_TIME_DIR)
   cp.create_score_table(compare_list['mape']['list'], compare_list['mape']['name_list'], st.MAPE_TABLE_DIR, st.MAPE_AVERAGE_TIME_DIR)
-  #cp.compare_r2_tables(compare_list['r2']['name_list'], st.R2_AVERAGE_UPTO_TIME_PLOT_DIR, st.R2_AVERAGE_UPTO_TIME_DIR)
-  """
+  cp.compare_r2_tables(compare_list['r2']['name_list'], st.R2_AVERAGE_UPTO_TIME_PLOT_DIR, st.R2_AVERAGE_UPTO_TIME_DIR)
+
   for model in compare_list['compare']:
     cp.compare_avg_metrics(model['model'], model['directory'], model['name'])
     #cp.compare_upto_metrics(model['model'], model['directory'], model['name'])
@@ -136,19 +138,24 @@ def main() -> None:
   # Carga los datos de la API
   patient = api.load_data()
 
-  # Datos necesarios: age, durationOfDiabetes y baseHbA1cLevel
-  patient_data_base = patient[['baseHbA1cLevel', 'age', 'durationOfDiabetes']].rename(columns={'baseHbA1cLevel': 'HBA1C', 'age': 'AGE', 'durationOfDiabetes': 'DURATION'})
-  patient_data_int = patient[['objHbA1cLevel', 'age', 'durationOfDiabetes']].rename(columns={'objHbA1cLevel': 'HBA1C', 'age': 'AGE', 'durationOfDiabetes': 'DURATION'})
+  # Transformaciones del JSON
+  # Cambiamos los nombres de las columnas
+  patient_data_base = patient.rename(columns={'baseHbA1cLevel': 'HBA1C', 'age': 'AGE', 'durationOfDiabetes': 'DURATION', 'hypoRate': 'HYPO_RATE', 'man': 'SEX'})
+  patient_data_int = patient.rename(columns={'objHbA1cLevel': 'HBA1C', 'age': 'AGE', 'durationOfDiabetes': 'DURATION', 'hypoRateRR': 'HYPO_RATE', 'man': 'SEX'})
 
-  # Carga los modelos de la API
-  model_time_to_event, model_incidence, model_left_years, model_quality_of_life, model_severe_hypoglucemic_event, model_cost, model_risk = api.load_models()
+  # Multiplicamos los valores de HYPO_RATE por el valor de base
+  patient_data_int['HYPO_RATE'] = patient_data_int['HYPO_RATE'] * patient_data_base['HYPO_RATE']
 
-  # Predice con los modelos
-  time_to_event_base, incidence_base, left_years_base, quality_of_life_base, severe_hypoglucemic_event_base, cost_base, risk_base = api.predict(patient_data_base, model_time_to_event, model_incidence, model_left_years, model_quality_of_life, model_severe_hypoglucemic_event, model_cost, model_risk)
-  time_to_event_int, incidence_int, left_years_int, quality_of_life_int, severe_hypoglucemic_event_int, cost_int, risk_int = api.predict(patient_data_int, model_time_to_event, model_incidence, model_left_years, model_quality_of_life, model_severe_hypoglucemic_event, model_cost, model_risk)
+  # Cambiar SEX: man = true -> 0, woman = false -> 1
+  patient_data_base['SEX'] = patient_data_base['SEX'].replace({'true': 0, 'false': 1})
+  patient_data_int['SEX'] = patient_data_int['SEX'].replace({'true': 0, 'false': 1})
 
-  # Crea un JSON con los resultados
-  json_file = api.create_json_file(time_to_event_base, incidence_base, left_years_base, quality_of_life_base, severe_hypoglucemic_event_base, cost_base, risk_base, time_to_event_int, incidence_int, left_years_int, quality_of_life_int, severe_hypoglucemic_event_int, cost_int, risk_int)
+  # El coste anual se multiplica por el valor de HYPO_RATE
+  patient_data_int['annualCost'] = patient_data_int['annualCost'] * patient_data_int['HYPO_RATE']
+
+  # Llamada a la api para obtener los datos
+  data = api.run(patient_data_base, patient_data_int)
+  print(data)
 
   # Hace la petición POST
   url = ""
