@@ -77,7 +77,7 @@ def main() -> None:
     else:
       print('Argumento no válido.')
       sys.exit()
-
+  """
   # Preprocesar los datos
   df_cols = data_frame.columns[data_frame.columns.str.contains('UPTO')]
   data_frame[df_cols] = data_frame[df_cols].div(500) * 100
@@ -122,19 +122,10 @@ def main() -> None:
     automl.plot_avg_time(nan_pos)
   """
   # Comparar las métricas de los resultados de los modelos
-  cp.create_score_table(compare_list['r2']['list'], compare_list['r2']['name_list'], st.R2_TABLE_DIR, st.R2_AVERAGE_TIME_DIR)
-  cp.create_score_table(compare_list['mape']['list'], compare_list['mape']['name_list'], st.MAPE_TABLE_DIR, st.MAPE_AVERAGE_TIME_DIR)
-  cp.compare_r2_tables(compare_list['r2']['name_list'], st.R2_AVERAGE_UPTO_TIME_PLOT_DIR, st.R2_AVERAGE_UPTO_TIME_DIR)
-
-  for model in compare_list['compare']:
-    cp.compare_avg_metrics(model['model'], model['directory'], model['name'])
-    #cp.compare_upto_metrics(model['model'], model['directory'], model['name'])
-
-  # Comparar los modelos
-  cp.compare_models(compare_list['compare_model']['list'],
-                    compare_list['compare_model']['directory'],
-                    compare_list['compare_model']['name'])
-
+  #cp.create_score_table(compare_list['r2']['list'], compare_list['r2']['name_list'], st.R2_TABLE_DIR, st.R2_AVERAGE_TIME_DIR)
+  #cp.create_score_table(compare_list['mape']['list'], compare_list['mape']['name_list'], st.MAPE_TABLE_DIR, st.MAPE_AVERAGE_TIME_DIR)
+  cp.compare_r2_tables(compare_list['r2']['name_list'], st.R2_INCIDENCE_PLOT_DIR, st.R2_INCIDENCE_DIR)
+  """
   # Carga los datos de la API
   patient = api.load_data()
 
@@ -167,4 +158,5 @@ def main() -> None:
   """
 if __name__ == '__main__':
   main()
+  os.system('afplay /System/Library/Sounds/Glass.aiff')
   os.system('afplay /System/Library/Sounds/Glass.aiff')

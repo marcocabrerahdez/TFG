@@ -29,7 +29,7 @@ GLOBAL_PLOTS_DIR = os.path.join(PLOTS_DIR, 'global')
 R2_PLOTS_DIR = os.path.join(PLOTS_DIR, 'R2')
 R2_AVERAGE_TIME_PLOT_DIR = os.path.join(R2_PLOTS_DIR, 'average time')
 R2_UPTO_TIME_PLOT_DIR = os.path.join(R2_PLOTS_DIR, 'upto time')
-R2_AVERAGE_UPTO_TIME_PLOT_DIR = os.path.join(R2_PLOTS_DIR, 'average & upto')
+R2_INCIDENCE_PLOT_DIR = os.path.join(R2_PLOTS_DIR, 'incidence')
 
 
 # PREDICCIONES

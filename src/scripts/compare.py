@@ -43,59 +43,54 @@ def create_score_table(metrics_list: List[str], name_list: List[str], path=st.R2
     result = pd.DataFrame()
 
 
+
 def compare_r2_tables(name_list: List[str], figpath=st.R2_AVERAGE_TIME_PLOT_DIR, path=st.R2_TABLE_DIR) -> None:
-  """ Create and save R2 comparison plots for each model in the given list of names.
-      The function reads R2 scores from .xlsx files in the given directory path and generates
-      three types of comparison plots: single, multiple, and global R2 scores for each model.
+    """ Create and save R2 comparison plots for each model in the given list of names.
+        The function reads R2 scores from .xlsx files in the given directory path and generates
+        three types of comparison plots: single, multiple, and global R2 scores for each model.
 
-  Args:
-    name_list (List[str]): List of names of the models to create R2 comparison plots for.
-    figpath (str, optional): Directory path to save the generated R2 comparison plots. Default is st.R2_AVERAGE_TIME_PLOT_DIR.
-    path : (str, optional): Directory path to read the R2 scores from. Default is st.R2_TABLE_DIR.
+    Args:
+      name_list (List[str]): List of names of the models to create R2 comparison plots for.
+      figpath (str, optional): Directory path to save the generated R2 comparison plots. Default is st.R2_AVERAGE_TIME_PLOT_DIR.
+      path : (str, optional): Directory path to read the R2 scores from. Default is st.R2_TABLE_DIR.
 
-  Returns:
-    None
-  """
-  for name in name_list:
-    # Initialize empty dataframe to store results
-    results = pd.DataFrame()
+    Returns:
+      None
+    """
+    for name in name_list:
+        # Initialize empty dataframe to store results
+        results = pd.DataFrame()
 
-    # Search for file in directory and concatenate dataframes
-    for root, dirs, files in os.walk(path):
-      if f"{name}.xlsx" in files:
-        filepath = os.path.join(root, f"{name}.xlsx")
-        results = pd.concat([results, pd.read_excel(filepath)], axis=1)
+        # Search for file in directory and concatenate dataframes
+        for root, dirs, files in os.walk(path):
+            if f"{name}.xlsx" in files:
+                filepath = os.path.join(root, f"{name}.xlsx")
+                results = pd.concat([results, pd.read_excel(filepath)], axis=1)
 
-    # Plot and save bar plots for single, multiple, and global R^2 scores
-    for i, col_name in enumerate(["single", "multiple", "global"]):
-      fig, ax = plt.subplots(figsize=(10, 10))
+        # Create plot using scatter plot with error bars
+        fig, ax = plt.subplots(figsize=(10, 10))
+        ax.errorbar(x=range(len(results)), y=results["single"], yerr=results["single"].std(), fmt="o", capsize=5, label="Entrenamiento de tipo single")
+        ax.errorbar(x=[i + 0.2 for i in range(len(results))], y=results["multiple"], yerr=results["multiple"].std(), fmt="o", capsize=5, label="Entrenamiento  de tipo multiple")
+        ax.errorbar(x=[i + 0.4 for i in range(len(results))], y=results["global"], yerr=results["global"].std(), fmt="o", capsize=5, label="Entrenamiento de tipo global")
 
-      # Plot bar chart
-      results.plot.bar(ax=ax, width=0.4, x="Modelo", y=col_name, color="deepskyblue", rot=0)
+        # Set xticks and labels to be the model names
+        ax.set_xticks([i + 0.2 for i in range(len(results))])
+        ax.set_xticklabels(results["Modelo"])
 
-      # Annotate bars with their values
-      for p in ax.patches:
-          ax.annotate(str(round(p.get_height(), 7)), (p.get_x() + p.get_width() / 2., p.get_height()), ha="center", va="center", xytext=(0, 10), textcoords="offset points")
+        # Set x and y labels and title
+        ax.set_xlabel("Modelo", fontsize=12, fontweight="bold")
+        ax.set_ylabel("$\\mathbf{R}^\\mathbf{2}$", fontsize=12, fontweight="bold")
 
-      # Set x and y labels and title
-      ax.set_xlabel("Modelo", fontsize=12, fontweight="bold")
-      ax.set_ylabel("$\\mathbf{R}^\\mathbf{2}$", fontsize=12, fontweight="bold")
+        # Set title in spanish
+        ax.set_title(f"Comparación de $\\mathbf{{R}}^\\mathbf{{2}}$ para {name}", fontsize=14, fontweight="bold")
 
-      if i == 0:
-        ax.set_title(f"Comparación entrenamiento single del $\\mathbf{R}^\\mathbf{2}$ para {name}", fontsize=15, fontweight="bold")
-      elif i == 1:
-        ax.set_title(f"Comparación entrenamiento multiple del $\\mathbf{R}^\\mathbf{2}$ para {name}", fontsize=15, fontweight="bold")
-      else:
-        ax.set_title(f"Comparación entrenamiento global del $\\mathbf{R}^\\mathbf{2}$ para {name}", fontsize=15, fontweight="bold")
+        # Add legend
+        ax.legend()
 
-      # Remove legend
-      ax.legend().set_visible(False)
+        # Save figure with appropriate file name and directory
+        filename = f"{name}.png"
+        os.makedirs(figpath, exist_ok=True)
+        fig.savefig(os.path.join(figpath, filename), dpi=300, bbox_inches="tight")
 
-      # Save figure with appropriate file name and directory
-      filename = f"{name} ({col_name.capitalize()}).png"
-      filepath = os.path.join(figpath, name, filename)
-      os.makedirs(os.path.dirname(filepath), exist_ok=True)
-      fig.savefig(filepath, dpi=300, bbox_inches="tight")
-
-      # Close the figure
-      plt.close(fig)
+        # Close the figure
+        plt.close(fig)
