@@ -67,10 +67,7 @@ COMPARE_MODELS = 'compare_config.json'
 # API
 API_MODEL_TIME_TO_EVENT = os.path.join(GLOBAL_MODEL_DIR, 'GradientBoostingRegressor', 'average time')
 API_MODEL_INCIDENCE = os.path.join(GLOBAL_MODEL_DIR, 'GradientBoostingRegressor', 'incidence')
-API_MODEL_LY = os.path.join(SINGLE_MODEL_DIR, 'GradientBoostingRegressor', 'left years')
-API_MODEL_QALY = os.path.join(SINGLE_MODEL_DIR, 'GradientBoostingRegressor', 'quality of life')
-API_MODEL_SHE = os.path.join(SINGLE_MODEL_DIR, 'GradientBoostingRegressor', 'severe hypoglycemic event')
-API_MODEL_COST = os.path.join(SINGLE_MODEL_DIR, 'GradientBoostingRegressor', 'cost')
+API_MODEL_LY_QALY_COST_SHE = os.path.join(SINGLE_MODEL_DIR, 'GradientBoostingRegressor')
 API_MODEL_RISK = os.path.join(GLOBAL_MODEL_DIR, 'GradientBoostingRegressor', 'upto time')
 
 # PARÁMETROS DE ENTRENAMIENTO

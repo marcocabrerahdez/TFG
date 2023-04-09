@@ -120,42 +120,13 @@ def main() -> None:
     # Graficar los resultados
     #automl.plot_upto_time()
     automl.plot_avg_time(nan_pos)
-  """
+
   # Comparar las métricas de los resultados de los modelos
   #cp.create_score_table(compare_list['r2']['list'], compare_list['r2']['name_list'], st.R2_TABLE_DIR, st.R2_AVERAGE_TIME_DIR)
   #cp.create_score_table(compare_list['mape']['list'], compare_list['mape']['name_list'], st.MAPE_TABLE_DIR, st.MAPE_AVERAGE_TIME_DIR)
   cp.compare_r2_tables(compare_list['r2']['name_list'], st.R2_INCIDENCE_PLOT_DIR, st.R2_INCIDENCE_DIR)
   """
-  # Carga los datos de la API
-  patient = api.load_data()
 
-  # Transformaciones del JSON
-  # Cambiamos los nombres de las columnas
-  patient_data_base = patient.rename(columns={'baseHbA1cLevel': 'HBA1C', 'age': 'AGE', 'durationOfDiabetes': 'DURATION', 'hypoRate': 'HYPO_RATE', 'man': 'SEX'})
-  patient_data_int = patient.rename(columns={'objHbA1cLevel': 'HBA1C', 'age': 'AGE', 'durationOfDiabetes': 'DURATION', 'hypoRateRR': 'HYPO_RATE', 'man': 'SEX'})
-
-  # Multiplicamos los valores de HYPO_RATE por el valor de base
-  patient_data_int['HYPO_RATE'] = patient_data_int['HYPO_RATE'] * patient_data_base['HYPO_RATE']
-
-  # Cambiar SEX: man = true -> 0, woman = false -> 1
-  patient_data_base['SEX'] = patient_data_base['SEX'].replace({'true': 0, 'false': 1})
-  patient_data_int['SEX'] = patient_data_int['SEX'].replace({'true': 0, 'false': 1})
-
-  # El coste anual se multiplica por el valor de HYPO_RATE
-  patient_data_int['annualCost'] = patient_data_int['annualCost'] * patient_data_int['HYPO_RATE']
-
-  # Llamada a la api para obtener los datos
-  data = api.run(patient_data_base, patient_data_int)
-  print(data)
-
-  # Hace la petición POST
-  url = ""
-  headers = {"Content-Type": "application/json"}
-  response = requests.post(url, data=data, headers=headers)
-
-  print(response.status_code) # Imprime el código de estado HTTP de la respuesta
-  print(response.json()) # Imprime los datos de la respuesta en formato JSON
-  """
 if __name__ == '__main__':
   main()
   os.system('afplay /System/Library/Sounds/Glass.aiff')

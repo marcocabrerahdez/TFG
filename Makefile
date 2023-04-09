@@ -1,6 +1,12 @@
 run:
 	python3 src/main.py $(OPTIONS) $(DATA) $(SHEET) $(MODEL_CONFIG) $(COMPARE)
 
+dev:
+	cd app && npm run dev
+
+server:
+	python3 src/server.py
+
 pylint:
 	pylint --rcfile=.pylintrc src/**/*.py
 

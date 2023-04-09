@@ -21,10 +21,10 @@ def load_models():
   # Carga el modelo de time to event
   path_time_to_event = os.path.join(st.API_MODEL_TIME_TO_EVENT, 'Comorbilidades.pkl')
   path_incidence = os.path.join(st.API_MODEL_INCIDENCE, 'Comorbilidades (INC).pkl')
-  path_left_years = os.path.join(st.API_MODEL_LY, 'LY.pkl')
-  path_quality_of_life = os.path.join(st.API_MODEL_QALY, 'QUALY.pkl')
-  path_severe_hypoglucemic_event = os.path.join(st.API_MODEL_SHE, 'SHE.pkl')
-  path_cost = os.path.join(st.API_MODEL_COST, 'Cost.pkl')
+  path_left_years = os.path.join(st.API_MODEL_LY_QALY_COST_SHE, 'LY.pkl')
+  path_quality_of_life = os.path.join(st.API_MODEL_LY_QALY_COST_SHE, 'QALY.pkl')
+  path_severe_hypoglucemic_event = os.path.join(st.API_MODEL_LY_QALY_COST_SHE, 'SHE.pkl')
+  path_cost = os.path.join(st.API_MODEL_LY_QALY_COST_SHE, 'Cost.pkl')
   path_risk = os.path.join(st.API_MODEL_RISK, 'Comorbilidades (UPTO).pkl')
 
   # Abre el archivo y carga el modelo
@@ -680,4 +680,4 @@ def create_json_file(time_to_event_base, incidence_base, left_years_base, qualit
 
 def run(data_base, data_int):
   time_to_event_base, incidence_base, left_years_base, quality_of_life_base, severe_hypoglucemic_event_base, cost_base, risk_base, time_to_event_int, incidence_int, left_years_int, quality_of_life_int, severe_hypoglucemic_event_int, cost_int, risk_int = predict(data_base, data_int)
-  return create_json(time_to_event_base, incidence_base, left_years_base, quality_of_life_base, severe_hypoglucemic_event_base, cost_base, risk_base, time_to_event_int, incidence_int, left_years_int, quality_of_life_int, severe_hypoglucemic_event_int, cost_int, risk_int)
+  return create_json_file(time_to_event_base, incidence_base, left_years_base, quality_of_life_base, severe_hypoglucemic_event_base, cost_base, risk_base, time_to_event_int, incidence_int, left_years_int, quality_of_life_int, severe_hypoglucemic_event_int, cost_int, risk_int)
