@@ -52,41 +52,72 @@ def load_models():
   return model_time_to_event, model_incidence, model_left_years, model_quality_of_life, model_severe_hypoglucemic_event, model_cost, model_risk
 
 
+def transform_data(patient: pd.DataFrame):
+    # Transformaciones del JSON
+  # Eliminamos las columnas que no nos interesan ('annualCost')
+  patient = patient.drop(columns=['annualCost'])
 
-def predict(data_base, data_int):
-  # Carga los modelos
-  model_time_to_event, model_incidence, model_left_years, model_quality_of_life, model_severe_hypoglucemic_event, model_cost, model_risk = load_models()
+  # Cambiamos los nombres de las columnas
+  patient_data_base = patient.rename(columns={'baseHbA1cLevel': 'HBA1C', 'age': 'AGE', 'durationOfDiabetes': 'DURATION', 'hypoRate': 'HYPO_RATE', 'man': 'SEX'})
+  patient_data_int = patient.rename(columns={'objHbA1cLevel': 'HBA1C', 'age': 'AGE', 'durationOfDiabetes': 'DURATION', 'hypoRateRR': 'HYPO_RATE', 'man': 'SEX'})
 
-  # Predice el time to event
-  time_to_event_base = model_time_to_event.predict(data_base)
-  time_to_event_int = model_time_to_event.predict(data_int)
+  # Cambiamos los tipos de datos
+  patient_data_base['HBA1C'] = patient_data_base['HBA1C'].astype(int)
+  patient_data_int['HBA1C'] = patient_data_int['HBA1C'].astype(int)
+  patient_data_base['AGE'] = patient_data_base['AGE'].astype(int)
+  patient_data_int['AGE'] = patient_data_int['AGE'].astype(int)
+  patient_data_base['DURATION'] = patient_data_base['DURATION'].astype(int)
+  patient_data_int['DURATION'] = patient_data_int['DURATION'].astype(int)
+  patient_data_base['HYPO_RATE'] = patient_data_base['HYPO_RATE'].astype(float)
+  patient_data_int['HYPO_RATE'] = patient_data_int['HYPO_RATE'].astype(float)
 
-  # Predice la incidencia
-  incidence_base = model_incidence.predict(data_base)
-  incidence_int = model_incidence.predict(data_int)
+  # Multiplicamos los valores de HYPO_RATE por el valor de base
+  patient_data_int['HYPO_RATE'] = patient_data_int['HYPO_RATE'].values * patient_data_base['HYPO_RATE'].values
 
-  # Predice los años restantes
-  left_years_base = model_left_years.predict(data_base)
-  left_years_int = model_left_years.predict(data_int)
+  # Cambiar SEX: man = true -> 0, woman = false -> 1
+  patient_data_base['SEX'] = patient_data_base['SEX'].replace({'true': 0, 'false': 1})
+  patient_data_int['SEX'] = patient_data_int['SEX'].replace({'true': 0, 'false': 1})
 
-  # Predice la calidad de vida
-  quality_of_life_base = model_quality_of_life.predict(data_base)
-  quality_of_life_int = model_quality_of_life.predict(data_int)
+  patient_data_base = patient_data_base.drop(columns=['hypoRateRR'])
+  patient_data_base = patient_data_base.drop(columns=['objHbA1cLevel'])
+  patient_data_int = patient_data_int.drop(columns=['hypoRate'])
+  patient_data_int = patient_data_int.drop(columns=['baseHbA1cLevel'])
 
-  # Predice el evento severo de hipoglucemia
-  severe_hypoglucemic_event_base = model_severe_hypoglucemic_event.predict(data_base)
-  severe_hypoglucemic_event_int = model_severe_hypoglucemic_event.predict(data_int)
+  # Definir las posibles manifestaciones
+  possible_manifestations = ["BGRET", "PRET", "ME", "BLI", "ALB1", "ALB2", "ESRD", "ANGINA", "STROKE", "MI", "HF", "NEU", "LEA"]
 
-  # Predice el costo
-  cost_base = model_cost.predict(data_base)
-  cost_int = model_cost.predict(data_int)
+  # Crear una columna binaria para cada posible manifestación
+  for manifestation in possible_manifestations:
+    patient_data_base[manifestation] = patient_data_base["manifestations"].apply(lambda x: 1 if manifestation in x else 0)
+    patient_data_int[manifestation] = patient_data_int["manifestations"].apply(lambda x: 1 if manifestation in x else 0)
 
-  # Predice el riesgo
-  risk_base = model_risk.predict(data_base)
-  risk_int = model_risk.predict(data_int)
+  # Eliminar la columna original de manifestaciones
+  patient_data_base = patient_data_base.drop(columns=["manifestations"])
+  patient_data_int = patient_data_int.drop(columns=["manifestations"])
 
-  return time_to_event_base, incidence_base, left_years_base, quality_of_life_base, severe_hypoglucemic_event_base, cost_base, risk_base, time_to_event_int, incidence_int, left_years_int, quality_of_life_int, severe_hypoglucemic_event_int, cost_int, risk_int
+  # Definimos el orden de las columnas
+  column_order = [
+      "SEX",
+      "AGE",
+      "DURATION",
+      "HYPO_RATE",
+      "BGRET",
+      "PRET",
+      "ME",
+      "BLI",
+      "ALB1",
+      "ALB2",
+      "ESRD",
+      "ANGINA",
+      "STROKE",
+      "MI",
+      "HF",
+      "NEU",
+      "LEA",
+      "HBA1C"
+  ]
 
+  return patient_data_base.reindex(columns=column_order), patient_data_int.reindex(columns=column_order)
 
 
 def create_json_file(time_to_event_base, incidence_base, left_years_base, quality_of_life_base, severe_hypoglucemic_event_base, cost_base, risk_base, time_to_event_int, incidence_int, left_years_int, quality_of_life_int, severe_hypoglucemic_event_int, cost_int, risk_int):
@@ -675,9 +706,3 @@ def create_json_file(time_to_event_base, incidence_base, left_years_base, qualit
 
   # Devuelve el JSON
   return results
-
-
-
-def run(data_base, data_int):
-  time_to_event_base, incidence_base, left_years_base, quality_of_life_base, severe_hypoglucemic_event_base, cost_base, risk_base, time_to_event_int, incidence_int, left_years_int, quality_of_life_int, severe_hypoglucemic_event_int, cost_int, risk_int = predict(data_base, data_int)
-  return create_json_file(time_to_event_base, incidence_base, left_years_base, quality_of_life_base, severe_hypoglucemic_event_base, cost_base, risk_base, time_to_event_int, incidence_int, left_years_int, quality_of_life_int, severe_hypoglucemic_event_int, cost_int, risk_int)

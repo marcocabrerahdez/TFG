@@ -15,7 +15,7 @@ export default function Header() {
 
   return (
     <>
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
       <div className="flex h-16 justify-between">
         <div className="flex">
           <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">

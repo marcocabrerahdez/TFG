@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 
 type FormProps = {
   onFormSubmit: (data: object) => void;
@@ -13,9 +13,9 @@ export default function Form({ onFormSubmit }: FormProps) {
   const [hypoRate, setHypoRate] = useState("");
   const [hypoRateRR, setHypoRateRR] = useState("");
   const [annualCost, setAnnualCost] = useState("");
-  const [manifestations, setManifestations] = useState([""]);
+  const [manifestations, setManifestations] = useState<string[]>([]);
 
-  const handleManifestationsChange = (event: { target: { value: any; checked: any; }; }) => {
+  const handleManifestationsChange = (event: { target: { value: string; checked: boolean; }; }) => {
     const value = event.target.value;
     if (event.target.checked) {
       setManifestations([...manifestations, value]);
@@ -23,6 +23,7 @@ export default function Form({ onFormSubmit }: FormProps) {
       setManifestations(manifestations.filter((m) => m !== value));
     }
   };
+  console.log(manifestations);
 
   const handleSubmit = (event: { preventDefault: () => void; }) => {
     event.preventDefault();
@@ -58,113 +59,127 @@ export default function Form({ onFormSubmit }: FormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-xl mx-auto">
-      <div className="mb-4">
-        <label htmlFor="man" className="block mb-2 font-bold text-gray-700">
-          Sexo
-        </label>
-        <select
-          id="man"
-          name="man"
-          value={man}
-          onChange={(event) => setMan(event.target.value)}
-          className="border border-gray-400 p-2 w-full"
-        >
-          <option value="">Seleccione una opción</option>
-          <option value="true">Masculino</option>
-          <option value="false">Femenino</option>
-        </select>
+    <form onSubmit={handleSubmit} className="max-w-8xl my-auto">
+      <div className="grid grid-cols-3 gap-4">
+        <div className="mb-4">
+          <label htmlFor="man" className="block mb-2 font-bold text-gray-600">
+            Sexo
+          </label>
+          <select
+            id="man"
+            name="man"
+            value={man}
+            onChange={(event) => setMan(event.target.value)}
+            className="border border-gray-300 p-2 w-full"
+          >
+            <option value="">Seleccione una opción</option>
+            <option value="true">Masculino</option>
+            <option value="false">Femenino</option>
+          </select>
+        </div>
+        <div className="mb-4">
+          <label htmlFor="age" className="block mb-2 font-bold text-gray-600">
+            Edad
+          </label>
+          <input
+            type="number"
+            id="age"
+            name="age"
+            value={age}
+            placeholder="Introduzca un número"
+            onChange={(event) => setAge(event.target.value)}
+            className="border border-gray-300 p-2 w-full"
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="durationOfDiabetes" className="block mb-2 font-bold text-gray-600">
+            Duración de la diabetes (en años)
+          </label>
+          <input
+            type="number"
+            id="durationOfDiabetes"
+            name="durationOfDiabetes"
+            value={durationOfDiabetes}
+            placeholder="Introduzca un número"
+            onChange={(event) => setDurationOfDiabetes(event.target.value)}
+            className="border border-gray-300 p-2 w-full"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div className="mb-4">
+          <label htmlFor="baseHbA1cLevel" className="block mb-2 font-bold text-gray-600">
+            Nivel Base de HbA1c (%)
+          </label>
+          <input
+            type="number"
+            id="baseHbA1cLevel"
+            name="baseHbA1cLevel"
+            value={baseHbA1cLevel}
+            placeholder="Introduzca un número"
+            onChange={(event) => setBaseHbA1cLevel(event.target.value)}
+            className="border border-gray-300 p-2 w-full"
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="objHbA1cLevel" className="block mb-2 font-bold text-gray-600">
+            Nivel Objetivo de HbA1c (%)
+          </label>
+          <input
+            type="number"
+            id="objHbA1cLevel"
+            name="objHbA1cLevel"
+            value={objHbA1cLevel}
+            placeholder="Introduzca un número"
+            onChange={(event) => setObjHbA1cLevel(event.target.value)}
+            className="border border-gray-300 p-2 w-full"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div className="mb-4">
+          <label
+            htmlFor="hypoRate"
+            className="block mb-2 font-bold text-gray-600"
+          >
+            Episodios de hipoglucémicos severos (al año)
+          </label>
+          <input
+            type="number"
+            id="hypoRate"
+            name="hypoRate"
+            value={hypoRate}
+            placeholder="Introduzca un número"
+            onChange={(event) =>
+              setHypoRate(event.target.value)
+            }
+            className="border border-gray-300 p-2 w-full"
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="hypoRateRR"
+            className="block mb-2 font-bold text-gray-600"
+          >
+            Objetivo de episodios de hipoglucémicos severos (al año)
+          </label>
+          <input
+            type="number"
+            id="hypoRateRR"
+            name="hypoRateRR"
+            placeholder="Introduzca un número"
+            value={hypoRateRR}
+            onChange={(event) =>
+              setHypoRateRR(event.target.value)
+            }
+            className="border border-gray-300 p-2 w-full"
+          />
+        </div>
       </div>
       <div className="mb-4">
-        <label htmlFor="age" className="block mb-2 font-bold text-gray-700">
-          Edad
-        </label>
-        <input
-          type="number"
-          id="age"
-          name="age"
-          value={age}
-          onChange={(event) => setAge(event.target.value)}
-          className="border border-gray-400 p-2 w-full"
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="durationOfDiabetes" className="block mb-2 font-bold text-gray-700">
-          Duración de la diabetes (en años)
-        </label>
-        <input
-          type="number"
-          id="durationOfDiabetes"
-          name="durationOfDiabetes"
-          value={durationOfDiabetes}
-          onChange={(event) => setDurationOfDiabetes(event.target.value)}
-          className="border border-gray-400 p-2 w-full"
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="baseHbA1cLevel" className="block mb-2 font-bold text-gray-700">
-          Nivel Base de HbA1c (%)
-        </label>
-        <input
-          type="number"
-          id="baseHbA1cLevel"
-          name="baseHbA1cLevel"
-          value={baseHbA1cLevel}
-          onChange={(event) => setBaseHbA1cLevel(event.target.value)}
-          className="border border-gray-400 p-2 w-full"
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="objHbA1cLevel" className="block mb-2 font-bold text-gray-700">
-          Nivel Objetivo de HbA1c (%)
-        </label>
-        <input
-          type="number"
-          id="objHbA1cLevel"
-          name="objHbA1cLevel"
-          value={objHbA1cLevel}
-          onChange={(event) => setObjHbA1cLevel(event.target.value)}
-          className="border border-gray-400 p-2 w-full"
-        />
-      </div>
-      <div className="mb-4">
-        <label
-          htmlFor="hypoRate"
-          className="block mb-2 font-bold text-gray-700"
-        >
-          Episodios de hipoglucémicos severos (al año)
-        </label>
-        <input
-          type="number"
-          id="hypoRate"
-          name="hypoRate"
-          value={hypoRate}
-          onChange={(event) =>
-            setHypoRate(event.target.value)
-          }
-          className="border border-gray-400 p-2 w-full"
-        />
-      </div>
-      <div className="mb-4">
-        <label
-          htmlFor="hypoRateRR"
-          className="block mb-2 font-bold text-gray-700"
-        >
-          Objetivo de episodios de hipoglucémicos severos (al año)
-        </label>
-        <input
-          type="number"
-          id="hypoRateRR"
-          name="hypoRateRR"
-          value={hypoRateRR}
-          onChange={(event) =>
-            setHypoRateRR(event.target.value)
-          }
-          className="border border-gray-400 p-2 w-full"
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="annualCost" className="block mb-2 font-bold text-gray-700">
+        <label htmlFor="annualCost" className="block mb-2 font-bold text-gray-600">
           Costo de tratamiento (en dólares)
         </label>
         <input
@@ -172,12 +187,13 @@ export default function Form({ onFormSubmit }: FormProps) {
           id="annualCost"
           name="annualCost"
           value={annualCost}
+          placeholder="Introduzca un número"
           onChange={(event) => setAnnualCost(event.target.value)}
-          className="border border-gray-400 p-2 w-full"
+          className="border border-gray-300 p-2 w-full"
         />
       </div>
       <div className="mb-4">
-        <label htmlFor="manifestations" className="block mb-2 font-bold text-gray-700">
+        <label htmlFor="manifestations" className="block mb-2 font-bold text-gray-600">
           Manifestaciones clínicas
         </label>
         <div className="grid grid-cols-2 gap-4">
@@ -191,7 +207,7 @@ export default function Form({ onFormSubmit }: FormProps) {
               checked={manifestations.includes("BGRET")}
               className="form-checkbox h-5 w-5 text-gray-600"
             />
-            <span className="ml-2 text-gray-700">Retinopatía de Fondo</span>
+            <span className="ml-2 text-gray-600">Retinopatía de Fondo</span>
           </label>
           <label htmlFor="Retinopatía Proliferativa" className="inline-flex items-center mt-2">
             <input
@@ -203,7 +219,7 @@ export default function Form({ onFormSubmit }: FormProps) {
               checked={manifestations.includes("PRET")}
               className="form-checkbox h-5 w-5 text-gray-600"
             />
-            <span className="ml-2 text-gray-700">Retinopatía Proliferativa</span>
+            <span className="ml-2 text-gray-600">Retinopatía Proliferativa</span>
           </label>
           <label htmlFor="Edema Macular Diabético" className="inline-flex items-center mt-2">
             <input
@@ -215,7 +231,7 @@ export default function Form({ onFormSubmit }: FormProps) {
               checked={manifestations.includes("ME")}
               className="form-checkbox h-5 w-5 text-gray-600"
             />
-            <span className="ml-2 text-gray-700">Edema Macular Diabético</span>
+            <span className="ml-2 text-gray-600">Edema Macular Diabético</span>
           </label>
           <label htmlFor="Enfermedad Renal Terminal" className="inline-flex items-center mt-2">
             <input
@@ -227,7 +243,7 @@ export default function Form({ onFormSubmit }: FormProps) {
               checked={manifestations.includes("ESRD")}
               className="form-checkbox h-5 w-5 text-gray-600"
             />
-            <span className="ml-2 text-gray-700">Enfermedad Renal Terminal</span>
+            <span className="ml-2 text-gray-600">Enfermedad Renal Terminal</span>
           </label>
           <label htmlFor="Ceguera" className="inline-flex items-center mt-2">
             <input
@@ -239,7 +255,7 @@ export default function Form({ onFormSubmit }: FormProps) {
               checked={manifestations.includes("BLI")}
               className="form-checkbox h-5 w-5 text-gray-600"
             />
-            <span className="ml-2 text-gray-700">Ceguera</span>
+            <span className="ml-2 text-gray-600">Ceguera</span>
           </label>
           <label htmlFor="Microalbuminuria" className="inline-flex items-center mt-2">
             <input
@@ -251,7 +267,7 @@ export default function Form({ onFormSubmit }: FormProps) {
               checked={manifestations.includes("ALB1")}
               className="form-checkbox h-5 w-5 text-gray-600"
             />
-            <span className="ml-2 text-gray-700">Microalbuminuria</span>
+            <span className="ml-2 text-gray-600">Microalbuminuria</span>
           </label>
           <label htmlFor="Macroalbuminuria" className="inline-flex items-center mt-2">
             <input
@@ -263,7 +279,7 @@ export default function Form({ onFormSubmit }: FormProps) {
               checked={manifestations.includes("ALB2")}
               className="form-checkbox h-5 w-5 text-gray-600"
             />
-            <span className="ml-2 text-gray-700">Macroalbuminuria</span>
+            <span className="ml-2 text-gray-600">Macroalbuminuria</span>
           </label>
         </div>
           <div className="grid grid-cols-2 gap-4">
@@ -277,7 +293,7 @@ export default function Form({ onFormSubmit }: FormProps) {
               checked={manifestations.includes("ANGINA")}
               className="form-checkbox h-5 w-5 text-gray-600"
             />
-            <span className="ml-2 text-gray-700">Angina</span>
+            <span className="ml-2 text-gray-600">Angina</span>
           </label>
           <label htmlFor="Ictus" className="inline-flex items-center mt-2">
             <input
@@ -289,7 +305,7 @@ export default function Form({ onFormSubmit }: FormProps) {
               checked={manifestations.includes("STROKE")}
               className="form-checkbox h-5 w-5 text-gray-600"
             />
-            <span className="ml-2 text-gray-700">Ictus</span>
+            <span className="ml-2 text-gray-600">Ictus</span>
           </label>
           <label htmlFor="Infarto de Miocardio" className="inline-flex items-center mt-2">
             <input
@@ -301,7 +317,7 @@ export default function Form({ onFormSubmit }: FormProps) {
               checked={manifestations.includes("MI")}
               className="form-checkbox h-5 w-5 text-gray-600"
             />
-            <span className="ml-2 text-gray-700">Infarto de Miocardio</span>
+            <span className="ml-2 text-gray-600">Infarto de Miocardio</span>
           </label>
           <label htmlFor="Fallo Cardíaco" className="inline-flex items-center mt-2">
             <input
@@ -313,7 +329,7 @@ export default function Form({ onFormSubmit }: FormProps) {
               checked={manifestations.includes("HF")}
               className="form-checkbox h-5 w-5 text-gray-600"
             />
-            <span className="ml-2 text-gray-700">Fallo Cardíaco</span>
+            <span className="ml-2 text-gray-600">Fallo Cardíaco</span>
           </label>
           <label htmlFor="Neuropatía" className="inline-flex items-center mt-2">
             <input
@@ -325,7 +341,7 @@ export default function Form({ onFormSubmit }: FormProps) {
               checked={manifestations.includes("NEU")}
               className="form-checkbox h-5 w-5 text-gray-600"
             />
-            <span className="ml-2 text-gray-700">Neuropatía</span>
+            <span className="ml-2 text-gray-600">Neuropatía</span>
           </label>
           <label htmlFor="Amputación de Extremidades Inferiores" className="inline-flex items-center mt-2">
             <input
@@ -337,14 +353,14 @@ export default function Form({ onFormSubmit }: FormProps) {
               checked={manifestations.includes("LEA")}
               className="form-checkbox h-5 w-5 text-gray-600"
             />
-            <span className="ml-2 text-gray-700">Amputación de Extremidades Inferiores</span>
+            <span className="ml-2 text-gray-600">Amputación de Extremidades Inferiores</span>
           </label>
         </div>
       </div>
       <div className="mt-8 flex flex-col items-center">
         <button
           type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-gray-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
           Enviar
         </button>

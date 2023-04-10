@@ -9,9 +9,7 @@ import {
   ArcElement,
   Title,
   Tooltip,
-  Legend,
-  LineElement,
-  PointElement,
+  Legend
 } from 'chart.js';
 import { Bar, Pie } from 'react-chartjs-2';
 
@@ -19,8 +17,6 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
-  LineElement,
-  PointElement,
   ArcElement,
   RadialLinearScale,
   Title,
@@ -174,7 +170,7 @@ export default function Charts({data}: ChartsProps) {
     labels: ['Coste (base)', 'Coste (objetivo)'],
     datasets: [
       {
-        label: 'Tiempo promedio hasta evento (base)',
+        label: 'Coste ($)',
         data: dataQALY,
         backgroundColor: [
           'rgb(255, 99, 132)',
@@ -188,7 +184,7 @@ export default function Charts({data}: ChartsProps) {
     labels: ['Esperanza de vida (base)', 'Esperanza de vida (objetivo)'],
     datasets: [
       {
-        label: 'Tiempo promedio hasta evento (base)',
+        label: 'Esperanza de vida (años)',
         data: dataCost,
         backgroundColor: [
           'rgb(255, 99, 132)',
@@ -202,7 +198,7 @@ export default function Charts({data}: ChartsProps) {
     labels: ['Esperanza de vida con calidad (base)', 'Esperanza de vida con calidad (objetivo)'],
     datasets: [
       {
-        label: 'Tiempo promedio hasta evento (base)',
+        label: 'Esperanza de vida con calidad (años)',
         data: dataLY,
         backgroundColor: [
           'rgb(255, 99, 132)',
@@ -213,7 +209,7 @@ export default function Charts({data}: ChartsProps) {
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
       <Bar options={optionsAvgTime} data={chartDataAvgTime} />
       <div className="mb-4 flex flex-row" style={{minHeight: "500px"}}>
         <div className="w-1/3">
