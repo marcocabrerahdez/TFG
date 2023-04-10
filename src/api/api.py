@@ -6,7 +6,12 @@ import json
 import settings as st
 
 
-def load_data():
+def load_data() -> pd.DataFrame:
+    """Load a data patient from a json file.
+
+    Returns:
+        pd.DataFrame: The data of the patient.
+    """
     # Load the data
     path_data = os.path.join(st.API_DATA, 'test_patient1.json')
     data = pd.read_json(path_data)
@@ -18,6 +23,12 @@ def load_data():
 
 
 def load_models():
+    """Load the models from the API.
+
+    Returns:
+        model_time_to_event: The model for time to event.
+        model_incidence: The model for incidence.
+    """
     # Load the models
     path_time_to_event = os.path.join(
         st.API_MODEL_TIME_TO_EVENT, 'Comorbilidades.pkl')
@@ -57,6 +68,14 @@ def load_models():
 
 
 def transform_data(patient: pd.DataFrame):
+    """Transform the data of the patient.
+
+    Args:
+        patient (pd.DataFrame): The data of the patient.
+
+    Returns:
+        pd.DataFrame: The data of the patient transformed.
+    """
     # Delete the column annualCost
     patient = patient.drop(columns=['annualCost'])
 
@@ -136,6 +155,27 @@ def transform_data(patient: pd.DataFrame):
 def create_json_file(time_to_event_base, incidence_base, left_years_base, quality_of_life_base,
                      severe_hypoglucemic_event_base, cost_base, risk_base, time_to_event_int, incidence_int,
                      left_years_int, quality_of_life_int, severe_hypoglucemic_event_int, cost_int, risk_int):
+    """Create the json file to send to the frontend.
+
+    Args:
+        time_to_event_base (float): The time to event of the base case.
+        incidence_base (float): The incidence of the base case.
+        left_years_base (float): The left years of the base case.
+        quality_of_life_base (float): The quality of life of the base case.
+        severe_hypoglucemic_event_base (float): The severe hypoglucemic event of the base case.
+        cost_base (float): The cost of the base case.
+        risk_base (float): The risk of the base case.
+        time_to_event_int (float): The time to event of the intervention case.
+        incidence_int (float): The incidence of the intervention case.
+        left_years_int (float): The left years of the intervention case.
+        quality_of_life_int (float): The quality of life of the intervention case.
+        severe_hypoglucemic_event_int (float): The severe hypoglucemic event of the intervention case.
+        cost_int (float): The cost of the intervention case.
+        risk_int (float): The risk of the intervention case.
+
+    Returns:
+        None
+    """
     list_risk_base = []
     list_risk_int = []
     for i in range(0, len(risk_base)):

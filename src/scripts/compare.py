@@ -14,15 +14,15 @@ def create_score_table(metrics_list: List[str], name_list: List[str], path=st.R2
     """Create Excel files for the R-squared scores for each model.
 
     Args:
-      metrics_list (List[str]): A list of strings, each representing the name of a metric.
-      name_list (List[str]): A list of strings, each representing the name of a model.
-      path (str, optional): A string representing the directory where the R-squared tables are stored.
-          Defaults to st.R2_TABLE_DIR.
-      outdir (str, optional): A string representing the directory where the output Excel files will be saved.
-          Defaults to st.R2_AVERAGE_TIME_DIR.
+        metrics_list (List[str]): A list of strings, each representing the name of a metric.
+        name_list (List[str]): A list of strings, each representing the name of a model.
+        path (str, optional): A string representing the directory where the R-squared tables are stored.
+            Defaults to st.R2_TABLE_DIR.
+        outdir (str, optional): A string representing the directory where the output Excel files will be saved.
+            Defaults to st.R2_AVERAGE_TIME_DIR.
 
     Returns:
-      None
+        None
     """
     # Create an empty DataFrame to hold the results
     df_results = pd.DataFrame()
@@ -49,12 +49,12 @@ def compare_r2_tables(name_list: List[str], figpath=st.R2_AVERAGE_TIME_PLOT_DIR,
         three types of comparison plots: single, multiple, and global R2 scores for each model.
 
     Args:
-      name_list (List[str]): List of names of the models to create R2 comparison plots for.
-      figpath (str, optional): Directory path to save the generated R2 comparison plots. Default is st.R2_AVERAGE_TIME_PLOT_DIR.
-      path : (str, optional): Directory path to read the R2 scores from. Default is st.R2_TABLE_DIR.
+        name_list (List[str]): List of names of the models to create R2 comparison plots for.
+        figpath (str, optional): Directory path to save the generated R2 comparison plots. Default is st.R2_AVERAGE_TIME_PLOT_DIR.
+        path : (str, optional): Directory path to read the R2 scores from. Default is st.R2_TABLE_DIR.
 
     Returns:
-      None
+        None
     """
     for name in name_list:
         # Initialize empty dataframe to store results
