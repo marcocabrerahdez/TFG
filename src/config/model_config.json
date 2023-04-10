@@ -1,7 +1,7 @@
 {
   "config_list": [
     {
-      "name":"Comorbilidades",
+      "name": "Comorbilidades",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",

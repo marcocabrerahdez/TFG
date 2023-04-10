@@ -1,17 +1,13 @@
 {
-	"patient" : {
-		"man" : "true",
-		"age" : "45",
-		"durationOfDiabetes" : "25",
-		"hypoRate" : "0",
-		"hypoRateRR" : "0",
-		"baseHbA1cLevel" : "7",
-		"objHbA1cLevel" : "5",
-		"annualCost" : "3000",
-		"manifestations": [
-			"ME",
-			"ESRD",
-			"LEA"
-		]
-	}
+  "patient": {
+    "man": "true",
+    "age": "45",
+    "durationOfDiabetes": "25",
+    "hypoRate": "0",
+    "hypoRateRR": "0",
+    "baseHbA1cLevel": "7",
+    "objHbA1cLevel": "5",
+    "annualCost": "3000",
+    "manifestations": ["ME", "ESRD", "LEA"]
+  }
 }

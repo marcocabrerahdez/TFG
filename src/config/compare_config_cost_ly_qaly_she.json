@@ -1,11 +1,6 @@
 {
   "r2": {
-    "list": [
-      "AVG_C",
-      "AVG_LY",
-      "AVG_QALY",
-      "AVG_SHE"
-    ],
+    "list": ["AVG_C", "AVG_LY", "AVG_QALY", "AVG_SHE"],
     "name_list": [
       "Coste",
       "Años de Vida",
@@ -14,12 +9,7 @@
     ]
   },
   "mape": {
-    "list": [
-      "AVG_C",
-      "AVG_LY",
-      "AVG_QALY",
-      "AVG_SHE"
-    ],
+    "list": ["AVG_C", "AVG_LY", "AVG_QALY", "AVG_SHE"],
     "name_list": [
       "Coste",
       "Años de Vida",

@@ -1,7 +1,7 @@
 {
   "config_list": [
     {
-      "name":"Enfermedades cardíacas (INC)",
+      "name": "Enfermedades cardíacas (INC)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -40,7 +40,7 @@
       ]
     },
     {
-      "name":"Retinopatías (INC)",
+      "name": "Retinopatías (INC)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -79,7 +79,7 @@
       ]
     },
     {
-      "name":"Neuropatías (INC)",
+      "name": "Neuropatías (INC)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -116,7 +116,7 @@
       ]
     },
     {
-      "name":"Nefropatías (INC)",
+      "name": "Nefropatías (INC)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -154,7 +154,7 @@
       ]
     },
     {
-      "name":"Comorbilidades (INC)",
+      "name": "Comorbilidades (INC)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",

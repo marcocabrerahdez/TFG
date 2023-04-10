@@ -1,7 +1,7 @@
 {
   "config_list": [
     {
-      "name":"Cost",
+      "name": "Cost",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -52,14 +52,10 @@
         "LEA",
         "HBA1C"
       ],
-      "columns_Y": [
-        "AVG_C",
-        "L95CI_C",
-        "U95CI_C"
-      ]
+      "columns_Y": ["AVG_C", "L95CI_C", "U95CI_C"]
     },
     {
-      "name":"LY",
+      "name": "LY",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -110,14 +106,10 @@
         "LEA",
         "HBA1C"
       ],
-      "columns_Y": [
-        "AVG_LY",
-        "L95CI_LY",
-        "U95CI_LY"
-      ]
+      "columns_Y": ["AVG_LY", "L95CI_LY", "U95CI_LY"]
     },
     {
-      "name":"QALY",
+      "name": "QALY",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -168,14 +160,10 @@
         "LEA",
         "HBA1C"
       ],
-      "columns_Y": [
-        "AVG_QALY",
-        "L95CI_QALY",
-        "U95CI_QALY"
-      ]
+      "columns_Y": ["AVG_QALY", "L95CI_QALY", "U95CI_QALY"]
     },
     {
-      "name":"SHE",
+      "name": "SHE",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -226,11 +214,7 @@
         "LEA",
         "HBA1C"
       ],
-      "columns_Y": [
-        "AVG_SHE",
-        "L95CI_SHE",
-        "U95CI_SHE"
-      ]
+      "columns_Y": ["AVG_SHE", "L95CI_SHE", "U95CI_SHE"]
     }
   ]
 }

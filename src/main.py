@@ -1,24 +1,23 @@
-''' Programa principal.
-    Este programa es parte de un Trabajo de Fin de Grado
-    de la Universidad de La Laguna.
+"""Main program.
 
-    El objetivo de este programa es generar
-    modelos de predicción para el tiempo de espera
-    de pacientes con diabetes tipo 1 en Canarias.
-    Y comparar los resultados de los modelos
-    de simulación con los resultados de los modelos de predicción.
+This program is part of a final degree project
+at the University of La Laguna.
 
-    Los datos han sido previamente procesados
-    y se encuentran en el directorio data.
-    Se han generado gráficas con los resultados
-    y se encuentran en el directorio figures.
-    Además, se han generado los modelos y se encuentran en el directorio model.
-    Y por último, se han generadolos resultados de las predicciones
-    y se encuentran en el directorio predictions.
+The objective of this program is to generate prediction models
+for the waiting time of type 1 diabetes patients in the Canary Islands.
+And compare the results of the simulation models with the prediction models.
 
-    Autor:
-        Marco Antonio Cabrera Hernández
-'''
+The data has been previously processed
+and is located in the data directory.
+Graphs have been generated with the results
+and are located in the figures directory.
+In addition, the models have been generated and are located in the model directory.
+Finally, the prediction results have been generated
+and are located in the predictions directory.
+
+Author:
+    Marco Antonio Cabrera Hernández
+"""
 
 import json
 import os
@@ -31,103 +30,104 @@ from api import api
 from scripts import automl as ml
 from scripts import compare as cp
 
+
 def main() -> None:
-  ''' Función principal.
+    """Main function.
 
-      Parámetros:
-          -h, --help: Muestra la ayuda del programa.
-          -v, --version: Muestra la versión del programa.
-          -f, --file: Archivo de datos. Debe ser un archivo de Excel.
-            Además, se debe especificar:
-              - La hoja del archivo de datos.
-              - El archivo de configuración de modelos.
-              - El archivo de configuración de comparación de modelos.
+    Parameters:
+        -h, --help: Displays the program's help.
+        -v, --version: Displays the program's version.
+        -f, --file: Data file. Must be an Excel file.
+          Additionally, you must specify:
+            - The sheet of the data file.
+            - The model configuration file.
+            - The comparison model configuration file.
 
-      Ejemplo:
-          python3 main.py -v
-  '''
-  if len(sys.argv) > 1:
-    # Ayuda del programa
-    if sys.argv[1] == '-h' or sys.argv[1] == '--help':
-      print(main.__doc__)
-      sys.exit()
-    # Versión del programa
-    elif sys.argv[1] == '-v' or sys.argv[1] == '--version':
-      print(st.VERSION)
-      sys.exit()
+    Example:
+        python3 main.py -v
+    """
+    if len(sys.argv) > 1:
+        # Program help
+        if sys.argv[1] == '-h' or sys.argv[1] == '--help':
+            print(main.__doc__)
+            sys.exit()
+        # Versión del programa
+        elif sys.argv[1] == '-v' or sys.argv[1] == '--version':
+            print(st.VERSION)
+            sys.exit()
 
-    # Archivos de datos
-    elif sys.argv[1] == '-f' or sys.argv[1] == '--file':
-      data_file_path = os.path.join(st.ROOT_DIR, sys.argv[2])
-      data_file_sheet = sys.argv[3]
-      if os.path.isfile(data_file_path):
-         data_frame = pd.read_excel(data_file_path, data_file_sheet)
+        # Data files
+        elif sys.argv[1] == '-f' or sys.argv[1] == '--file':
+            data_file_path = os.path.join(st.ROOT_DIR, sys.argv[2])
+            data_file_sheet = sys.argv[3]
+            if os.path.isfile(data_file_path):
+                data_frame = pd.read_excel(data_file_path, data_file_sheet)
 
-      # Abrir el archivo de configuración de datos
-      configuration_model_file_path = os.path.join(st.ROOT_DIR, sys.argv[4])
-      if os.path.isfile(configuration_model_file_path):
-        with open(configuration_model_file_path, 'r', encoding='utf8') as file_name:
-          config_list = json.load(file_name)
+            # Open the data configuration file
+            configuration_model_file_path = os.path.join(
+                st.ROOT_DIR, sys.argv[4])
+            if os.path.isfile(configuration_model_file_path):
+                with open(configuration_model_file_path, 'r', encoding='utf8') as file_name:
+                    config_list = json.load(file_name)
 
-      # Abrir el archivo de configuración de la comparación
-      compare_file_path = os.path.join(st.ROOT_DIR, sys.argv[5])
-      if os.path.isfile(compare_file_path):
-        with open(compare_file_path, 'r', encoding='utf8') as file_name:
-          compare_list = json.load(file_name)
-    else:
-      print('Argumento no válido.')
-      sys.exit()
-  """
-  # Preprocesar los datos
-  df_cols = data_frame.columns[data_frame.columns.str.contains('UPTO')]
-  data_frame[df_cols] = data_frame[df_cols].div(500) * 100
-  df_cols = data_frame.columns[data_frame.columns.str.contains('INC')]
-  data_frame[df_cols] = data_frame[df_cols].div(500) * 100
+            # Open the comparison configuration file
+            compare_file_path = os.path.join(st.ROOT_DIR, sys.argv[5])
+            if os.path.isfile(compare_file_path):
+                with open(compare_file_path, 'r', encoding='utf8') as file_name:
+                    compare_list = json.load(file_name)
+        else:
+            print('Argumento no válido.')
+            sys.exit()
 
-  # Cambiar SEX: MAN -> 0, WOMAN -> 1
-  data_frame['SEX'] = data_frame['SEX'].replace({'MAN': 0, 'WOMAN': 1})
+    # Data preprocessing
+    df_cols = data_frame.columns[data_frame.columns.str.contains('UPTO')]
+    data_frame[df_cols] = data_frame[df_cols].div(500) * 100
+    df_cols = data_frame.columns[data_frame.columns.str.contains('INC')]
+    data_frame[df_cols] = data_frame[df_cols].div(500) * 100
 
-  # Guardar posiciones de los valores NaN
-  nan_pos = data_frame.isna()
+    # Change SEX: MAN -> 0, WOMAN -> 1
+    data_frame['SEX'] = data_frame['SEX'].replace({'MAN': 0, 'WOMAN': 1})
 
-  # Valores NaN a 0
-  data_frame = data_frame.fillna(0)
+    # Save the nan values ​​in a boolean matrix
+    nan_pos = data_frame.isna()
 
-  # Para cada modelo en la lista de modelos
-  for config in config_list['config_list']:
-    # Crear el objeto AutoML
-    if config['type'] == 'single':
-      automl = ml.AutoML(config['name'], config['class_name'],
-                          config['model'], config['type'], config['params'],
-                          columns_X=data_frame[config['columns_X']],
-                          columns_Y=data_frame[config['columns_Y']])
-    else:
-      automl = ml.AutoML(config['name'], config['class_name'],
-                          config['model'], config['type'],
-                          config['params'], config['trained_data_names'])
-    # Entrenar el modelo
-    automl.train()
+    # Fill the nan values ​​with 0
+    data_frame = data_frame.fillna(0)
 
-    # Predecir con el modelo
-    automl.predict()
+    # For each model configuration
+    for config in config_list['config_list']:
+        # Create the model
+        if config['type'] == 'single':
+            automl = ml.AutoML(config['name'], config['class_name'],
+                               config['model'], config['type'], config['params'],
+                               columns_X=data_frame[config['columns_X']],
+                               columns_Y=data_frame[config['columns_Y']])
+        else:
+            automl = ml.AutoML(config['name'], config['class_name'],
+                               config['model'], config['type'],
+                               config['params'], config['trained_data_names'])
+        # Train the model
+        automl.train()
 
-    # R2 and MAPE score
-    automl.metrics(nan_pos, increment=3)
+        # Predict the model
+        automl.predict()
 
-    # Guardar el modelo, las predicciones y las metricas
-    automl.save()
+        # R2 and MAPE score
+        automl.metrics(nan_pos, increment=3)
 
-    # Graficar los resultados
-    #automl.plot_upto_time()
-    automl.plot_avg_time(nan_pos)
+        # Save the model and the results
+        automl.save()
 
-  # Comparar las métricas de los resultados de los modelos
-  #cp.create_score_table(compare_list['r2']['list'], compare_list['r2']['name_list'], st.R2_TABLE_DIR, st.R2_AVERAGE_TIME_DIR)
-  #cp.create_score_table(compare_list['mape']['list'], compare_list['mape']['name_list'], st.MAPE_TABLE_DIR, st.MAPE_AVERAGE_TIME_DIR)
-  cp.compare_r2_tables(compare_list['r2']['name_list'], st.R2_INCIDENCE_PLOT_DIR, st.R2_INCIDENCE_DIR)
-  """
+        # Generate the graphs (UPTO and AVG_TIME)
+        # automl.plot_upto_time() # Uncomment to generate the graphs Upto time
+        automl.plot_avg_time(nan_pos)
+
+    # Comparar las métricas de los resultados de los modelos
+    cp.create_score_table(compare_list['r2']['list'], compare_list['r2']['name_list'], st.R2_TABLE_DIR, st.R2_AVERAGE_TIME_DIR)
+    cp.create_score_table(compare_list['mape']['list'], compare_list['mape']['name_list'], st.MAPE_TABLE_DIR, st.MAPE_AVERAGE_TIME_DIR)
+    cp.compare_r2_tables(
+        compare_list['r2']['name_list'], st.R2_INCIDENCE_PLOT_DIR, st.R2_INCIDENCE_DIR)
+
 
 if __name__ == '__main__':
-  main()
-  os.system('afplay /System/Library/Sounds/Glass.aiff')
-  os.system('afplay /System/Library/Sounds/Glass.aiff')
+    main()

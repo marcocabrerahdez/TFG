@@ -1,4 +1,4 @@
-''' Archivo de configuración de la aplicación '''
+"""Archivo de configuración de la aplicación."""
 
 import os
 
@@ -64,13 +64,17 @@ DATASET_NAME = "2023-01-11 datos_clusterizados_ML.xlsx"
 PARAM_MODELS = 'model_config.json'
 COMPARE_MODELS = 'compare_config.json'
 
-# API
-API_MODEL_TIME_TO_EVENT = os.path.join(GLOBAL_MODEL_DIR, 'GradientBoostingRegressor', 'average time')
-API_MODEL_INCIDENCE = os.path.join(GLOBAL_MODEL_DIR, 'GradientBoostingRegressor', 'incidence')
-API_MODEL_LY_QALY_COST_SHE = os.path.join(SINGLE_MODEL_DIR, 'GradientBoostingRegressor')
-API_MODEL_RISK = os.path.join(GLOBAL_MODEL_DIR, 'GradientBoostingRegressor', 'upto time')
+#  API
+API_MODEL_TIME_TO_EVENT = os.path.join(
+    GLOBAL_MODEL_DIR, 'GradientBoostingRegressor', 'average time')
+API_MODEL_INCIDENCE = os.path.join(
+    GLOBAL_MODEL_DIR, 'GradientBoostingRegressor', 'incidence')
+API_MODEL_LY_QALY_COST_SHE = os.path.join(
+    SINGLE_MODEL_DIR, 'GradientBoostingRegressor')
+API_MODEL_RISK = os.path.join(
+    GLOBAL_MODEL_DIR, 'GradientBoostingRegressor', 'upto time')
 
 # PARÁMETROS DE ENTRENAMIENTO
 TEST_SIZE = 0.2
 RANDOM_STATE = 42
-VERSION=1.0
+VERSION = 1.0

@@ -1,7 +1,7 @@
 {
   "config_list": [
     {
-      "name":"Fallo Cardiaco (UPTO)",
+      "name": "Fallo Cardiaco (UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -83,7 +83,7 @@
       ]
     },
     {
-      "name":"Infarto de Miocardio (UPTO)",
+      "name": "Infarto de Miocardio (UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -165,7 +165,7 @@
       ]
     },
     {
-      "name":"Angina (UPTO)",
+      "name": "Angina (UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -247,7 +247,7 @@
       ]
     },
     {
-      "name":"Ictus (UPTO)",
+      "name": "Ictus (UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -329,7 +329,7 @@
       ]
     },
     {
-      "name":"Ceguera (UPTO)",
+      "name": "Ceguera (UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -411,7 +411,7 @@
       ]
     },
     {
-      "name":"Edema macular diabético (UPTO)",
+      "name": "Edema macular diabético (UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -493,7 +493,7 @@
       ]
     },
     {
-      "name":"Retinopatía de fondo (UPTO)",
+      "name": "Retinopatía de fondo (UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -575,7 +575,7 @@
       ]
     },
     {
-      "name":"Retinopatía proliferativa (UPTO)",
+      "name": "Retinopatía proliferativa (UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -657,7 +657,7 @@
       ]
     },
     {
-      "name":"Neuropatía individual (UPTO)",
+      "name": "Neuropatía individual (UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -739,7 +739,7 @@
       ]
     },
     {
-      "name":"Amputación extremidades inferiores (UPTO)",
+      "name": "Amputación extremidades inferiores (UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -821,7 +821,7 @@
       ]
     },
     {
-      "name":"Microalbuminuria (UPTO)",
+      "name": "Microalbuminuria (UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -903,7 +903,7 @@
       ]
     },
     {
-      "name":"Macroalbuminuria (UPTO)",
+      "name": "Macroalbuminuria (UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -985,7 +985,7 @@
       ]
     },
     {
-      "name":"Enfermedad renal terminal (UPTO)",
+      "name": "Enfermedad renal terminal (UPTO)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
@@ -1067,13 +1067,9 @@
       ]
     },
     {
-      "name":"Enfermedades cardíacas (UPTO)",
-      "class_name": [
-        "sklearn.ensemble"
-      ],
-      "model": [
-        "GradientBoostingRegressor"
-      ],
+      "name": "Enfermedades cardíacas (UPTO)",
+      "class_name": ["sklearn.ensemble"],
+      "model": ["GradientBoostingRegressor"],
       "params": [
         {
           "model__n_estimators": [150],
@@ -1089,13 +1085,9 @@
       ]
     },
     {
-      "name":"Retinopatías (UPTO)",
-      "class_name": [
-        "sklearn.ensemble"
-      ],
-      "model": [
-        "GradientBoostingRegressor"
-      ],
+      "name": "Retinopatías (UPTO)",
+      "class_name": ["sklearn.ensemble"],
+      "model": ["GradientBoostingRegressor"],
       "params": [
         {
           "model__n_estimators": [150],
@@ -1111,13 +1103,9 @@
       ]
     },
     {
-      "name":"Neuropatías (UPTO)",
-      "class_name": [
-        "sklearn.ensemble"
-      ],
-      "model": [
-        "GradientBoostingRegressor"
-      ],
+      "name": "Neuropatías (UPTO)",
+      "class_name": ["sklearn.ensemble"],
+      "model": ["GradientBoostingRegressor"],
       "params": [
         {
           "model__n_estimators": [150],
@@ -1131,13 +1119,9 @@
       ]
     },
     {
-      "name":"Nefropatías (UPTO)",
-      "class_name": [
-        "sklearn.ensemble"
-      ],
-      "model": [
-        "GradientBoostingRegressor"
-      ],
+      "name": "Nefropatías (UPTO)",
+      "class_name": ["sklearn.ensemble"],
+      "model": ["GradientBoostingRegressor"],
       "params": [
         {
           "model__n_estimators": [150],
@@ -1152,13 +1136,9 @@
       ]
     },
     {
-      "name":"Comorbilidades (UPTO)",
-      "class_name": [
-        "sklearn.ensemble"
-      ],
-      "model": [
-        "GradientBoostingRegressor"
-      ],
+      "name": "Comorbilidades (UPTO)",
+      "class_name": ["sklearn.ensemble"],
+      "model": ["GradientBoostingRegressor"],
       "params": [
         {
           "model__n_estimators": [150],
