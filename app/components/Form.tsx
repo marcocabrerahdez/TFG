@@ -15,7 +15,9 @@ export default function Form({ onFormSubmit }: FormProps) {
   const [annualCost, setAnnualCost] = useState("");
   const [manifestations, setManifestations] = useState<string[]>([]);
 
-  const handleManifestationsChange = (event: { target: { value: string; checked: boolean; }; }) => {
+  const handleManifestationsChange = (event: {
+    target: { value: string; checked: boolean };
+  }) => {
     const value = event.target.value;
     if (event.target.checked) {
       setManifestations([...manifestations, value]);
@@ -25,7 +27,7 @@ export default function Form({ onFormSubmit }: FormProps) {
   };
   console.log(manifestations);
 
-  const handleSubmit = (event: { preventDefault: () => void; }) => {
+  const handleSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault();
     // Aquí se puede agregar la lógica para enviar los datos del formulario a un servidor o realizar alguna acción adicional
     const formData = {
@@ -37,7 +39,7 @@ export default function Form({ onFormSubmit }: FormProps) {
       baseHbA1cLevel,
       objHbA1cLevel,
       annualCost,
-      manifestations
+      manifestations,
     };
 
     const url = "http://127.0.0.1:5000/diabetes";
@@ -92,7 +94,10 @@ export default function Form({ onFormSubmit }: FormProps) {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="durationOfDiabetes" className="block mb-2 font-bold text-gray-600">
+          <label
+            htmlFor="durationOfDiabetes"
+            className="block mb-2 font-bold text-gray-600"
+          >
             Duración de la diabetes (en años)
           </label>
           <input
@@ -109,7 +114,10 @@ export default function Form({ onFormSubmit }: FormProps) {
 
       <div className="grid grid-cols-2 gap-4">
         <div className="mb-4">
-          <label htmlFor="baseHbA1cLevel" className="block mb-2 font-bold text-gray-600">
+          <label
+            htmlFor="baseHbA1cLevel"
+            className="block mb-2 font-bold text-gray-600"
+          >
             Nivel Base de HbA1c (%)
           </label>
           <input
@@ -123,7 +131,10 @@ export default function Form({ onFormSubmit }: FormProps) {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="objHbA1cLevel" className="block mb-2 font-bold text-gray-600">
+          <label
+            htmlFor="objHbA1cLevel"
+            className="block mb-2 font-bold text-gray-600"
+          >
             Nivel Objetivo de HbA1c (%)
           </label>
           <input
@@ -152,9 +163,7 @@ export default function Form({ onFormSubmit }: FormProps) {
             name="hypoRate"
             value={hypoRate}
             placeholder="Introduzca un número"
-            onChange={(event) =>
-              setHypoRate(event.target.value)
-            }
+            onChange={(event) => setHypoRate(event.target.value)}
             className="border border-gray-300 p-2 w-full"
           />
         </div>
@@ -171,15 +180,16 @@ export default function Form({ onFormSubmit }: FormProps) {
             name="hypoRateRR"
             placeholder="Introduzca un número"
             value={hypoRateRR}
-            onChange={(event) =>
-              setHypoRateRR(event.target.value)
-            }
+            onChange={(event) => setHypoRateRR(event.target.value)}
             className="border border-gray-300 p-2 w-full"
           />
         </div>
       </div>
       <div className="mb-4">
-        <label htmlFor="annualCost" className="block mb-2 font-bold text-gray-600">
+        <label
+          htmlFor="annualCost"
+          className="block mb-2 font-bold text-gray-600"
+        >
           Costo de tratamiento (en dólares)
         </label>
         <input
@@ -193,11 +203,17 @@ export default function Form({ onFormSubmit }: FormProps) {
         />
       </div>
       <div className="mb-4">
-        <label htmlFor="manifestations" className="block mb-2 font-bold text-gray-600">
+        <label
+          htmlFor="manifestations"
+          className="block mb-2 font-bold text-gray-600"
+        >
           Manifestaciones clínicas
         </label>
         <div className="grid grid-cols-2 gap-4">
-          <label htmlFor="Retinopatía de Fondo" className="inline-flex items-center mt-2">
+          <label
+            htmlFor="Retinopatía de Fondo"
+            className="inline-flex items-center mt-2"
+          >
             <input
               id="BGRET"
               name="manifestations"
@@ -209,7 +225,10 @@ export default function Form({ onFormSubmit }: FormProps) {
             />
             <span className="ml-2 text-gray-600">Retinopatía de Fondo</span>
           </label>
-          <label htmlFor="Retinopatía Proliferativa" className="inline-flex items-center mt-2">
+          <label
+            htmlFor="Retinopatía Proliferativa"
+            className="inline-flex items-center mt-2"
+          >
             <input
               id="PRET"
               name="manifestations"
@@ -219,9 +238,14 @@ export default function Form({ onFormSubmit }: FormProps) {
               checked={manifestations.includes("PRET")}
               className="form-checkbox h-5 w-5 text-gray-600"
             />
-            <span className="ml-2 text-gray-600">Retinopatía Proliferativa</span>
+            <span className="ml-2 text-gray-600">
+              Retinopatía Proliferativa
+            </span>
           </label>
-          <label htmlFor="Edema Macular Diabético" className="inline-flex items-center mt-2">
+          <label
+            htmlFor="Edema Macular Diabético"
+            className="inline-flex items-center mt-2"
+          >
             <input
               id="ME"
               name="manifestations"
@@ -233,7 +257,10 @@ export default function Form({ onFormSubmit }: FormProps) {
             />
             <span className="ml-2 text-gray-600">Edema Macular Diabético</span>
           </label>
-          <label htmlFor="Enfermedad Renal Terminal" className="inline-flex items-center mt-2">
+          <label
+            htmlFor="Enfermedad Renal Terminal"
+            className="inline-flex items-center mt-2"
+          >
             <input
               id="ESRD"
               name="manifestations"
@@ -243,7 +270,9 @@ export default function Form({ onFormSubmit }: FormProps) {
               checked={manifestations.includes("ESRD")}
               className="form-checkbox h-5 w-5 text-gray-600"
             />
-            <span className="ml-2 text-gray-600">Enfermedad Renal Terminal</span>
+            <span className="ml-2 text-gray-600">
+              Enfermedad Renal Terminal
+            </span>
           </label>
           <label htmlFor="Ceguera" className="inline-flex items-center mt-2">
             <input
@@ -257,7 +286,10 @@ export default function Form({ onFormSubmit }: FormProps) {
             />
             <span className="ml-2 text-gray-600">Ceguera</span>
           </label>
-          <label htmlFor="Microalbuminuria" className="inline-flex items-center mt-2">
+          <label
+            htmlFor="Microalbuminuria"
+            className="inline-flex items-center mt-2"
+          >
             <input
               id="ALB1"
               name="manifestations"
@@ -269,7 +301,10 @@ export default function Form({ onFormSubmit }: FormProps) {
             />
             <span className="ml-2 text-gray-600">Microalbuminuria</span>
           </label>
-          <label htmlFor="Macroalbuminuria" className="inline-flex items-center mt-2">
+          <label
+            htmlFor="Macroalbuminuria"
+            className="inline-flex items-center mt-2"
+          >
             <input
               id="ALB2"
               name="manifestations"
@@ -282,7 +317,7 @@ export default function Form({ onFormSubmit }: FormProps) {
             <span className="ml-2 text-gray-600">Macroalbuminuria</span>
           </label>
         </div>
-          <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           <label htmlFor="Angina" className="inline-flex items-center mt-2">
             <input
               id="ANGINA"
@@ -307,7 +342,10 @@ export default function Form({ onFormSubmit }: FormProps) {
             />
             <span className="ml-2 text-gray-600">Ictus</span>
           </label>
-          <label htmlFor="Infarto de Miocardio" className="inline-flex items-center mt-2">
+          <label
+            htmlFor="Infarto de Miocardio"
+            className="inline-flex items-center mt-2"
+          >
             <input
               id="MI"
               name="manifestations"
@@ -319,7 +357,10 @@ export default function Form({ onFormSubmit }: FormProps) {
             />
             <span className="ml-2 text-gray-600">Infarto de Miocardio</span>
           </label>
-          <label htmlFor="Fallo Cardíaco" className="inline-flex items-center mt-2">
+          <label
+            htmlFor="Fallo Cardíaco"
+            className="inline-flex items-center mt-2"
+          >
             <input
               id="HF"
               name="manifestations"
@@ -343,7 +384,10 @@ export default function Form({ onFormSubmit }: FormProps) {
             />
             <span className="ml-2 text-gray-600">Neuropatía</span>
           </label>
-          <label htmlFor="Amputación de Extremidades Inferiores" className="inline-flex items-center mt-2">
+          <label
+            htmlFor="Amputación de Extremidades Inferiores"
+            className="inline-flex items-center mt-2"
+          >
             <input
               id="LEA"
               name="manifestations"
@@ -353,7 +397,9 @@ export default function Form({ onFormSubmit }: FormProps) {
               checked={manifestations.includes("LEA")}
               className="form-checkbox h-5 w-5 text-gray-600"
             />
-            <span className="ml-2 text-gray-600">Amputación de Extremidades Inferiores</span>
+            <span className="ml-2 text-gray-600">
+              Amputación de Extremidades Inferiores
+            </span>
           </label>
         </div>
       </div>

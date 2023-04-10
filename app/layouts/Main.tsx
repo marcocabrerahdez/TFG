@@ -13,13 +13,13 @@ export default function Main() {
     setShowCharts(true);
     setShowForm(false);
     setData(data);
-  }
+  };
 
   return (
     <main className="flex flex-col items-center justify-between">
       <Header />
       {showForm && <Form onFormSubmit={handleFormSubmit} />}
-      {showCharts && <Charts data={data}/>}
+      {showCharts && <Charts data={data} />}
       <Footer />
     </main>
   );
