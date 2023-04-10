@@ -25,7 +25,6 @@ export default function Form({ onFormSubmit }: FormProps) {
       setManifestations(manifestations.filter((m) => m !== value));
     }
   };
-  console.log(manifestations);
 
   const handleSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault();
