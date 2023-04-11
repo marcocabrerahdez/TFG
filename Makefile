@@ -7,8 +7,8 @@ dev:
 server:
 	python3 src/server.py
 
-pylint:
-	pylint --rcfile=.pylintrc src/**/*.py
+lint:
+	flake8
 
 help:
 	@echo "make run"

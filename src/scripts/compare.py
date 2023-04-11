@@ -1,16 +1,17 @@
 import os
-import glob
 from typing import List
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
-from scipy.spatial import ConvexHull
 
 import settings as st
 import utils as ut
 
 
-def create_score_table(metrics_list: List[str], name_list: List[str], path=st.R2_TABLE_DIR, outdir=st.R2_AVERAGE_TIME_DIR) -> None:
+def create_score_table(
+        metrics_list: List[str],
+        name_list: List[str],
+        path=st.R2_TABLE_DIR,
+        outdir=st.R2_AVERAGE_TIME_DIR) -> None:
     """Create Excel files for the R-squared scores for each model.
 
     Args:
@@ -24,9 +25,6 @@ def create_score_table(metrics_list: List[str], name_list: List[str], path=st.R2
     Returns:
         None
     """
-    # Create an empty DataFrame to hold the results
-    df_results = pd.DataFrame()
-
     # Iterate over the list of metrics and model names
     for metric, name in zip(metrics_list, name_list):
         # Retrieve the DataFrame with the score results for the current metric
@@ -43,7 +41,10 @@ def create_score_table(metrics_list: List[str], name_list: List[str], path=st.R2
         result = pd.DataFrame()
 
 
-def compare_r2_tables(name_list: List[str], figpath=st.R2_AVERAGE_TIME_PLOT_DIR, path=st.R2_TABLE_DIR) -> None:
+def compare_r2_tables(
+        name_list: List[str],
+        figpath=st.R2_AVERAGE_TIME_PLOT_DIR,
+        path=st.R2_TABLE_DIR) -> None:
     """ Create and save R2 comparison plots for each model in the given list of names.
         The function reads R2 scores from .xlsx files in the given directory path and generates
         three types of comparison plots: single, multiple, and global R2 scores for each model.
@@ -68,12 +69,26 @@ def compare_r2_tables(name_list: List[str], figpath=st.R2_AVERAGE_TIME_PLOT_DIR,
 
         # Create plot using scatter plot with error bars
         fig, ax = plt.subplots(figsize=(10, 10))
-        ax.errorbar(x=range(len(results)), y=results["single"], yerr=results["single"].std(
-        ), fmt="o", capsize=5, label="Entrenamiento de tipo single")
-        ax.errorbar(x=[i + 0.2 for i in range(len(results))], y=results["multiple"],
-                    yerr=results["multiple"].std(), fmt="o", capsize=5, label="Entrenamiento  de tipo multiple")
-        ax.errorbar(x=[i + 0.4 for i in range(len(results))], y=results["global"],
-                    yerr=results["global"].std(), fmt="o", capsize=5, label="Entrenamiento de tipo global")
+        ax.errorbar(
+            x=range(
+                len(results)),
+            y=results["single"],
+            yerr=results["single"].std(),
+            fmt="o",
+            capsize=5,
+            label="Entrenamiento de tipo single")
+        ax.errorbar(x=[i + 0.2 for i in range(len(results))],
+                    y=results["multiple"],
+                    yerr=results["multiple"].std(),
+                    fmt="o",
+                    capsize=5,
+                    label="Entrenamiento  de tipo multiple")
+        ax.errorbar(x=[i + 0.4 for i in range(len(results))],
+                    y=results["global"],
+                    yerr=results["global"].std(),
+                    fmt="o",
+                    capsize=5,
+                    label="Entrenamiento de tipo global")
 
         # Set xticks and labels to be the model names
         ax.set_xticks([i + 0.2 for i in range(len(results))])
@@ -86,7 +101,9 @@ def compare_r2_tables(name_list: List[str], figpath=st.R2_AVERAGE_TIME_PLOT_DIR,
 
         # Set title in spanish
         ax.set_title(
-            f"Comparación de $\\mathbf{{R}}^\\mathbf{{2}}$ para {name}", fontsize=14, fontweight="bold")
+            f"Comparación de $\\mathbf{{R}}^\\mathbf{{2}}$ para {name}",
+            fontsize=14,
+            fontweight="bold")
 
         # Add legend
         ax.legend()

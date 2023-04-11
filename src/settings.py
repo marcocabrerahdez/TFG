@@ -1,4 +1,4 @@
-"""Archivo de configuración de la aplicación."""
+"""Configurations for the project."""
 
 import os
 

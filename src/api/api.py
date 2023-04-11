@@ -80,10 +80,20 @@ def transform_data(patient: pd.DataFrame):
     patient = patient.drop(columns=['annualCost'])
 
     # Change the name of the columns
-    patient_data_base = patient.rename(columns={
-                                       'baseHbA1cLevel': 'HBA1C', 'age': 'AGE', 'durationOfDiabetes': 'DURATION', 'hypoRate': 'HYPO_RATE', 'man': 'SEX'})
-    patient_data_int = patient.rename(columns={'objHbA1cLevel': 'HBA1C', 'age': 'AGE',
-                                      'durationOfDiabetes': 'DURATION', 'hypoRateRR': 'HYPO_RATE', 'man': 'SEX'})
+    patient_data_base = patient.rename(
+        columns={
+            'baseHbA1cLevel': 'HBA1C',
+            'age': 'AGE',
+            'durationOfDiabetes': 'DURATION',
+            'hypoRate': 'HYPO_RATE',
+            'man': 'SEX'})
+    patient_data_int = patient.rename(
+        columns={
+            'objHbA1cLevel': 'HBA1C',
+            'age': 'AGE',
+            'durationOfDiabetes': 'DURATION',
+            'hypoRateRR': 'HYPO_RATE',
+            'man': 'SEX'})
 
     # Convert the data type of the columns
     patient_data_base['HBA1C'] = patient_data_base['HBA1C'].astype(int)
@@ -113,8 +123,20 @@ def transform_data(patient: pd.DataFrame):
     patient_data_int = patient_data_int.drop(columns=['baseHbA1cLevel'])
 
     # Define the possible manifestations
-    possible_manifestations = ["BGRET", "PRET", "ME", "BLI", "ALB1",
-                               "ALB2", "ESRD", "ANGINA", "STROKE", "MI", "HF", "NEU", "LEA"]
+    possible_manifestations = [
+        "BGRET",
+        "PRET",
+        "ME",
+        "BLI",
+        "ALB1",
+        "ALB2",
+        "ESRD",
+        "ANGINA",
+        "STROKE",
+        "MI",
+        "HF",
+        "NEU",
+        "LEA"]
 
     # Create the columns of the possible manifestations
     for manifestation in possible_manifestations:
@@ -149,12 +171,26 @@ def transform_data(patient: pd.DataFrame):
         "HBA1C"
     ]
 
-    return patient_data_base.reindex(columns=column_order), patient_data_int.reindex(columns=column_order)
+    return patient_data_base.reindex(
+        columns=column_order), patient_data_int.reindex(
+        columns=column_order)
 
 
-def create_json_file(time_to_event_base, incidence_base, left_years_base, quality_of_life_base,
-                     severe_hypoglucemic_event_base, cost_base, risk_base, time_to_event_int, incidence_int,
-                     left_years_int, quality_of_life_int, severe_hypoglucemic_event_int, cost_int, risk_int):
+def create_json_file(
+        time_to_event_base,
+        incidence_base,
+        left_years_base,
+        quality_of_life_base,
+        severe_hypoglucemic_event_base,
+        cost_base,
+        risk_base,
+        time_to_event_int,
+        incidence_int,
+        left_years_int,
+        quality_of_life_int,
+        severe_hypoglucemic_event_int,
+        cost_int,
+        risk_int):
     """Create the json file to send to the frontend.
 
     Args:
@@ -183,8 +219,8 @@ def create_json_file(time_to_event_base, incidence_base, left_years_base, qualit
         new_list_int = []  # Initialize the new list outside the j loop
         for j in range(0, len(risk_base[i]), 3):
             # Create a list with the same value 9 times
-            value_base = risk_base[i][j:j+3][0]
-            value_int = risk_int[i][j:j+3][0]
+            value_base = risk_base[i][j:j + 3][0]
+            value_int = risk_int[i][j:j + 3][0]
             for k in range(0, 9):
                 new_list_base.append(value_base)
                 new_list_int.append(value_int)
@@ -196,9 +232,9 @@ def create_json_file(time_to_event_base, incidence_base, left_years_base, qualit
             new_list_int = []
 
     # Group the lists in lists of 9 elements
-    list_risk_base = [list_risk_base[i:i+9]
+    list_risk_base = [list_risk_base[i:i + 9]
                       for i in range(0, len(list_risk_base), 9)]
-    list_risk_int = [list_risk_int[i:i+9]
+    list_risk_int = [list_risk_int[i:i + 9]
                      for i in range(0, len(list_risk_int), 9)]
 
     # Merge the lists

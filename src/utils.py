@@ -2,10 +2,8 @@
 
 import os
 import glob
-import shutil
 
 import pandas as pd
-import numpy as np
 import settings as st
 
 
@@ -77,13 +75,25 @@ def get_model_results(model_name: str, directory_name: str) -> pd.DataFrame:
     # Raise an error if the model file or directory is not found
     if not model_file or not directory_name:
         raise FileNotFoundError(
-            'Model file or directory not found: ' + model_name + ', ' + directory_name)
+            'Model file or directory not found: '
+            + model_name
+            + ', '
+            + directory_name)
 
     # Read the file and return it
     return pd.read_excel(model_file, index_col=0)
 
 
-def save_splitted_data(_X_train, _X_test, _y_train, _y_test, _columns_X, _columns_Y, _name, _type,) -> None:
+def save_splitted_data(
+    _X_train,
+    _X_test,
+    _y_train,
+    _y_test,
+    _columns_X,
+    _columns_Y,
+    _name,
+    _type,
+) -> None:
     """Saves the splitted data into different directories based on the type of model.
 
     Args:

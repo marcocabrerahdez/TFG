@@ -26,7 +26,6 @@ import sys
 import pandas as pd
 
 import settings as st
-from api import api
 from scripts import automl as ml
 from scripts import compare as cp
 
@@ -98,8 +97,11 @@ def main() -> None:
     for config in config_list['config_list']:
         # Create the model
         if config['type'] == 'single':
-            automl = ml.AutoML(config['name'], config['class_name'],
-                               config['model'], config['type'], config['params'],
+            automl = ml.AutoML(config['name'],
+                               config['class_name'],
+                               config['model'],
+                               config['type'],
+                               config['params'],
                                columns_X=data_frame[config['columns_X']],
                                columns_Y=data_frame[config['columns_Y']])
         else:
@@ -123,10 +125,20 @@ def main() -> None:
         automl.plot_avg_time(nan_pos)
 
     # Comparar las métricas de los resultados de los modelos
-    cp.create_score_table(compare_list['r2']['list'], compare_list['r2']['name_list'], st.R2_TABLE_DIR, st.R2_AVERAGE_TIME_DIR)
-    cp.create_score_table(compare_list['mape']['list'], compare_list['mape']['name_list'], st.MAPE_TABLE_DIR, st.MAPE_AVERAGE_TIME_DIR)
+    cp.create_score_table(
+        compare_list['r2']['list'],
+        compare_list['r2']['name_list'],
+        st.R2_TABLE_DIR,
+        st.R2_AVERAGE_TIME_DIR)
+    cp.create_score_table(
+        compare_list['mape']['list'],
+        compare_list['mape']['name_list'],
+        st.MAPE_TABLE_DIR,
+        st.MAPE_AVERAGE_TIME_DIR)
     cp.compare_r2_tables(
-        compare_list['r2']['name_list'], st.R2_INCIDENCE_PLOT_DIR, st.R2_INCIDENCE_DIR)
+        compare_list['r2']['name_list'],
+        st.R2_INCIDENCE_PLOT_DIR,
+        st.R2_INCIDENCE_DIR)
 
 
 if __name__ == '__main__':

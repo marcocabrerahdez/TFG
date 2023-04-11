@@ -11,8 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from scipy.spatial import ConvexHull
-from sklearn.metrics import (mean_absolute_percentage_error,
-                             mean_squared_error, r2_score)
+from sklearn.metrics import (mean_absolute_percentage_error, r2_score)
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.pipeline import Pipeline
@@ -59,9 +58,16 @@ class AutoML:
         'index_list_y_test',
     ]
 
-    def __init__(self, name: str, class_name, model, type_model: str, params,
-                 trained_data_names=[], columns_X: pd.DataFrame = pd.DataFrame(),
-                 columns_Y: pd.DataFrame = pd.DataFrame()) -> None:
+    def __init__(
+            self,
+            name: str,
+            class_name,
+            model,
+            type_model: str,
+            params,
+            trained_data_names=[],
+            columns_X: pd.DataFrame = pd.DataFrame(),
+            columns_Y: pd.DataFrame = pd.DataFrame()) -> None:
         """Constructor for the class.
 
         Args:
@@ -98,9 +104,17 @@ class AutoML:
         else:
             raise Exception('El tipo de modelo no es válido.')
 
-        # Save the data use by single models to be able to use them in multiple and global models
-        ut.save_splitted_data(self._X_train, self._X_test, self._y_train,
-                              self._y_test, self._columns_X, self._columns_Y, self._name, self._type)
+        # Save the data use by single models to be able to use them in multiple
+        # and global models
+        ut.save_splitted_data(
+            self._X_train,
+            self._X_test,
+            self._y_train,
+            self._y_test,
+            self._columns_X,
+            self._columns_Y,
+            self._name,
+            self._type)
 
         # Initialize the predicted data
         self._y_pred = None
@@ -111,7 +125,8 @@ class AutoML:
         self._X_train = scaler.transform(self._X_train)
         self._X_test = scaler.transform(self._X_test)
 
-        # Assign the correct data type to the data to allow the use of the data in the models
+        # Assign the correct data type to the data to allow the use of the data
+        # in the models
         if self._type == 'single':
             self._X_train = pd.DataFrame(
                 self._X_train, columns=self._columns_X.columns)
@@ -129,16 +144,24 @@ class AutoML:
             None
         """
         print('Training the models...')
-        # Create a pipeline with the model and the parameters to be used in the grid search
+        # Create a pipeline with the model and the parameters to be used in the
+        # grid search
         pipe = [Pipeline([('model', self._model[i])])
                 for i in range(len(self._model))]
 
         # Create a grid search with the pipeline and the parameters
         # Grid search is used to find the best parameters for the model
-        grid_search = [GridSearchCV(pipe[i], param_grid=self._params[i],
-                                    cv=5, refit=True, scoring='r2') for i in range(len(pipe))]
+        grid_search = [
+            GridSearchCV(
+                pipe[i],
+                param_grid=self._params[i],
+                cv=5,
+                refit=True,
+                scoring='r2') for i in range(
+                len(pipe))]
 
-        # Create a multi output regressor to be able to train the model with multiple outputs
+        # Create a multi output regressor to be able to train the model with
+        # multiple outputs
         self._model = [MultiOutputRegressor(grid_search[i])
                        for i in range(len(grid_search))]
 
@@ -154,7 +177,8 @@ class AutoML:
         """
         print('Predicting the data...')
         # We store the predicted data in a list because if we use a dataframe we will have a dataframe with
-        # multiple columns and we will not be able to use the data in the multiple and global models
+        # multiple columns and we will not be able to use the data in the
+        # multiple and global models
         self._y_pred = [self._model[i].predict(self._X_test)
                         for i in range(len(self._model))]
 
@@ -172,8 +196,13 @@ class AutoML:
         if self._type == 'single':
             nan_pos = nan_pos.loc[self.index_list_y_test]
             y_test = self._y_test.copy()
-            y_pred = [pd.DataFrame(self._y_pred[i], columns=y_test.columns,
-                                   index=y_test.index) for i in range(len(self._model))]
+            y_pred = [
+                pd.DataFrame(
+                    self._y_pred[i],
+                    columns=y_test.columns,
+                    index=y_test.index) for i in range(
+                    len(
+                        self._model))]
 
             # Delete the rows with nan values
             y_test = self._y_test.drop(nan_pos.index[nan_pos.any(axis=1)])
@@ -184,7 +213,8 @@ class AutoML:
             mape = []  # MAPE
             # For each model we calculate the metrics
             for i in range(len(self._model)):
-              # We used uniform_average to calculate the metrics for each column and then we take the average
+                # We used uniform_average to calculate the metrics for each
+                # column and then we take the average
                 r2.append(
                     r2_score(y_test, y_pred[i], multioutput='uniform_average'))
                 mape.append(mean_absolute_percentage_error(
@@ -213,7 +243,8 @@ class AutoML:
             single_mape_df.to_excel(os.path.join(
                 st.SINGLE_MAPE_TABLE_DIR, f'{column_name}.xlsx'), index=False)
 
-            # Reset the dataframes to be sure that the data is correct in the next iteration
+            # Reset the dataframes to be sure that the data is correct in the
+            # next iteration
             single_r2_df = pd.DataFrame()
             single_mape_df = pd.DataFrame()
             column_name = ''
@@ -221,8 +252,13 @@ class AutoML:
         elif self._type == 'multiple' or self._type == 'global':
             nan_pos = nan_pos.loc[self.index_list_y_test]
             y_test = self._y_test.copy()
-            y_pred = [pd.DataFrame(self._y_pred[i], columns=y_test.columns,
-                                   index=y_test.index) for i in range(len(self._model))]
+            y_pred = [
+                pd.DataFrame(
+                    self._y_pred[i],
+                    columns=y_test.columns,
+                    index=y_test.index) for i in range(
+                    len(
+                        self._model))]
 
             # Delete the rows with nan values
             r2_subset = []
@@ -232,20 +268,26 @@ class AutoML:
             for j in range(len(self._model)):
                 for i in range(0, y_test.shape[1], increment):
                     # Delete the rows with nan values
-                    y_test_increment = y_test.iloc[:, i:i+increment].drop(
+                    y_test_increment = y_test.iloc[:, i:i + increment].drop(
                         nan_pos.index[nan_pos.any(axis=1)])
 
                     # Delete the rows with nan values
-                    y_pred_increment = y_pred[j].iloc[:, i:i +
-                                                      increment].drop(nan_pos.index[nan_pos.any(axis=1)])
+                    y_pred_increment = y_pred[j].iloc[:, i:i + increment].drop(nan_pos.index[nan_pos.any(axis=1)])
 
                     # Calculate R2 and MAPE
                     r2_subset.append(
-                        r2_score(y_test_increment, y_pred_increment, multioutput='uniform_average'))
-                    mape_subset.append(mean_absolute_percentage_error(
-                        y_test_increment, y_pred_increment, multioutput='uniform_average'))
+                        r2_score(
+                            y_test_increment,
+                            y_pred_increment,
+                            multioutput='uniform_average'))
+                    mape_subset.append(
+                        mean_absolute_percentage_error(
+                            y_test_increment,
+                            y_pred_increment,
+                            multioutput='uniform_average'))
 
-                    # Reset the dataframes to be sure that the data is correct in the next iteration
+                    # Reset the dataframes to be sure that the data is correct
+                    # in the next iteration
                     y_test_increment = pd.DataFrame()
                     y_pred_increment = pd.DataFrame()
 
@@ -253,12 +295,13 @@ class AutoML:
                 r2.append(r2_subset)
                 mape.append(mape_subset)
 
-                # Reset the dataframes to be sure that the data is correct in the next iteration
+                # Reset the dataframes to be sure that the data is correct in
+                # the next iteration
                 r2_subset = []
                 mape_subset = []
 
             colum_names = [[y_test.columns[i] for i in range(
-                i, i+increment)][0] for i in range(0, y_test.shape[1], increment)]
+                i, i + increment)][0] for i in range(0, y_test.shape[1], increment)]
 
             # Transpose the list to be able to create the dataframe
             r2 = np.transpose(r2)
@@ -276,32 +319,50 @@ class AutoML:
                 })
 
                 if self._type == 'multiple':
-                    if not os.path.exists(os.path.join(st.MULTIPLE_R2_TABLE_DIR)):
+                    if not os.path.exists(
+                            os.path.join(st.MULTIPLE_R2_TABLE_DIR)):
                         os.mkdir(st.MULTIPLE_R2_TABLE_DIR)
-                    multiple_global_r2_df.to_excel(os.path.join(
-                        st.MULTIPLE_R2_TABLE_DIR, f'{colum_names[i]}.xlsx'), index=False)
+                    multiple_global_r2_df.to_excel(
+                        os.path.join(
+                            st.MULTIPLE_R2_TABLE_DIR,
+                            f'{colum_names[i]}.xlsx'),
+                        index=False)
 
-                    if not os.path.exists(os.path.join(st.MULTIPLE_MAPE_TABLE_DIR)):
+                    if not os.path.exists(os.path.join(
+                            st.MULTIPLE_MAPE_TABLE_DIR)):
                         os.mkdir(st.MULTIPLE_MAPE_TABLE_DIR)
-                    multiple_global_mape_df.to_excel(os.path.join(
-                        st.MULTIPLE_MAPE_TABLE_DIR, f'{colum_names[i]}.xlsx'), index=False)
+                    multiple_global_mape_df.to_excel(
+                        os.path.join(
+                            st.MULTIPLE_MAPE_TABLE_DIR,
+                            f'{colum_names[i]}.xlsx'),
+                        index=False)
 
                 elif self._type == 'global':
-                    if not os.path.exists(os.path.join(st.GLOBAL_R2_TABLE_DIR)):
+                    if not os.path.exists(
+                            os.path.join(st.GLOBAL_R2_TABLE_DIR)):
                         os.mkdir(st.GLOBAL_R2_TABLE_DIR)
-                    multiple_global_r2_df.to_excel(os.path.join(
-                        st.GLOBAL_R2_TABLE_DIR, f'{colum_names[i]}.xlsx'), index=False)
+                    multiple_global_r2_df.to_excel(
+                        os.path.join(
+                            st.GLOBAL_R2_TABLE_DIR,
+                            f'{colum_names[i]}.xlsx'),
+                        index=False)
 
-                    if not os.path.exists(os.path.join(st.GLOBAL_MAPE_TABLE_DIR)):
+                    if not os.path.exists(
+                            os.path.join(st.GLOBAL_MAPE_TABLE_DIR)):
                         os.mkdir(st.GLOBAL_MAPE_TABLE_DIR)
-                    multiple_global_mape_df.to_excel(os.path.join(
-                        st.GLOBAL_MAPE_TABLE_DIR, f'{colum_names[i]}.xlsx'), index=False)
+                    multiple_global_mape_df.to_excel(
+                        os.path.join(
+                            st.GLOBAL_MAPE_TABLE_DIR,
+                            f'{colum_names[i]}.xlsx'),
+                        index=False)
 
-                # Reset the dataframes to be sure that the data is correct in the next iteration
+                # Reset the dataframes to be sure that the data is correct in
+                # the next iteration
                 multiple_global_r2_df = pd.DataFrame()
                 multiple_global_mape_df = pd.DataFrame()
 
-            # Reset the array to be sure that the data is correct in the next iteration
+            # Reset the array to be sure that the data is correct in the next
+            # iteration
             colum_names = []
 
     def _save_predictions_results(self) -> None:
@@ -376,7 +437,8 @@ class AutoML:
         print('Graficando...')
         nan_pos = nan_pos.loc[self.index_list_y_test]
         y_test = self._y_test.copy()
-        y_pred = [pd.DataFrame(self._y_pred[i], columns=y_test.columns,
+        y_pred = [pd.DataFrame(self._y_pred[i],
+                               columns=y_test.columns,
                                index=y_test.index) for i in range(len(self._model))]
 
         if self._type == 'single':
@@ -399,22 +461,52 @@ class AutoML:
                 fig, ax = plt.subplots(figsize=(10, 10))
 
                 # Normalize the data
-                ax.set_xlim([0, max(y_test_df.values.max(), y_pred_df.values.max(), y_test_l95ci_df.values.max(
-                ), y_pred_l95ci_df.values.max(), y_test_u95ci_df.values.max(), y_pred_u95ci_df.values.max()) + 1])
-                ax.set_ylim([0, max(y_test_df.values.max(), y_pred_df.values.max(), y_test_l95ci_df.values.max(
-                ), y_pred_l95ci_df.values.max(), y_test_u95ci_df.values.max(), y_pred_u95ci_df.values.max()) + 1])
+                ax.set_xlim([0,
+                             max(y_test_df.values.max(),
+                                 y_pred_df.values.max(),
+                                 y_test_l95ci_df.values.max(),
+                                 y_pred_l95ci_df.values.max(),
+                                 y_test_u95ci_df.values.max(),
+                                 y_pred_u95ci_df.values.max()) + 1])
+                ax.set_ylim([0,
+                             max(y_test_df.values.max(),
+                                 y_pred_df.values.max(),
+                                 y_test_l95ci_df.values.max(),
+                                 y_pred_l95ci_df.values.max(),
+                                 y_test_u95ci_df.values.max(),
+                                 y_pred_u95ci_df.values.max()) + 1])
 
                 # Plot the data
-                ax.plot([0, max(y_test_df.values.max(), y_pred_df.values.max(), y_test_l95ci_df.values.max(), y_pred_l95ci_df.values.max(), y_test_u95ci_df.values.max(), y_pred_u95ci_df.values.max()) + 1], [0, max(y_test_df.values.max(),
-                        y_pred_df.values.max(), y_test_l95ci_df.values.max(), y_pred_l95ci_df.values.max(), y_test_u95ci_df.values.max(), y_pred_u95ci_df.values.max()) + 1], color='black', linestyle='-', label='Valor Ideal')
+                ax.plot([0,
+                         max(y_test_df.values.max(),
+                             y_pred_df.values.max(),
+                             y_test_l95ci_df.values.max(),
+                             y_pred_l95ci_df.values.max(),
+                             y_test_u95ci_df.values.max(),
+                             y_pred_u95ci_df.values.max()) + 1],
+                        [0,
+                         max(y_test_df.values.max(),
+                             y_pred_df.values.max(),
+                             y_test_l95ci_df.values.max(),
+                             y_pred_l95ci_df.values.max(),
+                             y_test_u95ci_df.values.max(),
+                             y_pred_u95ci_df.values.max()) + 1],
+                        color='black',
+                        linestyle='-',
+                        label='Valor Ideal')
 
                 # Create the convex hull of the data
                 avg_points = np.column_stack((y_test_df, y_pred_df))
                 avg_hull = ConvexHull(avg_points)
 
                 # Plot the convex hull
-                ax.fill(avg_points[avg_hull.vertices, 0], avg_points[avg_hull.vertices, 1],
-                        'r', alpha=0.15, label='Área de valores predichos de tiempo promedio')
+                ax.fill(avg_points[avg_hull.vertices,
+                                   0],
+                        avg_points[avg_hull.vertices,
+                                   1],
+                        'r',
+                        alpha=0.15,
+                        label='Área de valores predichos de tiempo promedio')
                 ax.scatter(y_test_df, y_pred_df, color='red', alpha=0.85,
                            label='Valor predicho de tiempo promedio')
 
@@ -423,20 +515,40 @@ class AutoML:
                     (y_test_l95ci_df, y_pred_l95ci_df))
                 l95ci_hull = ConvexHull(l95ci_points)
 
-                ax.fill(l95ci_points[l95ci_hull.vertices, 0], l95ci_points[l95ci_hull.vertices, 1], color='blue',
-                        alpha=0.15, label='Área de valores predichos del intervalo de confianza inferior')
-                ax.scatter(y_test_l95ci_df, y_pred_l95ci_df, color='blue', marker='x',
-                           alpha=0.85, label='Valor predicho del intervalo de confianza inferior')
+                ax.fill(l95ci_points[l95ci_hull.vertices,
+                                     0],
+                        l95ci_points[l95ci_hull.vertices,
+                                     1],
+                        color='blue',
+                        alpha=0.15,
+                        label='Área de valores predichos del intervalo de confianza inferior')
+                ax.scatter(
+                    y_test_l95ci_df,
+                    y_pred_l95ci_df,
+                    color='blue',
+                    marker='x',
+                    alpha=0.85,
+                    label='Valor predicho del intervalo de confianza inferior')
 
                 # Plot the U95CI
                 u95ci_points = np.column_stack(
                     (y_test_u95ci_df, y_pred_u95ci_df))
                 u95ci_hull = ConvexHull(u95ci_points)
 
-                ax.fill(u95ci_points[u95ci_hull.vertices, 0], u95ci_points[u95ci_hull.vertices, 1], color='green',
-                        alpha=0.15, label='Área de valores predichos de intervalo de confianza superior')
-                ax.scatter(y_test_u95ci_df, y_pred_u95ci_df, color='green', marker='^',
-                           alpha=0.85, label='Valor predicho del intervalo de confianza superior')
+                ax.fill(u95ci_points[u95ci_hull.vertices,
+                                     0],
+                        u95ci_points[u95ci_hull.vertices,
+                                     1],
+                        color='green',
+                        alpha=0.15,
+                        label='Área de valores predichos de intervalo de confianza superior')
+                ax.scatter(
+                    y_test_u95ci_df,
+                    y_pred_u95ci_df,
+                    color='green',
+                    marker='^',
+                    alpha=0.85,
+                    label='Valor predicho del intervalo de confianza superior')
 
                 # Add the labels
                 ax.set_xlabel('Valor real de tiempo promedio',
@@ -448,18 +560,27 @@ class AutoML:
                 ax.legend()
 
                 ax.set_title(
-                    f'Tiempo promedio hasta aparición de {self._name}', fontweight='bold', fontsize=11)
+                    f'Tiempo promedio hasta aparición de {self._name}',
+                    fontweight='bold',
+                    fontsize=11)
 
                 # Configure the layout
                 fig.set_layout_engine('compressed')
 
                 # Save the figure
-                if not os.path.exists(os.path.join(st.SINGLE_PLOTS_DIR,
-                                      self._model_list_names[j], 'average time')):
+                if not os.path.exists(
+                    os.path.join(
+                        st.SINGLE_PLOTS_DIR,
+                        self._model_list_names[j],
+                        'average time')):
                     os.makedirs(os.path.join(st.SINGLE_PLOTS_DIR,
                                 self._model_list_names[j], 'average time'))
-                plt.savefig(os.path.join(st.SINGLE_PLOTS_DIR,
-                            self._model_list_names[j], 'average time', f'{self._name}.png'))
+                plt.savefig(
+                    os.path.join(
+                        st.SINGLE_PLOTS_DIR,
+                        self._model_list_names[j],
+                        'average time',
+                        f'{self._name}.png'))
 
                 # Close the figure
                 plt.close()
@@ -475,11 +596,10 @@ class AutoML:
         elif self._type == 'multiple' or self._type == 'global':
             for j in range(len(self._model_list_names)):
                 for i in range(0, len(y_test.columns), 3):
-                    # Delete the rows of y_test that have a True value in nan_pos
-                    y_test_col = y_test.iloc[:, i:i +
-                                             3].drop(nan_pos.index[nan_pos.any(axis=1)])
-                    y_pred_col = y_pred[j].iloc[:, i:i +
-                                                3].drop(nan_pos.index[nan_pos.any(axis=1)])
+                    # Delete the rows of y_test that have a True value in
+                    # nan_pos
+                    y_test_col = y_test.iloc[:, i:i + 3].drop(nan_pos.index[nan_pos.any(axis=1)])
+                    y_pred_col = y_pred[j].iloc[:, i:i + 3].drop(nan_pos.index[nan_pos.any(axis=1)])
 
                     # Filter the columns of y_test and y_pred
                     y_test_l95ci_df = y_test_col.filter(
@@ -498,14 +618,39 @@ class AutoML:
                     fig, ax = plt.subplots(figsize=(10, 10))
 
                     # Normalize the data
-                    ax.set_xlim([0, max(y_test_df.values.max(), y_pred_df.values.max(), y_test_l95ci_df.values.max(
-                    ), y_pred_l95ci_df.values.max(), y_test_u95ci_df.values.max(), y_pred_u95ci_df.values.max()) + 1])
-                    ax.set_ylim([0, max(y_test_df.values.max(), y_pred_df.values.max(), y_test_l95ci_df.values.max(
-                    ), y_pred_l95ci_df.values.max(), y_test_u95ci_df.values.max(), y_pred_u95ci_df.values.max()) + 1])
+                    ax.set_xlim([0,
+                                 max(y_test_df.values.max(),
+                                     y_pred_df.values.max(),
+                                     y_test_l95ci_df.values.max(),
+                                     y_pred_l95ci_df.values.max(),
+                                     y_test_u95ci_df.values.max(),
+                                     y_pred_u95ci_df.values.max()) + 1])
+                    ax.set_ylim([0,
+                                 max(y_test_df.values.max(),
+                                     y_pred_df.values.max(),
+                                     y_test_l95ci_df.values.max(),
+                                     y_pred_l95ci_df.values.max(),
+                                     y_test_u95ci_df.values.max(),
+                                     y_pred_u95ci_df.values.max()) + 1])
 
                     # Plot the AVG
-                    ax.plot([0, max(y_test_df.values.max(), y_pred_df.values.max(), y_test_l95ci_df.values.max(), y_pred_l95ci_df.values.max(), y_test_u95ci_df.values.max(), y_pred_u95ci_df.values.max()) + 1], [0, max(
-                        y_test_df.values.max(), y_pred_df.values.max(), y_test_l95ci_df.values.max(), y_pred_l95ci_df.values.max(), y_test_u95ci_df.values.max(), y_pred_u95ci_df.values.max()) + 1], color='black', linestyle='-', label='Valor Ideal')
+                    ax.plot([0,
+                             max(y_test_df.values.max(),
+                                 y_pred_df.values.max(),
+                                 y_test_l95ci_df.values.max(),
+                                 y_pred_l95ci_df.values.max(),
+                                 y_test_u95ci_df.values.max(),
+                                 y_pred_u95ci_df.values.max()) + 1],
+                            [0,
+                             max(y_test_df.values.max(),
+                                 y_pred_df.values.max(),
+                                 y_test_l95ci_df.values.max(),
+                                 y_pred_l95ci_df.values.max(),
+                                 y_test_u95ci_df.values.max(),
+                                 y_pred_u95ci_df.values.max()) + 1],
+                            color='black',
+                            linestyle='-',
+                            label='Valor Ideal')
 
                     # Create the points for the AVG
                     avg_points = np.column_stack((y_test_df, y_pred_df))
@@ -522,26 +667,48 @@ class AutoML:
                         (y_test_l95ci_df, y_pred_l95ci_df))
                     l95ci_hull = ConvexHull(l95ci_points)
 
-                    ax.fill(l95ci_points[l95ci_hull.vertices, 0], l95ci_points[l95ci_hull.vertices, 1], color='blue',
-                            alpha=0.15, label='Área de valores predichos del intervalo de confianza inferior')
-                    ax.scatter(y_test_l95ci_df, y_pred_l95ci_df, color='blue', marker='x',
-                               alpha=0.85, label='Valor predicho del intervalo de confianza inferior')
+                    ax.fill(l95ci_points[l95ci_hull.vertices,
+                                         0],
+                            l95ci_points[l95ci_hull.vertices,
+                                         1],
+                            color='blue',
+                            alpha=0.15,
+                            label='Área de valores predichos del intervalo de confianza inferior')
+                    ax.scatter(
+                        y_test_l95ci_df,
+                        y_pred_l95ci_df,
+                        color='blue',
+                        marker='x',
+                        alpha=0.85,
+                        label='Valor predicho del intervalo de confianza inferior')
 
                     # Plot the U95CI
                     u95ci_points = np.column_stack(
                         (y_test_u95ci_df, y_pred_u95ci_df))
                     u95ci_hull = ConvexHull(u95ci_points)
 
-                    ax.fill(u95ci_points[u95ci_hull.vertices, 0], u95ci_points[u95ci_hull.vertices, 1], color='green',
-                            alpha=0.15, label='Área de valores predichos de intervalo de confianza superior')
-                    ax.scatter(y_test_u95ci_df, y_pred_u95ci_df, color='green', marker='^',
-                               alpha=0.85, label='Valor predicho del intervalo de confianza superior')
+                    ax.fill(u95ci_points[u95ci_hull.vertices,
+                                         0],
+                            u95ci_points[u95ci_hull.vertices,
+                                         1],
+                            color='green',
+                            alpha=0.15,
+                            label='Área de valores predichos de intervalo de confianza superior')
+                    ax.scatter(
+                        y_test_u95ci_df,
+                        y_pred_u95ci_df,
+                        color='green',
+                        marker='^',
+                        alpha=0.85,
+                        label='Valor predicho del intervalo de confianza superior')
 
                     # Add the labels
                     ax.set_xlabel('Valor real de incidencia promedio',
                                   fontsize=10, fontweight='bold')
                     ax.set_ylabel(
-                        'Valor predicho de incidencia promedio', fontsize=10, fontweight='bold')
+                        'Valor predicho de incidencia promedio',
+                        fontsize=10,
+                        fontweight='bold')
 
                     # Add the legend
                     ax.legend()
@@ -591,23 +758,47 @@ class AutoML:
 
                     # Add the title
                     ax.set_title(
-                        f'Incidencia promedio de {name} en relación con la población total', fontweight='bold', fontsize=12)
+                        f'Incidencia promedio de {name} en relación con la población total',
+                        fontweight='bold',
+                        fontsize=12)
 
                     # Configure the layout
                     fig.set_layout_engine('compressed')
 
                     if self._type == 'multiple':
-                        if not os.path.exists(os.path.join(st.MULTIPLE_PLOTS_DIR, self._model_list_names[j], 'incidence')):
-                            os.makedirs(os.path.join(
-                                st.MULTIPLE_PLOTS_DIR, self._model_list_names[j], 'incidence'))
-                        plt.savefig(os.path.join(
-                            st.MULTIPLE_PLOTS_DIR, self._model_list_names[j], 'incidence', f'{name}.png'))
+                        if not os.path.exists(
+                            os.path.join(
+                                st.MULTIPLE_PLOTS_DIR,
+                                self._model_list_names[j],
+                                'incidence')):
+                            os.makedirs(
+                                os.path.join(
+                                    st.MULTIPLE_PLOTS_DIR,
+                                    self._model_list_names[j],
+                                    'incidence'))
+                        plt.savefig(
+                            os.path.join(
+                                st.MULTIPLE_PLOTS_DIR,
+                                self._model_list_names[j],
+                                'incidence',
+                                f'{name}.png'))
                     elif self._type == 'global':
-                        if not os.path.exists(os.path.join(st.GLOBAL_PLOTS_DIR, self._model_list_names[j], 'incidence')):
-                            os.makedirs(os.path.join(
-                                st.GLOBAL_PLOTS_DIR, self._model_list_names[j], 'incidence'))
-                        plt.savefig(os.path.join(
-                            st.GLOBAL_PLOTS_DIR, self._model_list_names[j], 'incidence', f'{name}.png'))
+                        if not os.path.exists(
+                            os.path.join(
+                                st.GLOBAL_PLOTS_DIR,
+                                self._model_list_names[j],
+                                'incidence')):
+                            os.makedirs(
+                                os.path.join(
+                                    st.GLOBAL_PLOTS_DIR,
+                                    self._model_list_names[j],
+                                    'incidence'))
+                        plt.savefig(
+                            os.path.join(
+                                st.GLOBAL_PLOTS_DIR,
+                                self._model_list_names[j],
+                                'incidence',
+                                f'{name}.png'))
 
                     # Close the figure
                     plt.close()
@@ -637,7 +828,8 @@ class AutoML:
         """
         print('Plotting...')
         y_test = self._y_test.copy()
-        y_pred = [pd.DataFrame(self._y_pred[i], columns=y_test.columns,
+        y_pred = [pd.DataFrame(self._y_pred[i],
+                               columns=y_test.columns,
                                index=y_test.index) for i in range(len(self._model))]
 
         if self._type == 'single':
@@ -661,14 +853,24 @@ class AutoML:
                     axis=1).iloc[1], 'o-r', label='Valor predicho')
 
                 # Plot the confidence intervals
-                ax.fill_between(y_test_df.columns,
-                                y_test_l95ci_df.cumsum(axis=1).values[1],
-                                y_test_u95ci_df.cumsum(axis=1).values[1],
-                                alpha=0.2, color='b', label='Área de confianza real')
-                ax.fill_between(y_pred_df.columns,
-                                y_pred_l95ci_df.cumsum(axis=1).values[1],
-                                y_pred_u95ci_df.cumsum(axis=1).values[1],
-                                alpha=0.2, color='r', label='Área de confianza predicha')
+                ax.fill_between(
+                    y_test_df.columns,
+                    y_test_l95ci_df.cumsum(
+                        axis=1).values[1],
+                    y_test_u95ci_df.cumsum(
+                        axis=1).values[1],
+                    alpha=0.2,
+                    color='b',
+                    label='Área de confianza real')
+                ax.fill_between(
+                    y_pred_df.columns,
+                    y_pred_l95ci_df.cumsum(
+                        axis=1).values[1],
+                    y_pred_u95ci_df.cumsum(
+                        axis=1).values[1],
+                    alpha=0.2,
+                    color='r',
+                    label='Área de confianza predicha')
 
                 # Add the ticks
                 ax.set_xticks(y_test_df.columns)
@@ -726,16 +928,26 @@ class AutoML:
 
                 # Add the title
                 fig.suptitle(
-                    f'Relación de afectación de {name} por grupos de edad', fontweight='bold', fontsize=12)
+                    f'Relación de afectación de {name} por grupos de edad',
+                    fontweight='bold',
+                    fontsize=12)
 
                 # Configure the layout
                 fig.set_layout_engine('compressed')
 
-                if not os.path.exists(os.path.join(st.SINGLE_PLOTS_DIR, self._model_list_names[j], 'upto time')):
+                if not os.path.exists(
+                    os.path.join(
+                        st.SINGLE_PLOTS_DIR,
+                        self._model_list_names[j],
+                        'upto time')):
                     os.makedirs(os.path.join(st.SINGLE_PLOTS_DIR,
                                 self._model_list_names[j], 'upto time'))
-                plt.savefig(os.path.join(
-                    st.SINGLE_PLOTS_DIR, self._model_list_names[j], 'upto time', f'{name}.png'))
+                plt.savefig(
+                    os.path.join(
+                        st.SINGLE_PLOTS_DIR,
+                        self._model_list_names[j],
+                        'upto time',
+                        f'{name}.png'))
 
                 # Close the plot
                 plt.close()
@@ -743,9 +955,10 @@ class AutoML:
         elif self._type == 'multiple' or self._type == 'global':
             for j in range(len(self._model)):
                 for i in range(0, len(y_test.columns), 27):
-                    # Delete the rows of y_test that have a True value in nan_pos
-                    y_test_col = y_test.iloc[:, i:i+27]
-                    y_pred_col = y_pred[j].iloc[:, i:i+27]
+                    # Delete the rows of y_test that have a True value in
+                    # nan_pos
+                    y_test_col = y_test.iloc[:, i:i + 27]
+                    y_pred_col = y_pred[j].iloc[:, i:i + 27]
 
                     # Filter the dataframes
                     y_test_l95ci_df = y_test_col.filter(
@@ -769,15 +982,15 @@ class AutoML:
                         axis=1).iloc[1], 'o-r', label='Valor predicho')
 
                     # Plot the confidence intervals
-                    ax.fill_between(y_test_df.columns,
-                                    y_test_l95ci_df.cumsum(axis=1).values[1],
-                                    y_test_u95ci_df.cumsum(axis=1).values[1],
-                                    alpha=0.2, color='b', label='Área de confianza real')
+                    ax.fill_between(
+                        y_test_df.columns, y_test_l95ci_df.cumsum(
+                            axis=1).values[1], y_test_u95ci_df.cumsum(
+                            axis=1).values[1], alpha=0.2, color='b', label='Área de confianza real')
 
-                    ax.fill_between(y_pred_df.columns,
-                                    y_pred_l95ci_df.cumsum(axis=1).values[1],
-                                    y_pred_u95ci_df.cumsum(axis=1).values[1],
-                                    alpha=0.2, color='r', label='Área de confianza predicha')
+                    ax.fill_between(
+                        y_pred_df.columns, y_pred_l95ci_df.cumsum(
+                            axis=1).values[1], y_pred_u95ci_df.cumsum(
+                            axis=1).values[1], alpha=0.2, color='r', label='Área de confianza predicha')
 
                     # Add the ticks
                     ax.set_xticks(y_test_df.columns)
@@ -835,24 +1048,48 @@ class AutoML:
 
                     # Add the title
                     fig.suptitle(
-                        f'Relación de afectación de {name} por grupos de edad', fontweight='bold', fontsize=12)
+                        f'Relación de afectación de {name} por grupos de edad',
+                        fontweight='bold',
+                        fontsize=12)
 
                     # Configure the layout
                     fig.set_layout_engine('compressed')
 
                     if self._type == 'multiple':
-                        if not os.path.exists(os.path.join(st.MULTIPLE_PLOTS_DIR, self._model_list_names[j], 'upto time')):
-                            os.makedirs(os.path.join(
-                                st.MULTIPLE_PLOTS_DIR, self._model_list_names[j], 'upto time'))
-                        plt.savefig(os.path.join(
-                            st.MULTIPLE_PLOTS_DIR, self._model_list_names[j], 'upto time', f'{name}.png'))
+                        if not os.path.exists(
+                            os.path.join(
+                                st.MULTIPLE_PLOTS_DIR,
+                                self._model_list_names[j],
+                                'upto time')):
+                            os.makedirs(
+                                os.path.join(
+                                    st.MULTIPLE_PLOTS_DIR,
+                                    self._model_list_names[j],
+                                    'upto time'))
+                        plt.savefig(
+                            os.path.join(
+                                st.MULTIPLE_PLOTS_DIR,
+                                self._model_list_names[j],
+                                'upto time',
+                                f'{name}.png'))
 
                     elif self._type == 'global':
-                        if not os.path.exists(os.path.join(st.GLOBAL_PLOTS_DIR, self._model_list_names[j], 'upto time')):
-                            os.makedirs(os.path.join(
-                                st.GLOBAL_PLOTS_DIR, self._model_list_names[j], 'upto time'))
-                        plt.savefig(os.path.join(
-                            st.GLOBAL_PLOTS_DIR, self._model_list_names[j], 'upto time', f'{name}.png'))
+                        if not os.path.exists(
+                            os.path.join(
+                                st.GLOBAL_PLOTS_DIR,
+                                self._model_list_names[j],
+                                'upto time')):
+                            os.makedirs(
+                                os.path.join(
+                                    st.GLOBAL_PLOTS_DIR,
+                                    self._model_list_names[j],
+                                    'upto time'))
+                        plt.savefig(
+                            os.path.join(
+                                st.GLOBAL_PLOTS_DIR,
+                                self._model_list_names[j],
+                                'upto time',
+                                f'{name}.png'))
 
                     # Close the plot
                     plt.close()
