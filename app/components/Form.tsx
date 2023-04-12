@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 
 type FormProps = {
@@ -29,7 +30,7 @@ export default function Form({ onFormSubmit }: FormProps) {
   const handleSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault();
     // Aquí se puede agregar la lógica para enviar los datos del formulario a un servidor o realizar alguna acción adicional
-    const formData = {
+    let formData = {
       man,
       age,
       durationOfDiabetes,
@@ -40,24 +41,19 @@ export default function Form({ onFormSubmit }: FormProps) {
       annualCost,
       manifestations,
     };
+    console.log(formData)
 
-    const url = "http://127.0.0.1:5000/diabetes";
-    const options = {
-      method: "POST",
+    // POST request
+    axios.post('http://127.0.0.1:5000/diabetes', JSON.stringify(formData), {
       headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify(formData),
-    };
-
-    fetch(url, options)
-      .then((response) => response.json())
-      .then((data) => {
-        onFormSubmit(data);
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      }
+    }).then((response) => {
+        onFormSubmit(response.data);
       })
-      .catch((error) => console.error(error));
   };
+
 
   return (
     <form onSubmit={handleSubmit} className="max-w-8xl my-auto">
@@ -72,6 +68,7 @@ export default function Form({ onFormSubmit }: FormProps) {
             value={man}
             onChange={(event) => setMan(event.target.value)}
             className="border border-gray-300 p-2 w-full"
+            required
           >
             <option value="">Seleccione una opción</option>
             <option value="true">Masculino</option>
@@ -90,6 +87,7 @@ export default function Form({ onFormSubmit }: FormProps) {
             placeholder="Introduzca un número"
             onChange={(event) => setAge(event.target.value)}
             className="border border-gray-300 p-2 w-full"
+            required
           />
         </div>
         <div className="mb-4">
@@ -107,6 +105,7 @@ export default function Form({ onFormSubmit }: FormProps) {
             placeholder="Introduzca un número"
             onChange={(event) => setDurationOfDiabetes(event.target.value)}
             className="border border-gray-300 p-2 w-full"
+            required
           />
         </div>
       </div>
@@ -127,6 +126,7 @@ export default function Form({ onFormSubmit }: FormProps) {
             placeholder="Introduzca un número"
             onChange={(event) => setBaseHbA1cLevel(event.target.value)}
             className="border border-gray-300 p-2 w-full"
+            required
           />
         </div>
         <div className="mb-4">
@@ -144,6 +144,7 @@ export default function Form({ onFormSubmit }: FormProps) {
             placeholder="Introduzca un número"
             onChange={(event) => setObjHbA1cLevel(event.target.value)}
             className="border border-gray-300 p-2 w-full"
+            required
           />
         </div>
       </div>
@@ -164,6 +165,7 @@ export default function Form({ onFormSubmit }: FormProps) {
             placeholder="Introduzca un número"
             onChange={(event) => setHypoRate(event.target.value)}
             className="border border-gray-300 p-2 w-full"
+            required
           />
         </div>
         <div className="mb-4">
@@ -181,6 +183,7 @@ export default function Form({ onFormSubmit }: FormProps) {
             value={hypoRateRR}
             onChange={(event) => setHypoRateRR(event.target.value)}
             className="border border-gray-300 p-2 w-full"
+            required
           />
         </div>
       </div>
@@ -199,6 +202,7 @@ export default function Form({ onFormSubmit }: FormProps) {
           placeholder="Introduzca un número"
           onChange={(event) => setAnnualCost(event.target.value)}
           className="border border-gray-300 p-2 w-full"
+          required
         />
       </div>
       <div className="mb-4">

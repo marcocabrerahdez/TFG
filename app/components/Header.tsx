@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 
-const navigation = [{ name: "Home", href: "/" }];
+const navigation = [{ name: "Incio", href: "/" }];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
