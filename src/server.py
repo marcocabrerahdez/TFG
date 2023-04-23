@@ -1,4 +1,5 @@
 import pandas as pd
+import time
 from api import api
 
 from flask import Flask, request
@@ -29,7 +30,10 @@ def diabetes():
     data_base, data_int = api.transform_data(patient)
 
     # Predict time to event
+    # Calculate execution time
+    start_time = time.time()
     time_to_event_base = model_time_to_event.predict(data_base)
+    end_time = time.time()
     time_to_event_int = model_time_to_event.predict(data_int)
 
     # Predict incidence
@@ -57,6 +61,9 @@ def diabetes():
     # Predict risk
     risk_base = model_risk.predict(data_base)
     risk_int = model_risk.predict(data_int)
+
+    # Add time to log dataframe using append
+    api.add_to_log(end_time - start_time)
 
     # Return data
     return api.create_json_file(time_to_event_base, incidence_base,

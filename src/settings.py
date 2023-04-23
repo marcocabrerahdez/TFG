@@ -8,6 +8,7 @@ SRC_DIR = os.path.join(ROOT_DIR, 'src')
 DATA_DIR = os.path.join(ROOT_DIR, 'data')
 CONFIG_DIR = os.path.join(SRC_DIR, 'config')
 API_DATA = os.path.join(SRC_DIR, 'api', 'data')
+API_LOG = os.path.join(SRC_DIR, 'api', 'data', 'log')
 
 # DATOS DE ENTRENAMIENTO Y PRUEBA
 SPLITED_DATA = os.path.join(DATA_DIR, 'splited data')

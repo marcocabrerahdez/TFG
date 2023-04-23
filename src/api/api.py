@@ -22,6 +22,49 @@ def load_data() -> pd.DataFrame:
     return data
 
 
+def load_log() -> pd.DataFrame:
+    """Load the log file.
+
+    Returns:
+        pd.DataFrame: The log file.
+    """
+    # Load the log excel file if it exists or create a new one
+    path_log = os.path.join(st.API_LOG, 'log.xlsx')
+    if os.path.exists(path_log):
+        log = pd.read_excel(path_log)
+    else:
+        log = pd.DataFrame(columns=['Tiempo de ejecución'])
+
+    return log
+
+
+def save_log(log: pd.DataFrame) -> None:
+    """Save the log file.
+
+    Args:
+        log (pd.DataFrame): The log file.
+    """
+    # Save the log file
+    path_log = os.path.join(st.API_LOG, 'log.xlsx')
+    log.to_excel(path_log, index=False)
+
+
+def add_to_log(time: float) -> None:
+    """Add the time to the log file.
+
+    Args:
+        time (float): The time to add.
+    """
+    # Load the log
+    log = load_log()
+
+    # Add the time to the log
+    log = log.append({'Tiempo de ejecución': time}, ignore_index=True)
+
+    # Save the log
+    save_log(log)
+
+
 def load_models():
     """Load the models from the API.
 
