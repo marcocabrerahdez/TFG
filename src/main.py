@@ -28,6 +28,8 @@ import pandas as pd
 import settings as st
 from scripts import automl as ml
 from scripts import compare as cp
+from scripts import plot as pl
+import utils as ut
 
 
 def main() -> None:
@@ -74,6 +76,12 @@ def main() -> None:
             if os.path.isfile(compare_file_path):
                 with open(compare_file_path, 'r', encoding='utf8') as file_name:
                     compare_list = json.load(file_name)
+
+            # Open the plot configuration file
+            plot_file_path = os.path.join(st.ROOT_DIR, sys.argv[6])
+            if os.path.isfile(plot_file_path):
+                with open(plot_file_path, 'r', encoding='utf8') as file_name:
+                    plot_list = json.load(file_name)
         else:
             print('Argumento no válido.')
             sys.exit()
@@ -86,9 +94,6 @@ def main() -> None:
 
     # Change SEX: MAN -> 0, WOMAN -> 1
     data_frame['SEX'] = data_frame['SEX'].replace({'MAN': 0, 'WOMAN': 1})
-
-    # Save the nan values ​​in a boolean matrix
-    nan_pos = data_frame.isna()
 
     # Fill the nan values ​​with 0
     data_frame = data_frame.fillna(0)
@@ -114,31 +119,111 @@ def main() -> None:
         # Predict the model
         automl.predict()
 
-        # R2 and MAPE score
-        automl.metrics(nan_pos, increment=3)
-
         # Save the model and the results
         automl.save()
 
-        # Generate the graphs (UPTO and AVG_TIME)
-        # automl.plot_upto_time() # Uncomment to generate the graphs Upto time
-        automl.plot_avg_time(nan_pos)
+    # Generate the plots
+    for plot in plot_list['plot_config']:
+        for model in plot['model_list']:
+            for name in plot['name_list']:
+                y_test_file = ut.get_test_file(name, 'y')
+                x_test_file = ut.get_test_file(name, 'x')
 
-    # Comparar las métricas de los resultados de los modelos
-    cp.create_score_table(
-        compare_list['r2']['list'],
-        compare_list['r2']['name_list'],
-        st.R2_TABLE_DIR,
-        st.R2_AVERAGE_TIME_DIR)
-    cp.create_score_table(
-        compare_list['mape']['list'],
-        compare_list['mape']['name_list'],
-        st.MAPE_TABLE_DIR,
-        st.MAPE_AVERAGE_TIME_DIR)
-    cp.compare_r2_tables(
-        compare_list['r2']['name_list'],
-        st.R2_INCIDENCE_PLOT_DIR,
-        st.R2_INCIDENCE_DIR)
+                # Get the prediction file
+                if (plot['type_train'] == 'single'):
+                    prediction_file = ut.get_prediction_file(
+                        model, plot['prediction_folder'], plot['type_train'], name)
+                elif (plot['type_train'] == 'multiple'):
+                    if (name == 'Fallo Cardiaco' or name == 'Angina' or name == 'Infarto de Miocardio' or name == 'Ictus'):
+                        prediction_file = ut.get_prediction_file(
+                            model, plot['prediction_folder'], plot['type_train'], 'Enfermedades Cardíacas')
+                    if (name == 'Ceguera' or name == 'Edema macular diabético' or name == 'Retinopatía de fondo' or name == 'Retinopatía proliferativa'):
+                        prediction_file = ut.get_prediction_file(
+                            model, plot['prediction_folder'], plot['type_train'], 'Retinopatías')
+                    if (name == 'Neuropatía' or name == 'Amputación extremidades inferiores'):
+                        prediction_file = ut.get_prediction_file(
+                            model, plot['prediction_folder'], plot['type_train'], 'Neuropatías')
+                    if (name == 'Microalbuminuria' or name == 'Macroalbuminuria' or name == 'Enfermedad renal terminal'):
+                        prediction_file = ut.get_prediction_file(
+                            model, plot['prediction_folder'], plot['type_train'], 'Nefropatías')
+
+                if (plot['type_train'] == 'global'):
+                    prediction_file = ut.get_prediction_file(
+                        model, plot['prediction_folder'], plot['type_train'], 'Comorbilidades')
+
+                # Delete the columns that are not in the test file
+                if (plot['type_train'] == 'multiple' or plot['type_train'] == 'global'):
+                    prediction_file = prediction_file[y_test_file.columns]
+
+                # Set the index
+                prediction_file = prediction_file.set_index(y_test_file.index)
+
+                # Delete rows with nan values
+                y_test_file = ut.delete_nan_values(
+                    y_test_file, x_test_file, name)
+                prediction_file = ut.delete_nan_values(
+                    prediction_file, x_test_file, name)
+
+                # pl.plot_upto_time(y_test_file, prediction_file, model, plot['type_train'], name)
+                pl.plot_avg_time(y_test_file, prediction_file,
+                                 model, plot['type_train'], name)
+
+    # Compare the results of the models
+    for compare in compare_list['compare_config']:
+        for name in compare['name_list']:
+            y_test_file = ut.get_test_file(name, 'y')
+            x_test_file = ut.get_test_file(name, 'x')
+            single_list = []
+            multiple_list = []
+            global_list = []
+            # Get the prediction file
+            for model in compare['model_list']:
+                single_prediction_file = ut.get_prediction_file(
+                    model, compare['prediction_folder'], 'single', name)
+                if (name == 'Fallo Cardiaco' or name == 'Angina' or name == 'Infarto de Miocardio' or name == 'Ictus'):
+                    multiple_prediction_file = ut.get_prediction_file(
+                        model, compare['prediction_folder'], 'multiple', 'Enfermedades Cardíacas')
+                if (name == 'Ceguera' or name == 'Edema macular diabético' or name == 'Retinopatía de fondo' or name == 'Retinopatía proliferativa'):
+                    multiple_prediction_file = ut.get_prediction_file(
+                        model, compare['prediction_folder'], 'multiple', 'Retinopatías')
+                if (name == 'Neuropatía' or name == 'Amputación extremidades inferiores'):
+                    multiple_prediction_file = ut.get_prediction_file(
+                        model, compare['prediction_folder'], 'multiple', 'Neuropatías')
+                if (name == 'Microalbuminuria' or name == 'Macroalbuminuria' or name == 'Enfermedad renal terminal'):
+                    multiple_prediction_file = ut.get_prediction_file(
+                        model, compare['prediction_folder'], 'multiple', 'Nefropatías')
+
+                global_prediction_file = ut.get_prediction_file(
+                    model, compare['prediction_folder'], 'global', 'Comorbilidades')
+
+                # Delete the columns that are not in the test file
+                multiple_prediction_file = multiple_prediction_file[single_prediction_file.columns]
+                global_prediction_file = global_prediction_file[single_prediction_file.columns]
+
+                # Set index to be the same as the test data
+                single_prediction_file = single_prediction_file.set_index(
+                    y_test_file.index)
+                multiple_prediction_file = multiple_prediction_file.set_index(
+                    y_test_file.index)
+                global_prediction_file = global_prediction_file.set_index(
+                    y_test_file.index)
+
+                # Delete rows with nan values
+                single_prediction_file = ut.delete_nan_values(
+                    single_prediction_file, x_test_file, name)
+                multiple_prediction_file = ut.delete_nan_values(
+                    multiple_prediction_file, x_test_file, name)
+                global_prediction_file = ut.delete_nan_values(
+                    global_prediction_file, x_test_file, name)
+
+                # Crea a list with the prediction files of each model
+                single_list.append(single_prediction_file)
+                multiple_list.append(multiple_prediction_file)
+                global_list.append(global_prediction_file)
+
+            y_test_file = ut.delete_nan_values(y_test_file, x_test_file, name)
+            cp.create_tables(y_test_file, single_list, multiple_list, global_list,
+                             compare['model_list'], name, compare['prediction_folder'])
 
 
 if __name__ == '__main__':

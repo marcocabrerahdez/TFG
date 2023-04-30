@@ -1,0 +1,79 @@
+{
+  "plot_config": [
+    {
+      "model_list": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "name_list": [
+        "Fallo Cardiaco",
+        "Infarto de Miocardio",
+        "Angina",
+        "Ictus",
+        "Ceguera",
+        "Edema macular diabético",
+        "Retinopatía de fondo",
+        "Retinopatía proliferativa",
+        "Neuropatía",
+        "Amputación extremidades inferiores",
+        "Microalbuminuria",
+        "Macroalbuminuria",
+        "Enfermedad renal terminal"
+      ],
+      "prediction_folder": "average time",
+      "type_train": "single"
+    },
+    {
+      "model_list": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "name_list": [
+        "Fallo Cardiaco",
+        "Infarto de Miocardio",
+        "Angina",
+        "Ictus",
+        "Ceguera",
+        "Edema macular diabético",
+        "Retinopatía de fondo",
+        "Retinopatía proliferativa",
+        "Neuropatía",
+        "Amputación extremidades inferiores",
+        "Microalbuminuria",
+        "Macroalbuminuria",
+        "Enfermedad renal terminal"
+      ],
+      "prediction_folder": "average time",
+      "type_train": "multiple"
+    },
+    {
+      "model_list": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "name_list": [
+        "Fallo Cardiaco",
+        "Infarto de Miocardio",
+        "Angina",
+        "Ictus",
+        "Ceguera",
+        "Edema macular diabético",
+        "Retinopatía de fondo",
+        "Retinopatía proliferativa",
+        "Neuropatía",
+        "Amputación extremidades inferiores",
+        "Microalbuminuria",
+        "Macroalbuminuria",
+        "Enfermedad renal terminal"
+      ],
+      "prediction_folder": "average time",
+      "type_train": "global"
+    }
+  ]
+}

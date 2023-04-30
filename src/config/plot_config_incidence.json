@@ -1,0 +1,79 @@
+{
+  "plot_config": [
+    {
+      "model_list": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "name_list": [
+        "Fallo Cardiaco (INC)",
+        "Infarto de Miocardio (INC)",
+        "Angina (INC)",
+        "Ictus (INC)",
+        "Ceguera (INC)",
+        "Edema macular diabético (INC)",
+        "Retinopatía de fondo (INC)",
+        "Retinopatía proliferativa (INC)",
+        "Neuropatía (INC)",
+        "Amputación extremidades inferiores (INC)",
+        "Microalbuminuria (INC)",
+        "Macroalbuminuria (INC)",
+        "Enfermedad renal terminal (INC)"
+      ],
+      "prediction_folder": "incidence",
+      "type_train": "single"
+    },
+    {
+      "model_list": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "name_list": [
+        "Fallo Cardiaco (INC)",
+        "Infarto de Miocardio (INC)",
+        "Angina (INC)",
+        "Ictus (INC)",
+        "Ceguera (INC)",
+        "Edema macular diabético (INC)",
+        "Retinopatía de fondo (INC)",
+        "Retinopatía proliferativa (INC)",
+        "Neuropatía (INC)",
+        "Amputación extremidades inferiores (INC)",
+        "Microalbuminuria (INC)",
+        "Macroalbuminuria (INC)",
+        "Enfermedad renal terminal (INC)"
+      ],
+      "prediction_folder": "incidence",
+      "type_train": "multiple"
+    },
+    {
+      "model_list": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "name_list": [
+        "Fallo Cardiaco (INC)",
+        "Infarto de Miocardio (INC)",
+        "Angina (INC)",
+        "Ictus (INC)",
+        "Ceguera (INC)",
+        "Edema macular diabético (INC)",
+        "Retinopatía de fondo (INC)",
+        "Retinopatía proliferativa (INC)",
+        "Neuropatía (INC)",
+        "Amputación extremidades inferiores (INC)",
+        "Microalbuminuria (INC)",
+        "Macroalbuminuria (INC)",
+        "Enfermedad renal terminal (INC)"
+      ],
+      "prediction_folder": "incidence",
+      "type_train": "global"
+    }
+  ]
+}

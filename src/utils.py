@@ -1,87 +1,9 @@
-"""Funciones de utilidad."""
+"""Utility functions for the project."""
 
 import os
-import glob
 
 import pandas as pd
 import settings as st
-
-
-def search_model_file(model_name: str, directory_name: str) -> str:
-    """Searches for the file of a given model.
-
-    Args:
-      model_name (str): Name of the model.
-      directory_name (str): Name of the directory where the model is located.
-
-    Returns:
-      str: Path of the model file.
-      directory_name is the parent directory of model_name
-    """
-    # Search for the model file
-    model_file = glob.glob(os.path.join(
-        st.METRICS_DIR, '**', directory_name, model_name + '*.xlsx'))
-
-    # If the file is not found, return an error
-    if not model_file:
-        return print('Model file not found:', model_name)
-
-    # Return the file path
-    return model_file[0]
-
-
-def get_score_file(filename: str, path: str) -> pd.DataFrame:
-    """Returns a DataFrame containing scores for a given filename and path.
-
-    Args:
-      filename (str): The filename to search for.
-      path (str): The path to search in.
-
-    Returns:
-      pd.DataFrame: A DataFrame containing the scores for the given file.
-    """
-    # Add .xlsx extension to filename
-    filename = f"{filename}.xlsx"
-
-    results = pd.DataFrame()
-
-    # Search for filename in path
-    for root, dirs, files in os.walk(path):
-        if filename in files:
-            results = pd.concat([results, pd.read_excel(
-                os.path.join(root, filename))], axis=1)
-
-    # Remove duplicates and reorder columns
-    results = results.loc[:, ~results.columns.duplicated()]
-    results = results.reindex(
-        columns=["Modelo", "single", "multiple", "global"])
-
-    return results
-
-
-def get_model_results(model_name: str, directory_name: str) -> pd.DataFrame:
-    """Obtains the results of a model.
-
-    Args:
-      model_name (str): The name of the model.
-      directory_name (str): The directory name where the model file is located.
-
-    Returns:
-      pd.DataFrame: The results of the model in a pandas DataFrame.
-    """
-    # Search for the model file
-    model_file = search_model_file(model_name, directory_name)
-
-    # Raise an error if the model file or directory is not found
-    if not model_file or not directory_name:
-        raise FileNotFoundError(
-            'Model file or directory not found: '
-            + model_name
-            + ', '
-            + directory_name)
-
-    # Read the file and return it
-    return pd.read_excel(model_file, index_col=0)
 
 
 def save_splitted_data(
@@ -89,109 +11,189 @@ def save_splitted_data(
     _X_test,
     _y_train,
     _y_test,
-    _columns_X,
-    _columns_Y,
     _name,
     _type,
 ) -> None:
-    """Saves the splitted data into different directories based on the type of model.
+    """Saves the splitted data into the corresponding directory.
 
     Args:
-      _X_train (pd.DataFrame): The training data input features.
-      _X_test (pd.DataFrame): The test data input features.
-      _y_train (pd.DataFrame): The training data target feature.
-      _y_test (pd.DataFrame): The test data target feature.
-      _columns_X (pd.DataFrame): The column names of the input features.
-      _columns_Y (pd.DataFrame): The column names of the target feature.
-      _name (str): The name of the model.
-      _type (str): The type of the model. Can be 'single', 'multiple', or 'global'.
-
-    Returns:
-      None
+        _X_train (pd.DataFrame): The training data.
+        _X_test (pd.DataFrame): The testing data.
+        _y_train (pd.DataFrame): The training labels.
+        _y_test (pd.DataFrame): The testing labels.
+        _name (str): The name of the model.
+        _type (str): The type of data: 'multiple' or 'global'.
     """
-    # Concatenate dataframes
-    if _type == 'single':
-        df_X_train = pd.DataFrame(_X_train, columns=_columns_X.columns)
-        df_X_test = pd.DataFrame(_X_test, columns=_columns_X.columns)
-        df_y_train = pd.DataFrame(
-            _y_train, columns=_columns_Y.columns, index=_y_train.index)
-        df_y_test = pd.DataFrame(
-            _y_test, columns=_columns_Y.columns, index=_y_test.index)
+    # Directory where the data will be saved, depending on the type (single, multiple or global)
+    if (_type == 'single'):
+        directory = st.SPLITED_DATA_SINGLE
+    elif (_type == 'multiple'):
+        directory = st.SPLITED_DATA_MULTIPLE
+    elif (_type == 'global'):
+        directory = st.SPLITED_DATA_GLOBAL
     else:
-        df_X_train = pd.DataFrame(_X_train, columns=_columns_X)
-        df_X_test = pd.DataFrame(_X_test, columns=_columns_X)
-        df_y_train = pd.DataFrame(
-            _y_train, columns=_columns_Y, index=_y_train.index)
-        df_y_test = pd.DataFrame(
-            _y_test, columns=_columns_Y, index=_y_test.index)
+        raise ValueError('Invalid type:', _type)
 
-    # Save data based on the model type
-    if _type == 'single':
-        path = os.path.join(st.SPLITED_DATA_SINGLE, _name)
-    elif _type == 'multiple':
-        path = os.path.join(st.SPLITED_DATA_MULTIPLE, _name)
-    elif _type == 'global':
-        path = os.path.join(st.SPLITED_DATA_GLOBAL, _name)
-    else:
-        raise ValueError('El tipo de modelo no es válido')
+    #  Check if the directory exists, if not, create it
+    if not os.path.exists(os.path.join(directory, _name)):
+        os.makedirs(os.path.join(directory, _name))
 
-    if not os.path.exists(path):
-        os.makedirs(path)
-
-    df_X_train.to_excel(os.path.join(path, 'X_train.xlsx'), index=False)
-    df_X_test.to_excel(os.path.join(path, 'X_test.xlsx'), index=False)
-    df_y_train.to_excel(os.path.join(path, 'y_train.xlsx'), index=True)
-    df_y_test.to_excel(os.path.join(path, 'y_test.xlsx'), index=True)
+    #  Save each DataFrame into a different file
+    _X_train.to_excel(os.path.join(
+        directory, _name, 'X_train.xlsx'), index=True)
+    _X_test.to_excel(os.path.join(
+        directory, _name, 'X_test.xlsx'), index=True)
+    _y_train.to_excel(os.path.join(
+        directory, _name, 'y_train.xlsx'), index=True)
+    _y_test.to_excel(os.path.join(
+        directory, _name, 'y_test.xlsx'), index=True)
 
 
 def get_splited_data(_trained_data_names, _type):
-    """Returns the training and testing data for the trained models.
+    """Returns the splitted data for the given model.
 
     Args:
-      trained_data_names (list): List of names of trained data.
-      data_type (str): Type of data: 'multiple' or 'global'.
+      _trained_data_names (list): The names of the trained data.
+      _type (str): The type of data: 'multiple' or 'global'.
 
     Returns:
-      tuple: Tuple containing the training and testing data and corresponding columns.
+        x_train (pd.DataFrame): The training data.
+        x_test (pd.DataFrame): The testing data.
+        y_train (pd.DataFrame): The training labels.
+        y_test (pd.DataFrame): The testing labels.
     """
-    X_train = pd.DataFrame()
-    X_test = pd.DataFrame()
+    # Initialize the DataFrames
+    x_train = pd.DataFrame()
+    x_test = pd.DataFrame()
     y_train = pd.DataFrame()
     y_test = pd.DataFrame()
 
+    directory = 'single' if _type == 'multiple' else 'multiple'
+
+    # Iterate over the trained data names
     for name in _trained_data_names:
-        path = st.SPLITED_DATA_SINGLE if _type == 'multiple' else st.SPLITED_DATA_MULTIPLE
-        X_train = pd.concat([X_train, pd.read_excel(
-            os.path.join(path, name, 'X_train.xlsx'))], axis=0)
-        X_test = pd.concat([X_test, pd.read_excel(
-            os.path.join(path, name, 'X_test.xlsx'))], axis=0)
+        # Search for file
+        x_train_file = os.path.join(
+            st.SPLITED_DATA, directory, name, 'X_train.xlsx')
+        x_test_file = os.path.join(
+            st.SPLITED_DATA, directory, name, 'X_test.xlsx')
+        y_train_file = os.path.join(
+            st.SPLITED_DATA, directory, name, 'y_train.xlsx')
+        y_test_file = os.path.join(
+            st.SPLITED_DATA, directory, name, 'y_test.xlsx')
+
+        # Raise an error if the file is not found
+        if not x_train_file or not x_test_file or not y_train_file or not y_test_file:
+            raise FileNotFoundError('File not found: ' + name)
+
+        # Read the file and append it to the DataFrame
+        x_train = pd.concat([x_train, pd.read_excel(
+            x_train_file, index_col=0)], axis=0)
+        x_test = pd.concat([x_test, pd.read_excel(
+            x_test_file, index_col=0)], axis=0)
         y_train = pd.concat([y_train, pd.read_excel(
-            os.path.join(path, name, 'y_train.xlsx'))], axis=1)
+            y_train_file, index_col=0)], axis=1)
         y_test = pd.concat([y_test, pd.read_excel(
-            os.path.join(path, name, 'y_test.xlsx'))], axis=1)
+            y_test_file, index_col=0)], axis=1)
 
     # Remove duplicates
-    X_train.drop_duplicates(inplace=True)
-    X_test.drop_duplicates(inplace=True)
+    x_train.drop_duplicates(inplace=True)
+    x_test.drop_duplicates(inplace=True)
 
-    # Set index to the first column of y_test
-    y_test.index = y_test.iloc[:, 0]
-    y_train.index = y_train.iloc[:, 0]
+    return x_train, x_test, y_train, y_test
 
-    # Remove columns named 'Unnamed: 0'
-    y_test = y_test.loc[:, ~y_test.columns.str.contains('^Unnamed')]
-    y_train = y_train.loc[:, ~y_train.columns.str.contains('^Unnamed')]
 
-    # Remove the name of the index
-    y_test.index.name = None
-    y_train.index.name = None
+def get_test_file(name, flag: str) -> pd.DataFrame:
+    """Returns the test file for the given model.
+
+    Args:
+      model (str): The name of the model.
+      name (str): The name of the test file.
+
+    Returns:
+      pd.DataFrame: The test file.
     """
-    if _type == 'global':
-      y_test.drop(y_test.columns.duplicated(), axis=1, inplace=True)
-      y_train.drop(y_train.columns.duplicated(), axis=1, inplace=True)
+    # Search for the test file
+    if (flag == 'y'):
+        test_file = os.path.join(
+            st.SPLITED_DATA, 'single', name, 'y_test.xlsx')
+    elif (flag == 'x'):
+        test_file = os.path.join(
+            st.SPLITED_DATA, 'single', name, 'X_test.xlsx')
+    else:
+        raise ValueError('Invalid flag:', flag)
+
+    # Raise an error if the test file is not found
+    if not test_file:
+        raise FileNotFoundError('Test file not found: ' + name)
+
+    # Read the file and return it
+    return pd.read_excel(test_file, index_col=0)
+
+
+def get_prediction_file(model, folder_prediction, type, name) -> pd.DataFrame:
+    """Returns the prediction file for the given model.
+
+    Args:
+      model (str): The name of the model.
+      folder_prediction (str): The name of the folder where the prediction file is stored.
+      type (str): The type of the model. Can be 'single', 'multiple', or 'global'.
+      name (str): The name of the prediction file.
+
+    Returns:
+      pd.DataFrame: The prediction file.
     """
+    # Search for the prediction file
+    prediction_file = os.path.join(st.PREDICTIONS_DIR, type, model,
+                                   folder_prediction, name + '.xlsx')
 
-    X_columns = X_train.columns
-    y_columns = y_train.columns
+    # Raise an error if the prediction file is not found
+    if not prediction_file:
+        raise FileNotFoundError('Prediction file not found: ' + name)
 
-    return X_train, X_test, y_train, y_test, X_columns, y_columns
+    # Read the file and return it
+    return pd.read_excel(prediction_file)
+
+
+def delete_nan_values(y_test: pd.DataFrame, x_test: pd.DataFrame, name: str) -> pd.DataFrame:
+    """Deletes the NaN values from the given DataFrame.
+
+    Args:
+        y_test (pd.DataFrame): The DataFrame to delete the NaN values from.
+        x_test (pd.DataFrame): The DataFrame to delete the NaN values from.
+        name (str): The name of the model.
+
+    Returns:
+        pd.DataFrame: The DataFrame without NaN values.
+    """
+    if (name == 'Fallo Cardiaco'):
+        comorbidity = 'HF'
+    elif (name == 'Infarto de Miocardio'):
+        comorbidity = 'MI'
+    elif (name == 'Angina'):
+        comorbidity = 'ANGINA'
+    elif (name == 'Ictus'):
+        comorbidity = 'STROKE'
+    elif (name == 'Ceguera'):
+        comorbidity = 'BLI'
+    elif (name == 'Edema macular diabético'):
+        comorbidity = 'ME'
+    elif (name == 'Retinopatía de fondo'):
+        comorbidity = 'BGRET'
+    elif (name == 'Retinopatía proliferativa'):
+        comorbidity = 'PRET'
+    elif (name == 'Neuropatía'):
+        comorbidity = 'NEU'
+    elif (name == 'Amputación extremidades inferiores'):
+        comorbidity = 'LEA'
+    elif (name == 'Microalbuminuria'):
+        comorbidity = 'ALB1'
+    elif (name == 'Macroalbuminuria'):
+        comorbidity = 'ALB2'
+    elif (name == 'Enfermedad renal terminal'):
+        comorbidity = 'ESRD'
+    else:
+        raise ValueError('Invalid name:', name)
+
+    y_test = y_test.loc[x_test[comorbidity] != 1]
+    return y_test

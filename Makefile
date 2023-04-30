@@ -1,5 +1,5 @@
 run:
-	python3 src/main.py $(OPTIONS) $(DATA) $(SHEET) $(MODEL_CONFIG) $(COMPARE)
+	python3 src/main.py $(OPTIONS) $(DATA) $(SHEET) $(MODEL_CONFIG) $(COMPARE) $(PLOT)
 
 dev:
 	cd app && npm run dev

@@ -1,0 +1,79 @@
+{
+  "plot_config": [
+    {
+      "model_list": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "name_list": [
+        "Fallo Cardiaco (UPTO)",
+        "Infarto de Miocardio (UPTO)",
+        "Angina (UPTO)",
+        "Ictus (UPTO)",
+        "Ceguera (UPTO)",
+        "Edema macular diabético (UPTO)",
+        "Retinopatía de fondo (UPTO)",
+        "Retinopatía proliferativa (UPTO)",
+        "Neuropatía (UPTO)",
+        "Amputación extremidades inferiores (UPTO)",
+        "Microalbuminuria (UPTO)",
+        "Macroalbuminuria (UPTO)",
+        "Enfermedad renal terminal (UPTO)"
+      ],
+      "prediction_folder": "upto time",
+      "type_train": "single"
+    },
+    {
+      "model_list": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "name_list": [
+        "Fallo Cardiaco (UPTO)",
+        "Infarto de Miocardio (UPTO)",
+        "Angina (UPTO)",
+        "Ictus (UPTO)",
+        "Ceguera (UPTO)",
+        "Edema macular diabético (UPTO)",
+        "Retinopatía de fondo (UPTO)",
+        "Retinopatía proliferativa (UPTO)",
+        "Neuropatía (UPTO)",
+        "Amputación extremidades inferiores (UPTO)",
+        "Microalbuminuria (UPTO)",
+        "Macroalbuminuria (UPTO)",
+        "Enfermedad renal terminal (UPTO)"
+      ],
+      "prediction_folder": "upto time",
+      "type_train": "multiple"
+    },
+    {
+      "model_list": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "name_list": [
+        "Fallo Cardiaco (UPTO)",
+        "Infarto de Miocardio (UPTO)",
+        "Angina (UPTO)",
+        "Ictus (UPTO)",
+        "Ceguera (UPTO)",
+        "Edema macular diabético (UPTO)",
+        "Retinopatía de fondo (UPTO)",
+        "Retinopatía proliferativa (UPTO)",
+        "Neuropatía (UPTO)",
+        "Amputación extremidades inferiores (UPTO)",
+        "Microalbuminuria (UPTO)",
+        "Macroalbuminuria (UPTO)",
+        "Enfermedad renal terminal (UPTO)"
+      ],
+      "prediction_folder": "upto time",
+      "type_train": "global"
+    }
+  ]
+}

@@ -217,33 +217,33 @@
         "HBA1C"
       ],
       "columns_Y": [
-        "AVG_MI_UPTO_20",
-        "L95CI_MI_UPTO_20",
-        "U95CI_MI_UPTO_20",
-        "AVG_MI_UPTO_30",
-        "L95CI_MI_UPTO_30",
-        "U95CI_MI_UPTO_30",
-        "AVG_MI_UPTO_40",
-        "L95CI_MI_UPTO_40",
-        "U95CI_MI_UPTO_40",
-        "AVG_MI_UPTO_50",
-        "L95CI_MI_UPTO_50",
-        "U95CI_MI_UPTO_50",
-        "AVG_MI_UPTO_60",
-        "L95CI_MI_UPTO_60",
-        "U95CI_MI_UPTO_60",
-        "AVG_MI_UPTO_70",
-        "L95CI_MI_UPTO_70",
-        "U95CI_MI_UPTO_70",
-        "AVG_MI_UPTO_80",
-        "L95CI_MI_UPTO_80",
-        "U95CI_MI_UPTO_80",
-        "AVG_MI_UPTO_90",
-        "L95CI_MI_UPTO_90",
-        "U95CI_MI_UPTO_90",
-        "AVG_MI_UPTO_100",
-        "L95CI_MI_UPTO_100",
-        "U95CI_MI_UPTO_100"
+        "AVG_ANGINA_UPTO_20",
+        "L95CI_ANGINA_UPTO_20",
+        "U95CI_ANGINA_UPTO_20",
+        "AVG_ANGINA_UPTO_30",
+        "L95CI_ANGINA_UPTO_30",
+        "U95CI_ANGINA_UPTO_30",
+        "AVG_ANGINA_UPTO_40",
+        "L95CI_ANGINA_UPTO_40",
+        "U95CI_ANGINA_UPTO_40",
+        "AVG_ANGINA_UPTO_50",
+        "L95CI_ANGINA_UPTO_50",
+        "U95CI_ANGINA_UPTO_50",
+        "AVG_ANGINA_UPTO_60",
+        "L95CI_ANGINA_UPTO_60",
+        "U95CI_ANGINA_UPTO_60",
+        "AVG_ANGINA_UPTO_70",
+        "L95CI_ANGINA_UPTO_70",
+        "U95CI_ANGINA_UPTO_70",
+        "AVG_ANGINA_UPTO_80",
+        "L95CI_ANGINA_UPTO_80",
+        "U95CI_ANGINA_UPTO_80",
+        "AVG_ANGINA_UPTO_90",
+        "L95CI_ANGINA_UPTO_90",
+        "U95CI_ANGINA_UPTO_90",
+        "AVG_ANGINA_UPTO_100",
+        "L95CI_ANGINA_UPTO_100",
+        "U95CI_ANGINA_UPTO_100"
       ]
     },
     {
@@ -1068,12 +1068,33 @@
     },
     {
       "name": "Enfermedades cardíacas (UPTO)",
-      "class_name": ["sklearn.ensemble"],
-      "model": ["GradientBoostingRegressor"],
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
       "params": [
         {
-          "model__n_estimators": [150],
-          "model__max_depth": [7]
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
         }
       ],
       "type": "multiple",
@@ -1086,12 +1107,33 @@
     },
     {
       "name": "Retinopatías (UPTO)",
-      "class_name": ["sklearn.ensemble"],
-      "model": ["GradientBoostingRegressor"],
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
       "params": [
         {
-          "model__n_estimators": [150],
-          "model__max_depth": [7]
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
         }
       ],
       "type": "multiple",
@@ -1104,12 +1146,33 @@
     },
     {
       "name": "Neuropatías (UPTO)",
-      "class_name": ["sklearn.ensemble"],
-      "model": ["GradientBoostingRegressor"],
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
       "params": [
         {
-          "model__n_estimators": [150],
-          "model__max_depth": [7]
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
         }
       ],
       "type": "multiple",
@@ -1120,12 +1183,33 @@
     },
     {
       "name": "Nefropatías (UPTO)",
-      "class_name": ["sklearn.ensemble"],
-      "model": ["GradientBoostingRegressor"],
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
       "params": [
         {
-          "model__n_estimators": [150],
-          "model__max_depth": [7]
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
         }
       ],
       "type": "multiple",
@@ -1137,12 +1221,33 @@
     },
     {
       "name": "Comorbilidades (UPTO)",
-      "class_name": ["sklearn.ensemble"],
-      "model": ["GradientBoostingRegressor"],
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
       "params": [
         {
-          "model__n_estimators": [150],
-          "model__max_depth": [7]
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
         }
       ],
       "type": "global",

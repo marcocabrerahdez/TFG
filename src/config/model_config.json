@@ -1,6 +1,913 @@
 {
   "config_list": [
     {
+      "name": "Fallo Cardiaco",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "SEX",
+        "AGE",
+        "DURATION",
+        "HYPO_RATE",
+        "BGRET",
+        "PRET",
+        "ME",
+        "BLI",
+        "ALB1",
+        "ALB2",
+        "ESRD",
+        "ANGINA",
+        "STROKE",
+        "MI",
+        "HF",
+        "NEU",
+        "LEA",
+        "HBA1C"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_HF",
+        "L95CI_TIMETO_HF",
+        "U95CI_TIMETO_HF"
+      ]
+    },
+    {
+      "name": "Infarto de Miocardio",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "SEX",
+        "AGE",
+        "DURATION",
+        "HYPO_RATE",
+        "BGRET",
+        "PRET",
+        "ME",
+        "BLI",
+        "ALB1",
+        "ALB2",
+        "ESRD",
+        "ANGINA",
+        "STROKE",
+        "MI",
+        "HF",
+        "NEU",
+        "LEA",
+        "HBA1C"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_MI",
+        "L95CI_TIMETO_MI",
+        "U95CI_TIMETO_MI"
+      ]
+    },
+    {
+      "name": "Angina",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "SEX",
+        "AGE",
+        "DURATION",
+        "HYPO_RATE",
+        "BGRET",
+        "PRET",
+        "ME",
+        "BLI",
+        "ALB1",
+        "ALB2",
+        "ESRD",
+        "ANGINA",
+        "STROKE",
+        "MI",
+        "HF",
+        "NEU",
+        "LEA",
+        "HBA1C"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_ANGINA",
+        "L95CI_TIMETO_ANGINA",
+        "U95CI_TIMETO_ANGINA"
+      ]
+    },
+    {
+      "name": "Ictus",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "SEX",
+        "AGE",
+        "DURATION",
+        "HYPO_RATE",
+        "BGRET",
+        "PRET",
+        "ME",
+        "BLI",
+        "ALB1",
+        "ALB2",
+        "ESRD",
+        "ANGINA",
+        "STROKE",
+        "MI",
+        "HF",
+        "NEU",
+        "LEA",
+        "HBA1C"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_STROKE",
+        "L95CI_TIMETO_STROKE",
+        "U95CI_TIMETO_STROKE"
+      ]
+    },
+    {
+      "name": "Ceguera",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "SEX",
+        "AGE",
+        "DURATION",
+        "HYPO_RATE",
+        "BGRET",
+        "PRET",
+        "ME",
+        "BLI",
+        "ALB1",
+        "ALB2",
+        "ESRD",
+        "ANGINA",
+        "STROKE",
+        "MI",
+        "HF",
+        "NEU",
+        "LEA",
+        "HBA1C"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_BLI",
+        "L95CI_TIMETO_BLI",
+        "U95CI_TIMETO_BLI"
+      ]
+    },
+    {
+      "name": "Edema macular diabético",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "SEX",
+        "AGE",
+        "DURATION",
+        "HYPO_RATE",
+        "BGRET",
+        "PRET",
+        "ME",
+        "BLI",
+        "ALB1",
+        "ALB2",
+        "ESRD",
+        "ANGINA",
+        "STROKE",
+        "MI",
+        "HF",
+        "NEU",
+        "LEA",
+        "HBA1C"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_ME",
+        "L95CI_TIMETO_ME",
+        "U95CI_TIMETO_ME"
+      ]
+    },
+    {
+      "name": "Retinopatía de fondo",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "SEX",
+        "AGE",
+        "DURATION",
+        "HYPO_RATE",
+        "BGRET",
+        "PRET",
+        "ME",
+        "BLI",
+        "ALB1",
+        "ALB2",
+        "ESRD",
+        "ANGINA",
+        "STROKE",
+        "MI",
+        "HF",
+        "NEU",
+        "LEA",
+        "HBA1C"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_BGRET",
+        "L95CI_TIMETO_BGRET",
+        "U95CI_TIMETO_BGRET"
+      ]
+    },
+    {
+      "name": "Retinopatía proliferativa",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "SEX",
+        "AGE",
+        "DURATION",
+        "HYPO_RATE",
+        "BGRET",
+        "PRET",
+        "ME",
+        "BLI",
+        "ALB1",
+        "ALB2",
+        "ESRD",
+        "ANGINA",
+        "STROKE",
+        "MI",
+        "HF",
+        "NEU",
+        "LEA",
+        "HBA1C"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_PRET",
+        "L95CI_TIMETO_PRET",
+        "U95CI_TIMETO_PRET"
+      ]
+    },
+    {
+      "name": "Neuropatía individual",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "SEX",
+        "AGE",
+        "DURATION",
+        "HYPO_RATE",
+        "BGRET",
+        "PRET",
+        "ME",
+        "BLI",
+        "ALB1",
+        "ALB2",
+        "ESRD",
+        "ANGINA",
+        "STROKE",
+        "MI",
+        "HF",
+        "NEU",
+        "LEA",
+        "HBA1C"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_NEU",
+        "L95CI_TIMETO_NEU",
+        "U95CI_TIMETO_NEU"
+      ]
+    },
+    {
+      "name": "Amputación extremidades inferiores",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "SEX",
+        "AGE",
+        "DURATION",
+        "HYPO_RATE",
+        "BGRET",
+        "PRET",
+        "ME",
+        "BLI",
+        "ALB1",
+        "ALB2",
+        "ESRD",
+        "ANGINA",
+        "STROKE",
+        "MI",
+        "HF",
+        "NEU",
+        "LEA",
+        "HBA1C"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_LEA",
+        "L95CI_TIMETO_LEA",
+        "U95CI_TIMETO_LEA"
+      ]
+    },
+    {
+      "name": "Microalbuminuria",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "SEX",
+        "AGE",
+        "DURATION",
+        "HYPO_RATE",
+        "BGRET",
+        "PRET",
+        "ME",
+        "BLI",
+        "ALB1",
+        "ALB2",
+        "ESRD",
+        "ANGINA",
+        "STROKE",
+        "MI",
+        "HF",
+        "NEU",
+        "LEA",
+        "HBA1C"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_ALB1",
+        "L95CI_TIMETO_ALB1",
+        "U95CI_TIMETO_ALB1"
+      ]
+    },
+    {
+      "name": "Macroalbuminuria",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "SEX",
+        "AGE",
+        "DURATION",
+        "HYPO_RATE",
+        "BGRET",
+        "PRET",
+        "ME",
+        "BLI",
+        "ALB1",
+        "ALB2",
+        "ESRD",
+        "ANGINA",
+        "STROKE",
+        "MI",
+        "HF",
+        "NEU",
+        "LEA",
+        "HBA1C"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_ALB2",
+        "L95CI_TIMETO_ALB2",
+        "U95CI_TIMETO_ALB2"
+      ]
+    },
+    {
+      "name": "Enfermedad renal terminal",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
+      "type": "single",
+      "columns_X": [
+        "SEX",
+        "AGE",
+        "DURATION",
+        "HYPO_RATE",
+        "BGRET",
+        "PRET",
+        "ME",
+        "BLI",
+        "ALB1",
+        "ALB2",
+        "ESRD",
+        "ANGINA",
+        "STROKE",
+        "MI",
+        "HF",
+        "NEU",
+        "LEA",
+        "HBA1C"
+      ],
+      "columns_Y": [
+        "AVG_TIMETO_ESRD",
+        "L95CI_TIMETO_ESRD",
+        "U95CI_TIMETO_ESRD"
+      ]
+    },
+    {
+      "name": "Enfermedades cardíacas",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
+      "type": "multiple",
+      "trained_data_names": [
+        "Fallo Cardiaco",
+        "Infarto de Miocardio",
+        "Angina",
+        "Ictus"
+      ]
+    },
+    {
+      "name": "Retinopatías",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
+      "type": "multiple",
+      "trained_data_names": [
+        "Ceguera",
+        "Edema macular diabético",
+        "Retinopatía de fondo",
+        "Retinopatía proliferativa"
+      ]
+    },
+    {
+      "name": "Neuropatías",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
+      "type": "multiple",
+      "trained_data_names": [
+        "Neuropatía individual",
+        "Amputación extremidades inferiores"
+      ]
+    },
+    {
+      "name": "Nefropatías",
+      "class_name": [
+        "sklearn.linear_model",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.ensemble"
+      ],
+      "model": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "params": [
+        {
+          "model__fit_intercept": [true, false]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__max_depth": [3, 5, 7]
+        },
+        {
+          "model__n_estimators": [50, 100, 150],
+          "model__learning_rate": [0.1, 0.5, 1.0]
+        }
+      ],
+      "type": "multiple",
+      "trained_data_names": [
+        "Microalbuminuria",
+        "Macroalbuminuria",
+        "Enfermedad renal terminal"
+      ]
+    },
+    {
       "name": "Comorbilidades",
       "class_name": [
         "sklearn.linear_model",

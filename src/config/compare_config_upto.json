@@ -1,66 +1,28 @@
 {
-  "r2": {
-    "list": [
-      "AVG_ALB1_UPTO_20",
-      "AVG_ALB2_UPTO_20",
-      "AVG_ANGINA_UPTO_20",
-      "AVG_BGRET_UPTO_20",
-      "AVG_BLI_UPTO_20",
-      "AVG_ESRD_UPTO_20",
-      "AVG_HF_UPTO_20",
-      "AVG_LEA_UPTO_20",
-      "AVG_ME_UPTO_20",
-      "AVG_MI_UPTO_20",
-      "AVG_NEU_UPTO_20",
-      "AVG_PRET_UPTO_20",
-      "AVG_STROKE_UPTO_20"
-    ],
-    "name_list": [
-      "Fallo Cardiaco (UPTO)",
-      "Infarto de Miocardio (UPTO)",
-      "Angina (UPTO)",
-      "Ictus (UPTO)",
-      "Ceguera (UPTO)",
-      "Edema macular diabético (UPTO)",
-      "Retinopatía de fondo (UPTO)",
-      "Retinopatía proliferativa (UPTO)",
-      "Neuropatía (UPTO)",
-      "Amputación extremidades inferiores (UPTO)",
-      "Microalbuminuria (UPTO)",
-      "Macroalbuminuria (UPTO)",
-      "Enfermedad renal terminal (UPTO)"
-    ]
-  },
-  "mape": {
-    "list": [
-      "AVG_ALB1_UPTO_20",
-      "AVG_ALB2_UPTO_20",
-      "AVG_ANGINA_UPTO_20",
-      "AVG_BGRET_UPTO_20",
-      "AVG_BLI_UPTO_20",
-      "AVG_ESRD_UPTO_20",
-      "AVG_HF_UPTO_20",
-      "AVG_LEA_UPTO_20",
-      "AVG_ME_UPTO_20",
-      "AVG_MI_UPTO_20",
-      "AVG_NEU_UPTO_20",
-      "AVG_PRET_UPTO_20",
-      "AVG_STROKE_UPTO_20"
-    ],
-    "name_list": [
-      "Fallo Cardiaco (UPTO)",
-      "Infarto de Miocardio (UPTO)",
-      "Angina (UPTO)",
-      "Ictus (UPTO)",
-      "Ceguera (UPTO)",
-      "Edema macular diabético (UPTO)",
-      "Retinopatía de fondo (UPTO)",
-      "Retinopatía proliferativa (UPTO)",
-      "Neuropatía (UPTO)",
-      "Amputación extremidades inferiores (UPTO)",
-      "Microalbuminuria (UPTO)",
-      "Macroalbuminuria (UPTO)",
-      "Enfermedad renal terminal (UPTO)"
-    ]
-  }
+  "compare_config": [
+    {
+      "model_list": [
+        "LinearRegression",
+        "RandomForestRegressor",
+        "GradientBoostingRegressor",
+        "AdaBoostRegressor"
+      ],
+      "name_list": [
+        "Fallo Cardiaco (UPTO)",
+        "Infarto de Miocardio (UPTO)",
+        "Angina (UPTO)",
+        "Ictus (UPTO)",
+        "Ceguera (UPTO)",
+        "Edema macular diabético (UPTO)",
+        "Retinopatía de fondo (UPTO)",
+        "Retinopatía proliferativa (UPTO)",
+        "Neuropatía (UPTO)",
+        "Amputación extremidades inferiores (UPTO)",
+        "Microalbuminuria (UPTO)",
+        "Macroalbuminuria (UPTO)",
+        "Enfermedad renal terminal (UPTO)"
+      ],
+      "prediction_folder": "upto time"
+    }
+  ]
 }
