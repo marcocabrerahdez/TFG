@@ -120,7 +120,7 @@ def main() -> None:
         automl.predict()
 
         # Save the model and the results
-        automl.save()
+        automl.save(folder='')
 
     # Generate the plots
     for plot in plot_list['plot_config']:

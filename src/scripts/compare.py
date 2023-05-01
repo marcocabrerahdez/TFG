@@ -1,9 +1,10 @@
 """Compare functions for the models."""
 
 import os
-import pandas as pd
 from typing import List
-from sklearn.metrics import (mean_absolute_percentage_error, r2_score)
+
+import pandas as pd
+from sklearn.metrics import mean_absolute_percentage_error, r2_score
 
 import settings as st
 
@@ -11,12 +12,16 @@ import settings as st
 def create_tables(y_test: pd.DataFrame, single_list: List[pd.DataFrame],
                   multiple_list: List[pd.DataFrame], global_list: List[pd.DataFrame],
                   model: List[str], name: str, folder: str) -> None:
-    """Create Excel files for the R-squared scores for each model.
+    """Create Excel files for the R-squared and MAPE scores for each model.
 
     Args:
-        name_list (List[str]): A list of strings, each representing the name of a model.
-        model_list (List[str]): A list of strings, each representing the name of a model.
-        folder_prediction (str): A string representing the directory where the predictions are stored.
+        y_test (pd.DataFrame): The testing labels.
+        single_list (list): The list of single predictions.
+        multiple_list (list): The list of multiple predictions.
+        global_list (list): The list of global predictions.
+        model (list): The list of model names.
+        name (str): The name of the model.
+        folder (str): The name of the folder where the Excel files will be saved.
 
     Returns:
         None

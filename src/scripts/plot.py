@@ -1,12 +1,14 @@
 """Plot functions."""
 
 import os
-import numpy as np
+
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 from scipy.spatial import ConvexHull
 
 
-def plot_avg_time(y_test, y_pred, model, type_train, name) -> None:
+def plot_avg_time(y_test: pd.DataFrame, y_pred: pd.DataFrame, model: str, type_train: str, name: str) -> None:
     """Plot the average time of the model.
 
     Args:
@@ -14,6 +16,7 @@ def plot_avg_time(y_test, y_pred, model, type_train, name) -> None:
         y_pred (pd.DataFrame): DataFrame with the predicted data.
         model (str): Name of the model.
         type_train (str): Type of training.
+        name (str): Name of the model.
 
     Returns
         None
@@ -76,9 +79,9 @@ def plot_avg_time(y_test, y_pred, model, type_train, name) -> None:
             avg_points[avg_hull.vertices, 1],
             'r',
             alpha=0.15,
-            label='Área de valores predichos de tiempo promedio')
+            label='Área de valores predichos de incidencia promedio')
     ax.scatter(y_test_df, y_pred_df, color='red', alpha=0.85,
-               label='Valor predicho de tiempo promedio')
+               label='Valor predicho de incidencia promedio')
 
     # Plot the L95CI
     l95ci_points = np.column_stack(
@@ -117,16 +120,18 @@ def plot_avg_time(y_test, y_pred, model, type_train, name) -> None:
         label='Valor predicho del intervalo de confianza superior')
 
     # Add the labels
-    ax.set_xlabel('Valor real de tiempo promedio',
+    ax.set_xlabel('Valor real de incidencia promedio',
                   fontsize=10, fontweight='bold')
-    ax.set_ylabel('Valor predicho de tiempo promedio',
+    ax.set_ylabel('Valor predicho de incidencia promedio',
                   fontsize=10, fontweight='bold')
 
     # Add the legend
     ax.legend()
 
+    title = name.replace(' (INC)', '')
+
     ax.set_title(
-        f'Tiempo promedio hasta aparición de {name}',
+        f'Relación de incidencia de {title}',
         fontweight='bold',
         fontsize=11)
 
@@ -150,7 +155,7 @@ def plot_avg_time(y_test, y_pred, model, type_train, name) -> None:
     plt.close()
 
 
-def plot_upto_time(y_test, y_pred, model, type_train, name) -> None:
+def plot_upto_time(y_test: pd.DataFrame, y_pred: pd.DataFrame, model: str, type_train: str, name: str) -> None:
     """Plots the predicted values of the models up to the time of the test data.
 
     Args:
@@ -158,7 +163,7 @@ def plot_upto_time(y_test, y_pred, model, type_train, name) -> None:
         y_pred (pd.DataFrame): The predicted values of the models.
         model (str): The name of the model.
         type_train (str): The type of training.
-
+        name (str): The name of the model.
 
     Returns:
         None

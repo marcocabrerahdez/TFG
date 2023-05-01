@@ -1,18 +1,20 @@
 """Utility functions for the project."""
 
 import os
+from typing import List
 
 import pandas as pd
+
 import settings as st
 
 
 def save_splitted_data(
-    _X_train,
-    _X_test,
-    _y_train,
-    _y_test,
-    _name,
-    _type,
+    _X_train: pd.DataFrame,
+    _X_test: pd.DataFrame,
+    _y_train: pd.DataFrame,
+    _y_test: pd.DataFrame,
+    _name: str,
+    _type: str,
 ) -> None:
     """Saves the splitted data into the corresponding directory.
 
@@ -49,7 +51,7 @@ def save_splitted_data(
         directory, _name, 'y_test.xlsx'), index=True)
 
 
-def get_splited_data(_trained_data_names, _type):
+def get_splited_data(_trained_data_names: List[str], _type: str) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """Returns the splitted data for the given model.
 
     Args:
@@ -103,15 +105,15 @@ def get_splited_data(_trained_data_names, _type):
     return x_train, x_test, y_train, y_test
 
 
-def get_test_file(name, flag: str) -> pd.DataFrame:
+def get_test_file(name: str, flag: str) -> pd.DataFrame:
     """Returns the test file for the given model.
 
     Args:
-      model (str): The name of the model.
-      name (str): The name of the test file.
+        name (str): The name of the test file.
+        flag (str): The flag of the test file. Can be 'x' or 'y'.
 
     Returns:
-      pd.DataFrame: The test file.
+        pd.DataFrame: The test file.
     """
     # Search for the test file
     if (flag == 'y'):
@@ -131,17 +133,17 @@ def get_test_file(name, flag: str) -> pd.DataFrame:
     return pd.read_excel(test_file, index_col=0)
 
 
-def get_prediction_file(model, folder_prediction, type, name) -> pd.DataFrame:
+def get_prediction_file(model: str, folder_prediction: str, type: str, name: str) -> pd.DataFrame:
     """Returns the prediction file for the given model.
 
     Args:
-      model (str): The name of the model.
-      folder_prediction (str): The name of the folder where the prediction file is stored.
-      type (str): The type of the model. Can be 'single', 'multiple', or 'global'.
-      name (str): The name of the prediction file.
+        model (str): The name of the model.
+        folder_prediction (str): The name of the folder where the prediction file is stored.
+        type (str): The type of the model. Can be 'single', 'multiple', or 'global'.
+        name (str): The name of the prediction file.
 
     Returns:
-      pd.DataFrame: The prediction file.
+        pd.DataFrame: The prediction file.
     """
     # Search for the prediction file
     prediction_file = os.path.join(st.PREDICTIONS_DIR, type, model,
