@@ -79,9 +79,9 @@ def plot_avg_time(y_test: pd.DataFrame, y_pred: pd.DataFrame, model: str, type_t
             avg_points[avg_hull.vertices, 1],
             'r',
             alpha=0.15,
-            label='Área de valores predichos de incidencia promedio')
+            label='Área de valores predichos de tiempo promedio')
     ax.scatter(y_test_df, y_pred_df, color='red', alpha=0.85,
-               label='Valor predicho de incidencia promedio')
+               label='Valor predicho de tiempo promedio')
 
     # Plot the L95CI
     l95ci_points = np.column_stack(
@@ -120,18 +120,16 @@ def plot_avg_time(y_test: pd.DataFrame, y_pred: pd.DataFrame, model: str, type_t
         label='Valor predicho del intervalo de confianza superior')
 
     # Add the labels
-    ax.set_xlabel('Valor real de incidencia promedio',
+    ax.set_xlabel('Valor real de tiempo promedio',
                   fontsize=10, fontweight='bold')
-    ax.set_ylabel('Valor predicho de incidencia promedio',
+    ax.set_ylabel('Valor predicho de tiempo promedio',
                   fontsize=10, fontweight='bold')
 
     # Add the legend
     ax.legend()
 
-    title = name.replace(' (INC)', '')
-
     ax.set_title(
-        f'Relación de incidencia de {title}',
+        f'Tiempo promedio hasta aparición de {name}',
         fontweight='bold',
         fontsize=11)
 
