@@ -1,7 +1,8 @@
-import joblib
-import os
-import pandas as pd
 import json
+import os
+
+import joblib
+import pandas as pd
 
 import settings as st
 
@@ -74,6 +75,7 @@ def load_models():
     """
     # Load the models
     path_time_to_event = os.path.join(
+        st.RESOURCES, 'experiment 2',
         st.API_MODEL_TIME_TO_EVENT, 'Comorbilidades.pkl')
     path_incidence = os.path.join(
         st.API_MODEL_INCIDENCE, 'Comorbilidades (INC).pkl')

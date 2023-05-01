@@ -2,27 +2,32 @@
 
 import os
 
-# Directorios de la aplicación
+# ROOT
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC_DIR = os.path.join(ROOT_DIR, 'src')
 DATA_DIR = os.path.join(ROOT_DIR, 'data')
 CONFIG_DIR = os.path.join(SRC_DIR, 'config')
 API_DATA = os.path.join(SRC_DIR, 'api', 'data')
 API_LOG = os.path.join(SRC_DIR, 'api', 'data', 'log')
+RESOURCES = os.path.join(ROOT_DIR, 'resources')
 
-# DATOS DE ENTRENAMIENTO Y PRUEBA
+# EXPERIMENTS
+EXPERIMENTS_1_DIR = os.path.join(RESOURCES, 'experiment 1')
+EXPERIMENTS_2_DIR = os.path.join(RESOURCES, 'experiment 2')
+
+# DATA
 SPLITED_DATA = os.path.join(DATA_DIR, 'splited data')
 SPLITED_DATA_MULTIPLE = os.path.join(SPLITED_DATA, 'multiple')
 SPLITED_DATA_SINGLE = os.path.join(SPLITED_DATA, 'single')
 SPLITED_DATA_GLOBAL = os.path.join(SPLITED_DATA, 'global')
 
-# MODELOS
+# MODELS
 MODEL_DIR = os.path.join(ROOT_DIR, 'model')
 SINGLE_MODEL_DIR = os.path.join(MODEL_DIR, 'single')
 MULTIPLE_MODEL_DIR = os.path.join(MODEL_DIR, 'multiple')
 GLOBAL_MODEL_DIR = os.path.join(MODEL_DIR, 'global')
 
-# FIGURAS
+# FIGURES
 PLOTS_DIR = os.path.join(ROOT_DIR, 'figures')
 SINGLE_PLOTS_DIR = os.path.join(PLOTS_DIR, 'single')
 MULTIPLE_PLOTS_DIR = os.path.join(PLOTS_DIR, 'multiple')
@@ -31,7 +36,6 @@ R2_PLOTS_DIR = os.path.join(PLOTS_DIR, 'R2')
 R2_AVERAGE_TIME_PLOT_DIR = os.path.join(R2_PLOTS_DIR, 'average time')
 R2_UPTO_TIME_PLOT_DIR = os.path.join(R2_PLOTS_DIR, 'upto time')
 R2_INCIDENCE_PLOT_DIR = os.path.join(R2_PLOTS_DIR, 'incidence')
-
 
 # PREDICCIONES
 PREDICTIONS_DIR = os.path.join(ROOT_DIR, 'predictions')
@@ -67,13 +71,13 @@ COMPARE_MODELS = 'compare_config.json'
 
 #  API
 API_MODEL_TIME_TO_EVENT = os.path.join(
-    GLOBAL_MODEL_DIR, 'GradientBoostingRegressor', 'average time')
+    EXPERIMENTS_2_DIR, 'model', 'global', 'GradientBoostingRegressor', 'average time')
 API_MODEL_INCIDENCE = os.path.join(
-    GLOBAL_MODEL_DIR, 'GradientBoostingRegressor', 'incidence')
+    EXPERIMENTS_2_DIR, 'model', 'global', 'GradientBoostingRegressor', 'incidence')
 API_MODEL_LY_QALY_COST_SHE = os.path.join(
-    SINGLE_MODEL_DIR, 'GradientBoostingRegressor')
+    EXPERIMENTS_2_DIR, 'model', 'single', 'GradientBoostingRegressor')
 API_MODEL_RISK = os.path.join(
-    GLOBAL_MODEL_DIR, 'GradientBoostingRegressor', 'upto time')
+    EXPERIMENTS_2_DIR, 'model', 'global', 'GradientBoostingRegressor', 'upto time')
 
 # PARÁMETROS DE ENTRENAMIENTO
 TEST_SIZE = 0.2
