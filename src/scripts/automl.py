@@ -9,7 +9,6 @@ import os
 import joblib
 import pandas as pd
 from sklearn.model_selection import GridSearchCV, train_test_split
-from sklearn.multioutput import MultiOutputRegressor
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
@@ -152,14 +151,10 @@ class AutoML:
                 scoring='r2') for i in range(
                 len(pipe))]
 
-        # Create a multi output regressor to be able to train the model with
-        # multiple outputs
-        self._model = [MultiOutputRegressor(grid_search[i])
-                       for i in range(len(grid_search))]
-
-        # Train the model
-        for i in range(len(self._model)):
-            self._model[i].fit(self._X_train, self._y_train)
+        # Fit the grid search with the training data
+        for i in range(len(grid_search)):
+            grid_search[i].fit(self._X_train, self._y_train)
+            self._model[i] = grid_search[i].best_estimator_
 
     def predict(self) -> None:
         """Predict the output data.

@@ -5,30 +5,32 @@
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
+        "sklearn.tree",
+        "sklearn.neural_network"
       ],
       "model": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "params": [
         {
           "model__fit_intercept": [true, false]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__n_estimators": [3, 10, 30, 50],
+          "model__max_features": [2, 4, 6, 8, 16]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__max_features": [2, 4, 6, 8, 16],
+          "model__min_samples_leaf": [2, 4, 6, 8, 10]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
+          "model__hidden_layer_sizes": [[100, 50], [200]],
+          "model__solver": ["adam", "lbfgs"],
+          "model__alpha": [0.0001, 0.001, 0.01],
+          "model__max_iter": [400]
         }
       ],
       "type": "single",
@@ -63,30 +65,32 @@
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
+        "sklearn.tree",
+        "sklearn.neural_network"
       ],
       "model": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "params": [
         {
           "model__fit_intercept": [true, false]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__n_estimators": [3, 10, 30, 50],
+          "model__max_features": [2, 4, 6, 8, 16]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__max_features": [2, 4, 6, 8, 16],
+          "model__min_samples_leaf": [2, 4, 6, 8, 10]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
+          "model__hidden_layer_sizes": [[100, 50], [200]],
+          "model__solver": ["adam", "lbfgs"],
+          "model__alpha": [0.0001, 0.001, 0.01],
+          "model__max_iter": [400]
         }
       ],
       "type": "single",
@@ -121,30 +125,32 @@
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
+        "sklearn.tree",
+        "sklearn.neural_network"
       ],
       "model": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "params": [
         {
           "model__fit_intercept": [true, false]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__n_estimators": [3, 10, 30, 50],
+          "model__max_features": [2, 4, 6, 8, 16]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__max_features": [2, 4, 6, 8, 16],
+          "model__min_samples_leaf": [2, 4, 6, 8, 10]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
+          "model__hidden_layer_sizes": [[100, 50], [200]],
+          "model__solver": ["adam", "lbfgs"],
+          "model__alpha": [0.0001, 0.001, 0.01],
+          "model__max_iter": [400]
         }
       ],
       "type": "single",
@@ -179,30 +185,32 @@
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
+        "sklearn.tree",
+        "sklearn.neural_network"
       ],
       "model": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "params": [
         {
           "model__fit_intercept": [true, false]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__n_estimators": [3, 10, 30, 50],
+          "model__max_features": [2, 4, 6, 8, 16]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__max_features": [2, 4, 6, 8, 16],
+          "model__min_samples_leaf": [2, 4, 6, 8, 10]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
+          "model__hidden_layer_sizes": [[100, 50], [200]],
+          "model__solver": ["adam", "lbfgs"],
+          "model__alpha": [0.0001, 0.001, 0.01],
+          "model__max_iter": [400]
         }
       ],
       "type": "single",
@@ -237,30 +245,32 @@
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
+        "sklearn.tree",
+        "sklearn.neural_network"
       ],
       "model": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "params": [
         {
           "model__fit_intercept": [true, false]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__n_estimators": [3, 10, 30, 50],
+          "model__max_features": [2, 4, 6, 8, 16]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__max_features": [2, 4, 6, 8, 16],
+          "model__min_samples_leaf": [2, 4, 6, 8, 10]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
+          "model__hidden_layer_sizes": [[100, 50], [200]],
+          "model__solver": ["adam", "lbfgs"],
+          "model__alpha": [0.0001, 0.001, 0.01],
+          "model__max_iter": [400]
         }
       ],
       "type": "single",
@@ -295,30 +305,32 @@
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
+        "sklearn.tree",
+        "sklearn.neural_network"
       ],
       "model": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "params": [
         {
           "model__fit_intercept": [true, false]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__n_estimators": [3, 10, 30, 50],
+          "model__max_features": [2, 4, 6, 8, 16]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__max_features": [2, 4, 6, 8, 16],
+          "model__min_samples_leaf": [2, 4, 6, 8, 10]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
+          "model__hidden_layer_sizes": [[100, 50], [200]],
+          "model__solver": ["adam", "lbfgs"],
+          "model__alpha": [0.0001, 0.001, 0.01],
+          "model__max_iter": [400]
         }
       ],
       "type": "single",
@@ -353,30 +365,32 @@
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
+        "sklearn.tree",
+        "sklearn.neural_network"
       ],
       "model": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "params": [
         {
           "model__fit_intercept": [true, false]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__n_estimators": [3, 10, 30, 50],
+          "model__max_features": [2, 4, 6, 8, 16]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__max_features": [2, 4, 6, 8, 16],
+          "model__min_samples_leaf": [2, 4, 6, 8, 10]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
+          "model__hidden_layer_sizes": [[100, 50], [200]],
+          "model__solver": ["adam", "lbfgs"],
+          "model__alpha": [0.0001, 0.001, 0.01],
+          "model__max_iter": [400]
         }
       ],
       "type": "single",
@@ -411,30 +425,32 @@
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
+        "sklearn.tree",
+        "sklearn.neural_network"
       ],
       "model": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "params": [
         {
           "model__fit_intercept": [true, false]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__n_estimators": [3, 10, 30, 50],
+          "model__max_features": [2, 4, 6, 8, 16]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__max_features": [2, 4, 6, 8, 16],
+          "model__min_samples_leaf": [2, 4, 6, 8, 10]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
+          "model__hidden_layer_sizes": [[100, 50], [200]],
+          "model__solver": ["adam", "lbfgs"],
+          "model__alpha": [0.0001, 0.001, 0.01],
+          "model__max_iter": [400]
         }
       ],
       "type": "single",
@@ -465,34 +481,36 @@
       ]
     },
     {
-      "name": "Neuropatía individual (INC)",
+      "name": "Neuropatía (INC)",
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
+        "sklearn.tree",
+        "sklearn.neural_network"
       ],
       "model": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "params": [
         {
           "model__fit_intercept": [true, false]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__n_estimators": [3, 10, 30, 50],
+          "model__max_features": [2, 4, 6, 8, 16]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__max_features": [2, 4, 6, 8, 16],
+          "model__min_samples_leaf": [2, 4, 6, 8, 10]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
+          "model__hidden_layer_sizes": [[100, 50], [200]],
+          "model__solver": ["adam", "lbfgs"],
+          "model__alpha": [0.0001, 0.001, 0.01],
+          "model__max_iter": [400]
         }
       ],
       "type": "single",
@@ -527,30 +545,32 @@
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
+        "sklearn.tree",
+        "sklearn.neural_network"
       ],
       "model": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "params": [
         {
           "model__fit_intercept": [true, false]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__n_estimators": [3, 10, 30, 50],
+          "model__max_features": [2, 4, 6, 8, 16]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__max_features": [2, 4, 6, 8, 16],
+          "model__min_samples_leaf": [2, 4, 6, 8, 10]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
+          "model__hidden_layer_sizes": [[100, 50], [200]],
+          "model__solver": ["adam", "lbfgs"],
+          "model__alpha": [0.0001, 0.001, 0.01],
+          "model__max_iter": [400]
         }
       ],
       "type": "single",
@@ -585,30 +605,32 @@
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
+        "sklearn.tree",
+        "sklearn.neural_network"
       ],
       "model": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "params": [
         {
           "model__fit_intercept": [true, false]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__n_estimators": [3, 10, 30, 50],
+          "model__max_features": [2, 4, 6, 8, 16]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__max_features": [2, 4, 6, 8, 16],
+          "model__min_samples_leaf": [2, 4, 6, 8, 10]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
+          "model__hidden_layer_sizes": [[100, 50], [200]],
+          "model__solver": ["adam", "lbfgs"],
+          "model__alpha": [0.0001, 0.001, 0.01],
+          "model__max_iter": [400]
         }
       ],
       "type": "single",
@@ -643,30 +665,32 @@
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
+        "sklearn.tree",
+        "sklearn.neural_network"
       ],
       "model": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "params": [
         {
           "model__fit_intercept": [true, false]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__n_estimators": [3, 10, 30, 50],
+          "model__max_features": [2, 4, 6, 8, 16]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__max_features": [2, 4, 6, 8, 16],
+          "model__min_samples_leaf": [2, 4, 6, 8, 10]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
+          "model__hidden_layer_sizes": [[100, 50], [200]],
+          "model__solver": ["adam", "lbfgs"],
+          "model__alpha": [0.0001, 0.001, 0.01],
+          "model__max_iter": [400]
         }
       ],
       "type": "single",
@@ -701,30 +725,32 @@
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
+        "sklearn.tree",
+        "sklearn.neural_network"
       ],
       "model": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "params": [
         {
           "model__fit_intercept": [true, false]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__n_estimators": [3, 10, 30, 50],
+          "model__max_features": [2, 4, 6, 8, 16]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__max_features": [2, 4, 6, 8, 16],
+          "model__min_samples_leaf": [2, 4, 6, 8, 10]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
+          "model__hidden_layer_sizes": [[100, 50], [200]],
+          "model__solver": ["adam", "lbfgs"],
+          "model__alpha": [0.0001, 0.001, 0.01],
+          "model__max_iter": [400]
         }
       ],
       "type": "single",
@@ -759,30 +785,32 @@
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
+        "sklearn.tree",
+        "sklearn.neural_network"
       ],
       "model": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "params": [
         {
           "model__fit_intercept": [true, false]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__n_estimators": [3, 10, 30, 50],
+          "model__max_features": [2, 4, 6, 8, 16]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__max_features": [2, 4, 6, 8, 16],
+          "model__min_samples_leaf": [2, 4, 6, 8, 10]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
+          "model__hidden_layer_sizes": [[100, 50], [200]],
+          "model__solver": ["adam", "lbfgs"],
+          "model__alpha": [0.0001, 0.001, 0.01],
+          "model__max_iter": [400]
         }
       ],
       "type": "multiple",
@@ -798,30 +826,32 @@
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
+        "sklearn.tree",
+        "sklearn.neural_network"
       ],
       "model": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "params": [
         {
           "model__fit_intercept": [true, false]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__n_estimators": [3, 10, 30, 50],
+          "model__max_features": [2, 4, 6, 8, 16]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__max_features": [2, 4, 6, 8, 16],
+          "model__min_samples_leaf": [2, 4, 6, 8, 10]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
+          "model__hidden_layer_sizes": [[100, 50], [200]],
+          "model__solver": ["adam", "lbfgs"],
+          "model__alpha": [0.0001, 0.001, 0.01],
+          "model__max_iter": [400]
         }
       ],
       "type": "multiple",
@@ -837,35 +867,37 @@
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
+        "sklearn.tree",
+        "sklearn.neural_network"
       ],
       "model": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "params": [
         {
           "model__fit_intercept": [true, false]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__n_estimators": [3, 10, 30, 50],
+          "model__max_features": [2, 4, 6, 8, 16]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__max_features": [2, 4, 6, 8, 16],
+          "model__min_samples_leaf": [2, 4, 6, 8, 10]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
+          "model__hidden_layer_sizes": [[100, 50], [200]],
+          "model__solver": ["adam", "lbfgs"],
+          "model__alpha": [0.0001, 0.001, 0.01],
+          "model__max_iter": [400]
         }
       ],
       "type": "multiple",
       "trained_data_names": [
-        "Neuropatía individual (INC)",
+        "Neuropatía (INC)",
         "Amputación extremidades inferiores (INC)"
       ]
     },
@@ -874,30 +906,32 @@
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
+        "sklearn.tree",
+        "sklearn.neural_network"
       ],
       "model": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "params": [
         {
           "model__fit_intercept": [true, false]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__n_estimators": [3, 10, 30, 50],
+          "model__max_features": [2, 4, 6, 8, 16]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__max_features": [2, 4, 6, 8, 16],
+          "model__min_samples_leaf": [2, 4, 6, 8, 10]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
+          "model__hidden_layer_sizes": [[100, 50], [200]],
+          "model__solver": ["adam", "lbfgs"],
+          "model__alpha": [0.0001, 0.001, 0.01],
+          "model__max_iter": [400]
         }
       ],
       "type": "multiple",
@@ -912,30 +946,32 @@
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
+        "sklearn.tree",
+        "sklearn.neural_network"
       ],
       "model": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "params": [
         {
           "model__fit_intercept": [true, false]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__n_estimators": [3, 10, 30, 50],
+          "model__max_features": [2, 4, 6, 8, 16]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__max_features": [2, 4, 6, 8, 16],
+          "model__min_samples_leaf": [2, 4, 6, 8, 10]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
+          "model__hidden_layer_sizes": [[100, 50], [200]],
+          "model__solver": ["adam", "lbfgs"],
+          "model__alpha": [0.0001, 0.001, 0.01],
+          "model__max_iter": [400]
         }
       ],
       "type": "global",

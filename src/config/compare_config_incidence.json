@@ -4,8 +4,8 @@
       "model_list": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "name_list": [
         "Fallo Cardiaco (INC)",

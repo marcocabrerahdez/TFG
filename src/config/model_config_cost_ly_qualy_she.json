@@ -5,51 +5,38 @@
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
+        "sklearn.tree",
+        "sklearn.neural_network"
       ],
       "model": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "params": [
         {
           "model__fit_intercept": [true, false]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__n_estimators": [3, 10, 30, 50],
+          "model__max_features": [2, 4, 6, 8, 16]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__max_features": [2, 4, 6, 8, 16],
+          "model__min_samples_leaf": [2, 4, 6, 8, 10]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
+          "model__hidden_layer_sizes": [[100, 50], [200]],
+          "model__solver": ["adam", "lbfgs"],
+          "model__alpha": [0.0001, 0.001, 0.01],
+          "model__max_iter": [400]
         }
       ],
       "type": "single",
       "columns_X": [
-        "SEX",
         "AGE",
         "DURATION",
-        "HYPO_RATE",
-        "BGRET",
-        "PRET",
-        "ME",
-        "BLI",
-        "ALB1",
-        "ALB2",
-        "ESRD",
-        "ANGINA",
-        "STROKE",
-        "MI",
-        "HF",
-        "NEU",
-        "LEA",
         "HBA1C"
       ],
       "columns_Y": ["AVG_C", "L95CI_C", "U95CI_C"]
@@ -59,51 +46,38 @@
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
+        "sklearn.tree",
+        "sklearn.neural_network"
       ],
       "model": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "params": [
         {
           "model__fit_intercept": [true, false]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__n_estimators": [3, 10, 30, 50],
+          "model__max_features": [2, 4, 6, 8, 16]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__max_features": [2, 4, 6, 8, 16],
+          "model__min_samples_leaf": [2, 4, 6, 8, 10]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
+          "model__hidden_layer_sizes": [[100, 50], [200]],
+          "model__solver": ["adam", "lbfgs"],
+          "model__alpha": [0.0001, 0.001, 0.01],
+          "model__max_iter": [400]
         }
       ],
       "type": "single",
       "columns_X": [
-        "SEX",
         "AGE",
         "DURATION",
-        "HYPO_RATE",
-        "BGRET",
-        "PRET",
-        "ME",
-        "BLI",
-        "ALB1",
-        "ALB2",
-        "ESRD",
-        "ANGINA",
-        "STROKE",
-        "MI",
-        "HF",
-        "NEU",
-        "LEA",
         "HBA1C"
       ],
       "columns_Y": ["AVG_LY", "L95CI_LY", "U95CI_LY"]
@@ -113,51 +87,38 @@
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
+        "sklearn.tree",
+        "sklearn.neural_network"
       ],
       "model": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "params": [
         {
           "model__fit_intercept": [true, false]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__n_estimators": [3, 10, 30, 50],
+          "model__max_features": [2, 4, 6, 8, 16]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__max_features": [2, 4, 6, 8, 16],
+          "model__min_samples_leaf": [2, 4, 6, 8, 10]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
+          "model__hidden_layer_sizes": [[100, 50], [200]],
+          "model__solver": ["adam", "lbfgs"],
+          "model__alpha": [0.0001, 0.001, 0.01],
+          "model__max_iter": [400]
         }
       ],
       "type": "single",
       "columns_X": [
-        "SEX",
         "AGE",
         "DURATION",
-        "HYPO_RATE",
-        "BGRET",
-        "PRET",
-        "ME",
-        "BLI",
-        "ALB1",
-        "ALB2",
-        "ESRD",
-        "ANGINA",
-        "STROKE",
-        "MI",
-        "HF",
-        "NEU",
-        "LEA",
         "HBA1C"
       ],
       "columns_Y": ["AVG_QALY", "L95CI_QALY", "U95CI_QALY"]
@@ -167,51 +128,38 @@
       "class_name": [
         "sklearn.linear_model",
         "sklearn.ensemble",
-        "sklearn.ensemble",
-        "sklearn.ensemble"
+        "sklearn.tree",
+        "sklearn.neural_network"
       ],
       "model": [
         "LinearRegression",
         "RandomForestRegressor",
-        "GradientBoostingRegressor",
-        "AdaBoostRegressor"
+        "DecisionTreeRegressor",
+        "MLPRegressor"
       ],
       "params": [
         {
           "model__fit_intercept": [true, false]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__n_estimators": [3, 10, 30, 50],
+          "model__max_features": [2, 4, 6, 8, 16]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__max_depth": [3, 5, 7]
+          "model__max_features": [2, 4, 6, 8, 16],
+          "model__min_samples_leaf": [2, 4, 6, 8, 10]
         },
         {
-          "model__n_estimators": [50, 100, 150],
-          "model__learning_rate": [0.1, 0.5, 1.0]
+          "model__hidden_layer_sizes": [[100, 50], [200]],
+          "model__solver": ["adam", "lbfgs"],
+          "model__alpha": [0.0001, 0.001, 0.01],
+          "model__max_iter": [400]
         }
       ],
       "type": "single",
       "columns_X": [
-        "SEX",
         "AGE",
         "DURATION",
-        "HYPO_RATE",
-        "BGRET",
-        "PRET",
-        "ME",
-        "BLI",
-        "ALB1",
-        "ALB2",
-        "ESRD",
-        "ANGINA",
-        "STROKE",
-        "MI",
-        "HF",
-        "NEU",
-        "LEA",
         "HBA1C"
       ],
       "columns_Y": ["AVG_SHE", "L95CI_SHE", "U95CI_SHE"]

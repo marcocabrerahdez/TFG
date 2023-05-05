@@ -165,8 +165,7 @@ def main() -> None:
                     prediction_file, x_test_file, name)
 
                 # pl.plot_upto_time(y_test_file, prediction_file, model, plot['type_train'], name)
-                pl.plot_avg_time(y_test_file, prediction_file,
-                                 model, plot['type_train'], name)
+                pl.plot_avg_time(y_test_file, prediction_file, model, plot['type_train'], name)
 
     # Compare the results of the models
     for compare in compare_list['compare_config']:
