@@ -181,26 +181,26 @@ def plot_upto_time(y_test: pd.DataFrame, y_pred: pd.DataFrame, model: str, type_
     fig, ax = plt.subplots(figsize=(10, 6))
 
     ax.plot(y_test_df.columns, y_test_df.cumsum(
-        axis=1).iloc[1], 'o-b', label='Valor ideal')
+        axis=1).loc[1], 'o-b', label='Valor ideal')
     ax.plot(y_pred_df.columns, y_pred_df.cumsum(
-        axis=1).iloc[1], 'o-r', label='Valor predicho')
+        axis=1).loc[1], 'o-r', label='Valor predicho')
 
     # Plot the confidence intervals
     ax.fill_between(
         y_test_df.columns,
         y_test_l95ci_df.cumsum(
-            axis=1).values[1],
+            axis=1).loc[1],
         y_test_u95ci_df.cumsum(
-            axis=1).values[1],
+            axis=1).loc[1],
         alpha=0.2,
         color='b',
         label='Área de confianza real')
     ax.fill_between(
         y_pred_df.columns,
         y_pred_l95ci_df.cumsum(
-            axis=1).values[1],
+            axis=1).loc[1],
         y_pred_u95ci_df.cumsum(
-            axis=1).values[1],
+            axis=1).loc[1],
         alpha=0.2,
         color='r',
         label='Área de confianza predicha')
