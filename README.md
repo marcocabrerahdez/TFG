@@ -1,4 +1,6 @@
-# Trabajo de Fin de Grado
+# Trabajo de Fin de Grado 
+
+This repository contains my computer engineering bachelor's degree thesis, which received a grade of 10 from the examining board on June 2, 2023.
 
 ## Machine Learning as an alternative to simulation models for decision making
 
