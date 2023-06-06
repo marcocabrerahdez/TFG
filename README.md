@@ -29,5 +29,7 @@ In short, the use of surrogate machine learning models as an alternative to simu
 ## Authors
 
 > main developer `Marco Antonio Cabrera Hernández`
+> 
 > lead professor `Iván Castilla Rodríguez`
+> 
 > associate professor `Rafael Arnay del Arco`
