@@ -1,32 +1,18 @@
 # Trabajo de Fin de Grado
 
-## Machine Learning como alternativa a los modelos de simulación para la toma de decisiones
+## Machine Learning as an alternative to simulation models for decision making
 
 > realizado en `Universidad de la Laguna`
 
 ## Resumen
 
-Existen multitud de campos de aplicación donde es habitual el uso de la simulación
-para predecir el comportamiento a largo plazo del sistema modelado. Según aumenta la
-complejidad de estos modelos, aumenta también el tiempo de cómputo necesario para
-obtener resultados. Una alternativa es crear un modelo con técnicas de aprendizaje
-automático que imite el comportamiento del modelo original, pero cuyo tiempo de
-cómputo es casi instantáneo: estos son llamados modelos subrogados. En este proyecto
-se ha realizado una comparativa entre un modelo de simulación para evaluar la
-efectividad, seguridad y coste-efectividad de los sistemas de monitorización continua de
-glucosa intersticial en tiempo real para diabetes tipo 1 y modelos subrogados de
-aprendizaje automático, analizando métricas de rendimiento como el coeficiente de
-determinación y el error porcentual absoluto medio. Los resultados obtenidos han
-demostrado que los modelos subrogados son capaces de capturar de manera precisa y
-eficiente el comportamiento del sistema modelado en un tiempo significativamente
-menor, lo que los convierte en una herramienta valiosa para su integración con
-herramientas para la toma de decisiones en tiempo real.
+There are many fields of application where it is common to use simulation to predict the long-term behavior of the modeled system. As the complexity of these models increases, so does the computational time required to obtain results. An alternative is to create a model with machine learning techniques that mimics the behavior of the original model, but whose computation time is almost instantaneous: these are called surrogate models. In this project, a comparison has been made between a simulation model to evaluate the effectiveness, safety and cost-effectiveness of real-time continuous interstitial glucose monitoring systems for type 1 diabetes and surrogate machine learning models, analyzing performance metrics such as the coefficient of determination and the mean absolute percentage error. The results obtained have shown that surrogate models are able to accurately and efficiently capture the behavior of the modeled system in significantly less time, making them a valuable tool for real-time decision making applications.
 
-## Resultados
+## Results
 
 [Report](https://github.com/marcocabrerahdez/TFG/blob/main/Report.pdf)
 
-## Configuración
+## Authors
 
 > desarrollador principal `Marco Antonio Cabrera Hernández`
 >
