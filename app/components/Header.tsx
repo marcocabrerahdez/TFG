@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 
-const navigation = [{ name: "Incio", href: "/" }];
+const navigation = [{ name: "Home", href: "/" }];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -21,12 +21,14 @@ export default function Header() {
                 <a
                   key={item.name}
                   href={item.href}
+                  style={{ color: '#E63946', fontWeight: 'bold' }}
                   className={classNames(
                     pathname === item.href
-                      ? "border-slate-500 text-gray-900"
-                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
-                    "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                  )}
+                      ? "border-slate-500"
+                      : "border-transparent",
+                    "inline-flex items-center font-medium"
+                  )
+                }
                   aria-current={pathname === item.href ? "page" : undefined}
                 >
                   {item.name}

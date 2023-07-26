@@ -15,7 +15,7 @@ export default function Main() {
   };
 
   return (
-    <main className="flex flex-col items-center justify-between">
+    <main className="flex flex-col items-center justify-between" style={{ backgroundColor: '#A8DADC'}}>
       <Header />
       <div className="grid grid-cols-2">
         <div className="col-span-1" style={{ padding: '1rem'}}>

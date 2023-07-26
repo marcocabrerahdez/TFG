@@ -93,7 +93,8 @@ export default function Charts({ data }: ChartsProps) {
       },
       title: {
         display: true,
-        text: "Tiempo promedio hasta evento",
+        text: "Average time to event",
+        color: '#1D3557'
       },
     },
   };
@@ -113,6 +114,7 @@ export default function Charts({ data }: ChartsProps) {
       title: {
         display: true,
         text: "Coste ($)",
+        color: '#1D3557'
       },
     },
   };
@@ -131,7 +133,8 @@ export default function Charts({ data }: ChartsProps) {
       },
       title: {
         display: true,
-        text: "Esperanza de vida (años)",
+        text: "Life expectancy (years)",
+        color: '#1D3557'
       },
     },
   };
@@ -150,7 +153,8 @@ export default function Charts({ data }: ChartsProps) {
       },
       title: {
         display: true,
-        text: "Esperanza de vida con calidad (años)",
+        text: "Quality life expectancy (years)",
+        color: '#1D3557'
       },
     },
   };
@@ -159,52 +163,55 @@ export default function Charts({ data }: ChartsProps) {
     labels: dataAVGTimeBase.labels,
     datasets: [
       {
-        label: "Tiempo promedio hasta evento (base)",
+        label: "Average time to event (base)",
         data: dataAVGTimeBase.data,
-        borderColor: "rgb(255, 99, 132)",
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        borderColor: "#457B9D",
+        backgroundColor: "#457B9D",
       },
       {
-        label: "Tiempo promedio hasta evento (objetivo)",
+        label: "Average time to event (target)",
         data: dataAVGTimeObj.data,
-        borderColor: "rgb(54, 162, 235)",
-        backgroundColor: "rgba(54, 162, 235, 0.2)",
+        borderColor: "#E63946",
+        backgroundColor: "#E63946",
       },
     ],
   };
 
   const chartDataQALY = {
-    labels: ["Coste (base)", "Coste (objetivo)"],
+    labels: ["Cost (base)", "Cost (target)"],
     datasets: [
       {
-        label: "Coste ($)",
+        label: "Cost ($)",
         data: dataQALY,
-        backgroundColor: ["rgb(255, 99, 132)", "rgb(54, 162, 235)"],
+        borderColor: "#A8DADC",
+        backgroundColor: ["#457B9D", "#E63946"],
       },
     ],
   };
 
   const chartDataCost = {
-    labels: ["Esperanza de vida (base)", "Esperanza de vida (objetivo)"],
+    labels: ["Life expectancy (base)", "Life expectancy (target)"],
     datasets: [
       {
-        label: "Esperanza de vida (años)",
+        label: "Life expectancy (years)",
         data: dataCost,
-        backgroundColor: ["rgb(255, 99, 132)", "rgb(54, 162, 235)"],
+        borderColor: "#A8DADC",
+        backgroundColor: ["#457B9D", "#E63946"],
       },
     ],
   };
 
   const chartDataLY = {
     labels: [
-      "Esperanza de vida con calidad (base)",
-      "Esperanza de vida con calidad (objetivo)",
+      "Quality life expectancy (base)",
+      "Quality life expectancy (target)",
     ],
     datasets: [
       {
-        label: "Esperanza de vida con calidad (años)",
+        label: "Quality life expectancy (years)",
         data: dataLY,
-        backgroundColor: ["rgb(255, 99, 132)", "rgb(54, 162, 235)"],
+        borderColor: "#A8DADC",
+        backgroundColor: ["#457B9D", "#E63946"],
       },
     ],
   };

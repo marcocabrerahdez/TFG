@@ -71,13 +71,13 @@ COMPARE_MODELS = 'compare_config.json'
 
 #  API
 API_MODEL_TIME_TO_EVENT = os.path.join(
-    EXPERIMENTS_2_DIR, 'model', 'global', 'GradientBoostingRegressor', 'average time')
+    EXPERIMENTS_2_DIR, 'model', 'global', 'MLPRegressor', 'average time')
 API_MODEL_INCIDENCE = os.path.join(
-    EXPERIMENTS_2_DIR, 'model', 'global', 'GradientBoostingRegressor', 'incidence')
+    EXPERIMENTS_2_DIR, 'model', 'global', 'MLPRegressor', 'incidence')
 API_MODEL_LY_QALY_COST_SHE = os.path.join(
-    EXPERIMENTS_2_DIR, 'model', 'single', 'GradientBoostingRegressor')
+    EXPERIMENTS_2_DIR, 'model', 'single', 'MLPRegressor')
 API_MODEL_RISK = os.path.join(
-    EXPERIMENTS_2_DIR, 'model', 'global', 'GradientBoostingRegressor', 'upto time')
+    EXPERIMENTS_2_DIR, 'model', 'global', 'MLPRegressor', 'upto time')
 
 # PARÁMETROS DE ENTRENAMIENTO
 TEST_SIZE = 0.2

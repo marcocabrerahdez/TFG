@@ -59,25 +59,26 @@ export default function Form({ onFormSubmit }: FormProps) {
     <form onSubmit={handleSubmit} className="max-w-8xl my-auto">
       <div className="grid grid-cols-3 gap-4">
         <div className="mb-4">
-          <label htmlFor="man" className="block mb-2 font-bold text-gray-600">
-            Sexo
+          <label htmlFor="man" className="block mb-2 font-bold" style={{ color: '#1D3557'}}>
+            Sex
           </label>
           <select
             id="man"
             name="man"
             value={man}
             onChange={(event) => setMan(event.target.value)}
-            className="border border-gray-300 p-2 w-full"
+            className="p-2 w-full"
+            style={{ backgroundColor: '#F1FAEE', color: '#6b7280' }}
             required
           >
-            <option value="">Seleccione una opción</option>
-            <option value="true">Masculino</option>
-            <option value="false">Femenino</option>
+            <option value="">Select an option</option>
+            <option value="true">Male</option>
+            <option value="false">Female</option>
           </select>
         </div>
         <div className="mb-4">
-          <label htmlFor="age" className="block mb-2 font-bold text-gray-600">
-            Edad
+          <label htmlFor="age" className="block mb-2 font-bold" style={{ color: '#1D3557'}}>
+            Age
           </label>
           <input
             type="number"
@@ -86,16 +87,18 @@ export default function Form({ onFormSubmit }: FormProps) {
             value={age}
             placeholder="Introduzca un número"
             onChange={(event) => setAge(event.target.value)}
-            className="border border-gray-300 p-2 w-full"
+            className="p-2 w-full"
+            style={{ backgroundColor: '#F1FAEE' }}
             required
           />
         </div>
         <div className="mb-4">
           <label
             htmlFor="durationOfDiabetes"
-            className="block mb-2 font-bold text-gray-600"
+            className="block mb-2 font-bold"
+            style={{ color: '#1D3557'}}
           >
-            Duración de la diabetes (en años)
+           Duration of diabetes (in years)
           </label>
           <input
             type="number"
@@ -104,7 +107,8 @@ export default function Form({ onFormSubmit }: FormProps) {
             value={durationOfDiabetes}
             placeholder="Introduzca un número"
             onChange={(event) => setDurationOfDiabetes(event.target.value)}
-            className="border border-gray-300 p-2 w-full"
+            className="p-2 w-full"
+            style={{ backgroundColor: '#F1FAEE' }}
             required
           />
         </div>
@@ -114,9 +118,10 @@ export default function Form({ onFormSubmit }: FormProps) {
         <div className="mb-4">
           <label
             htmlFor="baseHbA1cLevel"
-            className="block mb-2 font-bold text-gray-600"
+            className="block mb-2 font-bold"
+            style={{ color: '#1D3557'}}
           >
-            Nivel Base de HbA1c (%)
+           Base HbA1c level (%)
           </label>
           <input
             type="number"
@@ -125,16 +130,18 @@ export default function Form({ onFormSubmit }: FormProps) {
             value={baseHbA1cLevel}
             placeholder="Introduzca un número"
             onChange={(event) => setBaseHbA1cLevel(event.target.value)}
-            className="border border-gray-300 p-2 w-full"
+            className="p-2 w-full"
+            style={{ backgroundColor: '#F1FAEE' }}
             required
           />
         </div>
         <div className="mb-4">
           <label
             htmlFor="objHbA1cLevel"
-            className="block mb-2 font-bold text-gray-600"
+            className="block mb-2 font-bold"
+            style={{ color: '#1D3557'}}
           >
-            Nivel Objetivo de HbA1c (%)
+            HbA1c Target Level (%)
           </label>
           <input
             type="number"
@@ -143,7 +150,8 @@ export default function Form({ onFormSubmit }: FormProps) {
             value={objHbA1cLevel}
             placeholder="Introduzca un número"
             onChange={(event) => setObjHbA1cLevel(event.target.value)}
-            className="border border-gray-300 p-2 w-full"
+            className="p-2 w-full"
+            style={{ backgroundColor: '#F1FAEE' }}
             required
           />
         </div>
@@ -153,9 +161,10 @@ export default function Form({ onFormSubmit }: FormProps) {
         <div className="mb-4">
           <label
             htmlFor="hypoRate"
-            className="block mb-2 font-bold text-gray-600"
+            className="block mb-2 font-bold"
+            style={{ color: '#1D3557'}}
           >
-            Episodios de hipoglucémicos severos (al año)
+            Severe hypoglycemic episodes (per year)
           </label>
           <input
             type="number"
@@ -164,16 +173,18 @@ export default function Form({ onFormSubmit }: FormProps) {
             value={hypoRate}
             placeholder="Introduzca un número"
             onChange={(event) => setHypoRate(event.target.value)}
-            className="border border-gray-300 p-2 w-full"
+            className="p-2 w-full"
+            style={{ backgroundColor: '#F1FAEE' }}
             required
           />
         </div>
         <div className="mb-4">
           <label
             htmlFor="hypoRateRR"
-            className="block mb-2 font-bold text-gray-600"
+            className="block mb-2 font-bold"
+            style={{ color: '#1D3557'}}
           >
-            Objetivo de episodios de hipoglucémicos severos (al año)
+            Target number of severe hypoglycemic episodes (per year)
           </label>
           <input
             type="number"
@@ -182,7 +193,8 @@ export default function Form({ onFormSubmit }: FormProps) {
             placeholder="Introduzca un número"
             value={hypoRateRR}
             onChange={(event) => setHypoRateRR(event.target.value)}
-            className="border border-gray-300 p-2 w-full"
+            className="p-2 w-full"
+            style={{ backgroundColor: '#F1FAEE' }}
             required
           />
         </div>
@@ -190,9 +202,10 @@ export default function Form({ onFormSubmit }: FormProps) {
       <div className="mb-4">
         <label
           htmlFor="annualCost"
-          className="block mb-2 font-bold text-gray-600"
+          className="block mb-2 font-bold"
+          style={{ color: '#1D3557'}}
         >
-          Costo de tratamiento (en dólares)
+          Treatment cost (in dollars)
         </label>
         <input
           type="number"
@@ -201,16 +214,18 @@ export default function Form({ onFormSubmit }: FormProps) {
           value={annualCost}
           placeholder="Introduzca un número"
           onChange={(event) => setAnnualCost(event.target.value)}
-          className="border border-gray-300 p-2 w-full"
+          style={{ backgroundColor: '#F1FAEE' }}
+          className="p-2 w-full"
           required
         />
       </div>
       <div className="mb-4">
         <label
           htmlFor="manifestations"
-          className="block mb-2 font-bold text-gray-600"
+          className="block mb-2 font-bold"
+          style={{ color: '#1D3557'}}
         >
-          Manifestaciones clínicas
+          Clinical manifestations
         </label>
         <div className="grid grid-cols-2 gap-4">
           <label
@@ -224,9 +239,10 @@ export default function Form({ onFormSubmit }: FormProps) {
               value="BGRET"
               onChange={handleManifestationsChange}
               checked={manifestations.includes("BGRET")}
-              className="form-checkbox h-5 w-5 text-gray-600"
+              className="form-checkbox h-5 w-5"
+              style={{ backgroundColor: '#457B9D' }}
             />
-            <span className="ml-2 text-gray-600">Retinopatía de Fondo</span>
+            <span className="ml-2" style={{ color: '#1D3557'}}>Background Retinopathy</span>
           </label>
           <label
             htmlFor="Retinopatía Proliferativa"
@@ -239,10 +255,11 @@ export default function Form({ onFormSubmit }: FormProps) {
               value="PRET"
               onChange={handleManifestationsChange}
               checked={manifestations.includes("PRET")}
-              className="form-checkbox h-5 w-5 text-gray-600"
+              className="form-checkbox h-5 w-5"
+              style={{ backgroundColor: '#457B9D' }}
             />
-            <span className="ml-2 text-gray-600">
-              Retinopatía Proliferativa
+            <span className="ml-2" style={{ color: '#1D3557'}}>
+            Proliferative Retinopathy
             </span>
           </label>
           <label
@@ -256,9 +273,10 @@ export default function Form({ onFormSubmit }: FormProps) {
               value="ME"
               onChange={handleManifestationsChange}
               checked={manifestations.includes("ME")}
-              className="form-checkbox h-5 w-5 text-gray-600"
+              className="form-checkbox h-5 w-5"
+              style={{ backgroundColor: '#457B9D' }}
             />
-            <span className="ml-2 text-gray-600">Edema Macular Diabético</span>
+            <span className="ml-2" style={{ color: '#1D3557'}}>Macular Edema</span>
           </label>
           <label
             htmlFor="Enfermedad Renal Terminal"
@@ -271,10 +289,11 @@ export default function Form({ onFormSubmit }: FormProps) {
               value="ESRD"
               onChange={handleManifestationsChange}
               checked={manifestations.includes("ESRD")}
-              className="form-checkbox h-5 w-5 text-gray-600"
+              className="form-checkbox h-5 w-5"
+              style={{ backgroundColor: '#457B9D' }}
             />
-            <span className="ml-2 text-gray-600">
-              Enfermedad Renal Terminal
+            <span className="ml-2" style={{ color: '#1D3557'}}>
+            End-Stage Renal Disease
             </span>
           </label>
           <label htmlFor="Ceguera" className="inline-flex items-center mt-2">
@@ -285,9 +304,11 @@ export default function Form({ onFormSubmit }: FormProps) {
               value="BLI"
               onChange={handleManifestationsChange}
               checked={manifestations.includes("BLI")}
-              className="form-checkbox h-5 w-5 text-gray-600"
+              className="form-checkbox h-5 w-5"
+              style={{ backgroundColor: '#457B9D' }}
+
             />
-            <span className="ml-2 text-gray-600">Ceguera</span>
+            <span className="ml-2" style={{ color: '#1D3557'}}>Blindness</span>
           </label>
           <label
             htmlFor="Microalbuminuria"
@@ -300,9 +321,11 @@ export default function Form({ onFormSubmit }: FormProps) {
               value="ALB1"
               onChange={handleManifestationsChange}
               checked={manifestations.includes("ALB1")}
-              className="form-checkbox h-5 w-5 text-gray-600"
+              className="form-checkbox h-5 w-5"
+              style={{ backgroundColor: '#457B9D' }}
+
             />
-            <span className="ml-2 text-gray-600">Microalbuminuria</span>
+            <span className="ml-2" style={{ color: '#1D3557'}}>Microalbuminuria</span>
           </label>
           <label
             htmlFor="Macroalbuminuria"
@@ -315,9 +338,11 @@ export default function Form({ onFormSubmit }: FormProps) {
               value="ALB2"
               onChange={handleManifestationsChange}
               checked={manifestations.includes("ALB2")}
-              className="form-checkbox h-5 w-5 text-gray-600"
+              className="form-checkbox h-5 w-5"
+              style={{ backgroundColor: '#457B9D' }}
+
             />
-            <span className="ml-2 text-gray-600">Macroalbuminuria</span>
+            <span className="ml-2" style={{ color: '#1D3557'}}>Macroalbuminuria</span>
           </label>
         </div>
         <div className="grid grid-cols-2 gap-4">
@@ -329,9 +354,11 @@ export default function Form({ onFormSubmit }: FormProps) {
               value="ANGINA"
               onChange={handleManifestationsChange}
               checked={manifestations.includes("ANGINA")}
-              className="form-checkbox h-5 w-5 text-gray-600"
+              className="form-checkbox h-5 w-5"
+              style={{ backgroundColor: '#457B9D' }}
+
             />
-            <span className="ml-2 text-gray-600">Angina</span>
+            <span className="ml-2" style={{ color: '#1D3557'}}>Angina</span>
           </label>
           <label htmlFor="Ictus" className="inline-flex items-center mt-2">
             <input
@@ -341,9 +368,11 @@ export default function Form({ onFormSubmit }: FormProps) {
               value="STROKE"
               onChange={handleManifestationsChange}
               checked={manifestations.includes("STROKE")}
-              className="form-checkbox h-5 w-5 text-gray-600"
+              className="form-checkbox h-5 w-5"
+              style={{ backgroundColor: '#457B9D' }}
+
             />
-            <span className="ml-2 text-gray-600">Ictus</span>
+            <span className="ml-2" style={{ color: '#1D3557'}}>Stroke</span>
           </label>
           <label
             htmlFor="Infarto de Miocardio"
@@ -356,9 +385,11 @@ export default function Form({ onFormSubmit }: FormProps) {
               value="MI"
               onChange={handleManifestationsChange}
               checked={manifestations.includes("MI")}
-              className="form-checkbox h-5 w-5 text-gray-600"
+              className="form-checkbox h-5 w-5"
+              style={{ backgroundColor: '#457B9D' }}
+
             />
-            <span className="ml-2 text-gray-600">Infarto de Miocardio</span>
+            <span className="ml-2" style={{ color: '#1D3557'}}>Myocardial Infarction</span>
           </label>
           <label
             htmlFor="Fallo Cardíaco"
@@ -371,9 +402,11 @@ export default function Form({ onFormSubmit }: FormProps) {
               value="HF"
               onChange={handleManifestationsChange}
               checked={manifestations.includes("HF")}
-              className="form-checkbox h-5 w-5 text-gray-600"
+              className="form-checkbox h-5 w-5"
+              style={{ backgroundColor: '#457B9D' }}
+
             />
-            <span className="ml-2 text-gray-600">Fallo Cardíaco</span>
+            <span className="ml-2" style={{ color: '#1D3557'}}>Heart Failure</span>
           </label>
           <label htmlFor="Neuropatía" className="inline-flex items-center mt-2">
             <input
@@ -383,9 +416,11 @@ export default function Form({ onFormSubmit }: FormProps) {
               value="NEU"
               onChange={handleManifestationsChange}
               checked={manifestations.includes("NEU")}
-              className="form-checkbox h-5 w-5 text-gray-600"
+              className="form-checkbox h-5 w-5"
+              style={{ backgroundColor: '#457B9D' }}
+
             />
-            <span className="ml-2 text-gray-600">Neuropatía</span>
+            <span className="ml-2" style={{ color: '#1D3557'}}>Neuropathy</span>
           </label>
           <label
             htmlFor="Amputación de Extremidades Inferiores"
@@ -398,10 +433,12 @@ export default function Form({ onFormSubmit }: FormProps) {
               value="LEA"
               onChange={handleManifestationsChange}
               checked={manifestations.includes("LEA")}
-              className="form-checkbox h-5 w-5 text-gray-600"
+              className="form-checkbox h-5 w-5"
+              style={{ backgroundColor: '#457B9D' }}
+
             />
-            <span className="ml-2 text-gray-600">
-              Amputación de Extremidades Inferiores
+            <span className="ml-2" style={{ color: '#1D3557'}}>
+              Lower Extremity Amputation
             </span>
           </label>
         </div>
@@ -409,7 +446,11 @@ export default function Form({ onFormSubmit }: FormProps) {
       <div className="mt-8 flex flex-col items-center">
         <button
           type="submit"
-          className="bg-gray-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="font-bold py-2 px-4 rounded"
+          style={{
+            backgroundColor: "#E63946", // Cambia el color de fondo del botón
+            color: "#F1FAEE", // Cambia el color del texto del botón
+          }}
         >
           Enviar
         </button>
